@@ -1,0 +1,232 @@
+@import '@fontsource-variable/montserrat/wght.css';
+@import '@fontsource-variable/open-sans/wght.css';
+@import 'tailwindcss';
+
+/*
+  Fallbacks com métricas ajustadas (Arial) para reduzir CLS do font-display: swap.
+  Itálico Montserrat NÃO é importado: .hero__title em { font-style: normal } —
+  o arquivo italic nunca era pedido no Network.
+*/
+@font-face {
+  font-family: 'Montserrat Fallback';
+  src: local('Arial');
+  size-adjust: 113.12%;
+  ascent-override: 89.28%;
+  descent-override: 23.43%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Open Sans Fallback';
+  src: local('Arial');
+  size-adjust: 106.37%;
+  ascent-override: 100.59%;
+  descent-override: 27.73%;
+  line-gap-override: 0%;
+}
+
+@theme {
+  --font-display: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
+  --font-body: 'Open Sans Variable', 'Open Sans Fallback', 'Open Sans', Arial, sans-serif;
+  --font-sans: 'Open Sans Variable', 'Open Sans Fallback', 'Open Sans', Arial, sans-serif;
+
+  --color-bt-orange: #eb9c36;
+  --color-bt-orange-secondary: #e9983d;
+  --color-bt-yellow: #ffd166;
+  --color-bt-teal: #1c92a0;
+  --color-bt-deep-teal: #013034;
+  --color-bt-teal-gray: #5b7a7b;
+  --color-bt-warm-100: #faf7f0;
+  --color-bt-warm-200: #e4d7b6;
+  --color-bt-warm-300: #c5bfa9;
+  --color-bt-warm-400: #bfc2b0;
+  --color-bt-dark-700: #4a5a61;
+  --color-bt-dark-800: #373f42;
+  --color-bt-dark-900: #2c2f31;
+}
+
+:root {
+  --bellavista-orange: #eb9c36;
+  --bellavista-teal: #1c92a0;
+  --bellavista-deep-teal: #013034;
+  --bellavista-teal-gray: #5b7a7b;
+  --bellavista-warm-100: #faf7f0;
+  --bellavista-warm-200: #e4d7b6;
+  --bellavista-dark-900: #2c2f31;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 999px;
+
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-24: 6rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  font-family: 'Open Sans Variable', 'Open Sans Fallback', 'Open Sans', Arial, sans-serif;
+  color: #2c2f31;
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.container {
+  width: min(calc(100% - 2rem), 1280px);
+  margin-inline: auto;
+}
+
+@media (min-width: 768px) {
+  .container {
+    width: min(calc(100% - 4rem), 1280px);
+  }
+}
+
+.section-padding {
+  padding-block: clamp(5rem, 9vw, 9rem);
+}
+
+:focus-visible {
+  outline: 2px solid var(--bellavista-teal);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Eyebrow label */
+.eyebrow {
+  font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* GSAP SplitText */
+.split-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.split-word {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.split-char {
+  display: inline-block;
+}
+
+/* Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bellavista-teal-gray) transparent;
+}
+
+/* Smooth image reveal */
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/*
+  Estado inicial das entradas, só com JavaScript (classe `js` no <html> antes do 1º paint).
+  Sem a classe, ou depois de [data-revealed], o conteúdo fica no fluxo normal.
+*/
+html.js [data-reveal='eyebrow']:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+html.js [data-reveal='heading']:not([data-revealed]) {
+  opacity: 0;
+}
+
+html.js [data-reveal='text']:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+html.js [data-reveal='extras']:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(20px) scale(0.97);
+}
+
+html.js [data-reveal='items']:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 48px)) scale(var(--reveal-scale, 0.96));
+  transform-origin: 50% 90%;
+}
+
+html.js [data-reveal='block']:not([data-revealed]) {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 40px)) scale(var(--reveal-scale, 0.98));
+}
+
+html.js [data-reveal='media']:not([data-revealed]) {
+  opacity: 0;
+  transform: scale(1.06);
+  clip-path: inset(10% 8% 10% 8% round var(--reveal-radius, 12px));
+}
+
+html.js [data-reveal='col']:not([data-revealed]) {
+  opacity: 0;
+  transform: translate3d(var(--reveal-x, -36px), 24px, 0);
+}
+
+html.js [data-reveal='col'][data-reveal-side='end']:not([data-revealed]) {
+  --reveal-x: 36px;
+}
+
+.benefit-card { --reveal-y: 52px; }
+.certs__item { --reveal-y: 40px; --reveal-scale: 0.94; }
+.amenities__card { --reveal-y: 56px; --reveal-scale: 0.95; }
+.floorplans__tab { --reveal-y: 28px; --reveal-scale: 0.97; }
+.location__poi-card { --reveal-y: 32px; --reveal-scale: 0.97; }
+.site-footer__brand,
+.site-footer__col { --reveal-y: 36px; --reveal-scale: 0.98; }
+.site-footer__bottom { --reveal-y: 20px; --reveal-scale: 1; }
+.gallery__rail { --reveal-y: 36px; }
+.location__address { --reveal-y: 24px; }
+.gallery__hero,
+.location__map-wrap,
+.about__media { --reveal-radius: 16px; }
+
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}

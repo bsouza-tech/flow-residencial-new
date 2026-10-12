@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
+import Hero from '../components/sections/Hero';
+import Benefits from '../components/sections/Benefits';
+import FloorPlans from '../components/sections/FloorPlans';
+import Gallery from '../components/sections/Gallery';
+import Amenities from '../components/sections/Amenities';
+import Location from '../components/sections/Location';
+import ConversionCTA from '../components/sections/ConversionCTA';
+import AboutGenesis from '../components/sections/AboutGenesis';
+import Certifications from '../components/sections/Certifications';
+import MetaPixelTracker from '../components/MetaPixelTracker';
+import ConsentBanner from '../components/ui/ConsentBanner';
+
+export const prerender = true;
+---
+
+<BaseLayout>
+  <a class="skip-link" href="#main-content">Ir para o conteúdo principal</a>
+
+  <Header client:load />
+  <MetaPixelTracker client:only="react" />
+  <ConsentBanner client:only="react" />
+
+  <main id="main-content">
+    <Hero client:load />
+    <Benefits client:visible={{ rootMargin: '400px' }} />
+    <FloorPlans client:visible={{ rootMargin: '400px' }} />
+    <Gallery client:visible={{ rootMargin: '400px' }} />
+    <Amenities client:visible={{ rootMargin: '400px' }} />
+    <Location client:visible={{ rootMargin: '400px' }} />
+    <ConversionCTA client:idle />
+    <AboutGenesis client:visible={{ rootMargin: '400px' }} />
+    <Certifications client:visible={{ rootMargin: '400px' }} />
+  </main>
+
+  <Footer client:visible={{ rootMargin: '400px' }} />
+</BaseLayout>
+
+<style is:global>
+  .skip-link {
+    position: fixed;
+    top: -100%;
+    left: 1rem;
+    z-index: 9999;
+    padding: 0.75rem 1.5rem;
+    background: #eb9c36;
+    color: #ffffff;
+    font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
+    font-weight: 700;
+    font-size: 0.875rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: top 0.2s ease;
+  }
+
+  .skip-link:focus {
+    top: 1rem;
+  }
+</style>
