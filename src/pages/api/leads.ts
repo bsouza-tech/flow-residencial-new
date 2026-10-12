@@ -62,7 +62,7 @@ export const POST: APIRoute = async ({ request }) => {
         ${telefone},
         ${EMPREENDIMENTO},
         ${'site'},
-        ${'landing-solar-bellavista'},
+        ${'SIE'},
         false,
         ${'ativo'}
       )
