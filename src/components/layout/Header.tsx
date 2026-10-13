@@ -74,7 +74,11 @@ export default function Header() {
             <ul className="site-header__list">
               {navLinks.map((link) => (
                 <li key={link.href}>
-                  <a className="site-header__link" href={link.href}>
+                  <a
+                    className="site-header__link"
+                    href={link.href}
+                    {...(link.href === '#interesse' ? { 'data-abrir-formulario': '' } : {})}
+                  >
                     {link.label}
                   </a>
                 </li>
@@ -83,7 +87,7 @@ export default function Header() {
           </nav>
 
           <div className="site-header__actions">
-            <a className="site-header__cta" href="#interesse">
+            <a className="site-header__cta" href="#interesse" data-abrir-formulario="">
               Tenho interesse
             </a>
 
@@ -117,7 +121,12 @@ export default function Header() {
             <ul className="site-header__mobile-list">
               {navLinks.map((link, index) => (
                 <li key={link.href} style={{ transitionDelay: menuOpen ? `${80 + index * 40}ms` : '0ms' }}>
-                  <a href={link.href} onClick={closeMenu} tabIndex={menuOpen ? 0 : -1}>
+                  <a
+                    href={link.href}
+                    onClick={closeMenu}
+                    tabIndex={menuOpen ? 0 : -1}
+                    {...(link.href === '#interesse' ? { 'data-abrir-formulario': '' } : {})}
+                  >
                     <span className="site-header__mobile-index">0{index + 1}</span>
                     {link.label}
                   </a>
@@ -129,6 +138,7 @@ export default function Header() {
           <a
             className="site-header__mobile-cta"
             href="#interesse"
+            data-abrir-formulario=""
             onClick={closeMenu}
             tabIndex={menuOpen ? 0 : -1}
           >

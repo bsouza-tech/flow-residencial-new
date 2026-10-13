@@ -217,5 +217,12 @@ const jsonLd = {
   </head>
   <body>
     <slot />
+    <script>
+      import { installFormularioGlobal } from '../scripts/formulario-global';
+
+      if (import.meta.env.PUBLIC_FORMULARIO_GLOBAL === '1') {
+        installFormularioGlobal();
+      }
+    </script>
   </body>
 </html>

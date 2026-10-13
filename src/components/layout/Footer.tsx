@@ -105,7 +105,12 @@ export default function Footer() {
               <ul>
                 {footerLinks.map((link) => (
                   <li key={link.href}>
-                    <a href={link.href}>{link.label}</a>
+                    <a
+                      href={link.href}
+                      {...(link.href === '#interesse' ? { 'data-abrir-formulario': '' } : {})}
+                    >
+                      {link.label}
+                    </a>
                   </li>
                 ))}
               </ul>

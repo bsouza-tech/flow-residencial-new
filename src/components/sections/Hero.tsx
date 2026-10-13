@@ -144,7 +144,7 @@ export default function Hero() {
           </p>
 
           <div className="hero__actions">
-            <a href="#interesse" className="hero__btn hero__btn--primary">
+            <a href="#interesse" className="hero__btn hero__btn--primary" data-abrir-formulario="">
               Quero conhecer
             </a>
             <a href="#plantas" className="hero__btn hero__btn--secondary">

@@ -1,6 +1,6 @@
 import type { BasicLeadPayload } from '../data/leadForm';
 
-function readTracking() {
+export function readTracking() {
   try {
     const t = (window as any).GenesisTracker;
     return t && typeof t.getContext === 'function' ? t.getContext() : null;

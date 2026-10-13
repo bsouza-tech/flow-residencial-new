@@ -227,7 +227,8 @@ export default function ConversionCTA() {
     setPhoneCountryOpen(false);
   };
 
-  const openForm = () => {
+  const openForm = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (event.defaultPrevented) return;
     resetAll();
     setFormOpen(true);
   };
@@ -474,7 +475,7 @@ export default function ConversionCTA() {
             Clique no botão para informar nome, e-mail e telefone e seguir com a pesquisa rápida de perfil e preferências.
           </p>
 
-          <button type="button" className="cta__open" data-reveal="extras" onClick={openForm}>
+          <button type="button" className="cta__open" data-reveal="extras" data-abrir-formulario="" onClick={openForm}>
             Receber condições exclusivas
           </button>
         </div>

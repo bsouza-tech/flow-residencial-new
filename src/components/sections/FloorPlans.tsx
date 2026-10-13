@@ -143,7 +143,9 @@ export default function FloorPlans() {
                 <button
                   type="button"
                   className="floorplans__availability"
-                  onClick={() => {
+                  data-abrir-formulario=""
+                  onClick={(event) => {
+                    if (event.defaultPrevented) return;
                     selectInterest();
                     document.getElementById('interesse')?.scrollIntoView({ behavior: 'smooth' });
                   }}
@@ -230,7 +232,11 @@ export default function FloorPlans() {
               <a
                 href="#interesse"
                 className="floorplans__cta"
-                onClick={selectInterest}
+                data-abrir-formulario=""
+                onClick={(event) => {
+                  if (event.defaultPrevented) return;
+                  selectInterest();
+                }}
               >
                 Tenho interesse nesta planta
               </a>
