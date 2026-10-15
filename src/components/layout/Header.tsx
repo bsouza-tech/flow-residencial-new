@@ -52,6 +52,48 @@ export default function Header() {
 
   const closeMenu = () => setMenuOpen(false);
 
+  const scrollToHash = (href: string) => {
+    const start = () => {
+      const el = document.querySelector(href);
+      const bar = document.querySelector('.site-header__bar');
+      if (!(el instanceof HTMLElement) || !(bar instanceof HTMLElement)) return;
+
+      const align = () => {
+        const currentBar = document.querySelector('.site-header__bar');
+        const scroller = document.scrollingElement;
+        if (!(currentBar instanceof HTMLElement) || !scroller) return;
+        const root = document.documentElement;
+        const previous = root.style.scrollBehavior;
+        root.style.scrollBehavior = 'auto';
+        const top = el.getBoundingClientRect().top + window.scrollY - currentBar.getBoundingClientRect().bottom;
+        scroller.scrollTop = Math.max(0, top);
+        root.style.scrollBehavior = previous;
+      };
+
+      align();
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const currentBar = document.querySelector('.site-header__bar');
+          if (!(currentBar instanceof HTMLElement)) return;
+          const gap = Math.abs(el.getBoundingClientRect().top - currentBar.getBoundingClientRect().bottom);
+          if (gap > 8) align();
+        });
+      });
+    };
+
+    const waitClosed = () => {
+      const header = document.querySelector('.site-header');
+      const closed = !header?.classList.contains('is-open') && document.body.style.overflow !== 'hidden';
+      if (closed) {
+        requestAnimationFrame(() => requestAnimationFrame(start));
+        return;
+      }
+      requestAnimationFrame(waitClosed);
+    };
+
+    requestAnimationFrame(waitClosed);
+  };
+
   return (
     <>
       <header className={`site-header${scrolled ? ' is-scrolled' : ''}${menuOpen ? ' is-open' : ''}`}>
@@ -123,7 +165,15 @@ export default function Header() {
                 <li key={link.href} style={{ transitionDelay: menuOpen ? `${80 + index * 40}ms` : '0ms' }}>
                   <a
                     href={link.href}
-                    onClick={closeMenu}
+                    onClick={(event) => {
+                      if (link.href === '#interesse') {
+                        closeMenu();
+                        return;
+                      }
+                      event.preventDefault();
+                      closeMenu();
+                      scrollToHash(link.href);
+                    }}
                     tabIndex={menuOpen ? 0 : -1}
                     {...(link.href === '#interesse' ? { 'data-abrir-formulario': '' } : {})}
                   >

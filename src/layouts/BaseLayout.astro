@@ -172,9 +172,12 @@ const jsonLd = {
       data-requires-consent="true"
       data-sections="hero,beneficios,plantas,galeria,benfeitorias,localizacao,interesse,sobre"
     ></script>
-    <script is:inline define:vars={{ META_PIXEL_ID }}>
+    <script is:inline define:vars={{ META_PIXEL_ID, PIXEL_ENABLED: import.meta.env.PROD }}>
       (function () {
+        if (!PIXEL_ENABLED) return;
+
         var initialized = false;
+        var pageViewSent = false;
 
         function loadMetaPixel() {
           if (!window.GenesisConsent || window.GenesisConsent.get() !== 'granted') return;
@@ -202,8 +205,9 @@ const jsonLd = {
             fbq('init', META_PIXEL_ID);
           }
 
-          if (typeof fbq === 'function') {
+          if (!pageViewSent && typeof fbq === 'function') {
             fbq('track', 'PageView');
+            pageViewSent = true;
           }
         }
 
@@ -217,6 +221,40 @@ const jsonLd = {
   </head>
   <body>
     <slot />
+    <script is:inline>
+      (function () {
+        var watching = null;
+        var resizeObserver = new ResizeObserver(apply);
+
+        function apply() {
+          var bar = document.querySelector('.site-header__bar');
+          if (!bar) return;
+          var bottom = Math.ceil(bar.getBoundingClientRect().bottom);
+          if (bottom <= 0) return;
+          document.documentElement.style.scrollPaddingTop = bottom + 'px';
+          var hero = document.getElementById('hero');
+          if (hero) hero.style.marginTop = bottom + 'px';
+        }
+
+        function bind() {
+          var bar = document.querySelector('.site-header__bar');
+          if (!bar || bar === watching) return !!bar;
+          if (watching) resizeObserver.unobserve(watching);
+          watching = bar;
+          resizeObserver.observe(bar);
+          apply();
+          return true;
+        }
+
+        if (!bind()) {
+          var timer = setInterval(function () {
+            if (bind()) clearInterval(timer);
+          }, 50);
+        }
+        window.addEventListener('resize', apply);
+        new MutationObserver(bind).observe(document.body, { childList: true, subtree: true });
+      })();
+    </script>
     <script>
       import { installFormularioGlobal } from '../scripts/formulario-global';
 

@@ -39,6 +39,14 @@ function onFormsEvent(event: Event) {
       },
     });
   }
+  if (import.meta.env.PROD && detail.type === 'completed') {
+    trackMeta('CompleteRegistration', {
+      params: {
+        content_name: 'Solar Bellavista',
+        status: true,
+      },
+    });
+  }
 }
 
 function fallbackReason(): string {

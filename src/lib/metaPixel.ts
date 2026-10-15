@@ -41,12 +41,13 @@ export function trackMeta(
   event: 'PageView' | 'ViewContent' | 'Lead' | 'CompleteRegistration',
   options?: { once?: boolean; params?: Record<string, unknown> }
 ) {
-  if (typeof window === 'undefined') return;
-  if (!hasGrantedConsent()) return;
-  if (typeof window.fbq !== 'function') return;
+  if (!import.meta.env.PROD) return false;
+  if (typeof window === 'undefined') return false;
+  if (!hasGrantedConsent()) return false;
+  if (typeof window.fbq !== 'function') return false;
 
   const once = options?.once ?? true;
-  if (once && firedEvents.has(event)) return;
+  if (once && firedEvents.has(event)) return true;
 
   try {
     if (options?.params) {
@@ -55,8 +56,9 @@ export function trackMeta(
       window.fbq('track', event);
     }
   } catch {
-    return;
+    return false;
   }
 
   if (once) firedEvents.add(event);
+  return true;
 }
