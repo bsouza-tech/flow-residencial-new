@@ -232,8 +232,6 @@ const jsonLd = {
           var bottom = Math.ceil(bar.getBoundingClientRect().bottom);
           if (bottom <= 0) return;
           document.documentElement.style.scrollPaddingTop = bottom + 'px';
-          var hero = document.getElementById('hero');
-          if (hero) hero.style.marginTop = bottom + 'px';
         }
 
         function bind() {

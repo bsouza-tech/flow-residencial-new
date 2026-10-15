@@ -52,6 +52,21 @@ export default function Header() {
 
   const closeMenu = () => setMenuOpen(false);
 
+  const scrollToTop = () => {
+    history.pushState(null, '', '#hero');
+    const start = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    const waitClosed = () => {
+      const header = document.querySelector('.site-header');
+      const closed = !header?.classList.contains('is-open') && document.body.style.overflow !== 'hidden';
+      if (closed) {
+        requestAnimationFrame(() => requestAnimationFrame(start));
+        return;
+      }
+      requestAnimationFrame(waitClosed);
+    };
+    requestAnimationFrame(waitClosed);
+  };
+
   const scrollToHash = (href: string) => {
     const start = () => {
       const el = document.querySelector(href);
@@ -98,7 +113,16 @@ export default function Header() {
     <>
       <header className={`site-header${scrolled ? ' is-scrolled' : ''}${menuOpen ? ' is-open' : ''}`}>
         <div className="site-header__bar">
-          <a href="#hero" className="site-header__brand" aria-label="Solar Bellavista — início" onClick={closeMenu}>
+          <a
+            href="#hero"
+            className="site-header__brand"
+            aria-label="Solar Bellavista — início"
+            onClick={(event) => {
+              event.preventDefault();
+              closeMenu();
+              scrollToTop();
+            }}
+          >
             <Picture
               name="solar-bellavista"
               alt="Solar Bellavista"
@@ -119,6 +143,11 @@ export default function Header() {
                   <a
                     className="site-header__link"
                     href={link.href}
+                    onClick={(event) => {
+                      if (link.href !== '#hero') return;
+                      event.preventDefault();
+                      scrollToTop();
+                    }}
                     {...(link.href === '#interesse' ? { 'data-abrir-formulario': '' } : {})}
                   >
                     {link.label}
@@ -172,6 +201,10 @@ export default function Header() {
                       }
                       event.preventDefault();
                       closeMenu();
+                      if (link.href === '#hero') {
+                        scrollToTop();
+                        return;
+                      }
                       scrollToHash(link.href);
                     }}
                     tabIndex={menuOpen ? 0 : -1}
