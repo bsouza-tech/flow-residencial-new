@@ -1,4 +1,4 @@
-# Deploy na VPS — Solar Bellavista
+# Deploy na VPS — Flow Residencial
 
 O processo abaixo só prepara e sobe o servidor Node. Não altera o nginx e não aponta o domínio.
 
@@ -67,7 +67,7 @@ O servidor Node entrega o que está em `dist/client/` (cópia de `public/` mais 
 | `/favicon.ico`, `/favicon-32.png` | Não |
 | `/apple-touch-icon.png` | Não |
 | `/icon-192.png`, `/icon-512.png` | Não |
-| `/og-solar-bellavista.jpg` | Não |
+| `/og-flow-residencial.jpg` | Não |
 | `/robots.txt` | Não |
 | `/sitemap.xml` | Não |
 | `/consent.js` | Não |
@@ -83,13 +83,13 @@ Não foram apagados. Podem sair depois, se não forem mais usados:
 
 - `scripts/optimize-images.mjs` — gera `public/img/` a partir do WordPress; não roda no servidor.
 - `.env` e `.env.local` — segredos locais. Já estão no `.gitignore`.
-- `public/solar-bellavista.png` — está em `public/`, mas nenhum código em `src/` referencia esse arquivo.
+- `public/flow-residencial.png` — está em `public/`, mas nenhum código em `src/` referencia esse arquivo.
 
 `dist/`, `node_modules/` e `.astro/` são gerados no servidor. `package-lock.json` está no `.gitignore` porque o gerenciador é o pnpm.
 
 ## Pontos de atenção
 
-- O domínio canônico no código e em `astro.config.mjs` (`site`) é `https://solarbellavista.com.br`. O nginx só deve passar a apontar para esta porta depois que este servidor estiver no ar ao lado do site antigo.
+- O domínio canônico no código e em `astro.config.mjs` (`site`) é `https://flowresidencial.com.br`. O nginx só deve passar a apontar para esta porta depois que este servidor estiver no ar ao lado do site antigo.
 - O banner de cookies não vem no HTML da primeira resposta. `ConsentBanner` está com `client:only="react"` e só aparece depois do JavaScript.
 - Sem `DATABASE_URL`, as rotas de lead existem e respondem erro de validação ou erro interno. Não retornam 404 de rota ausente.
 - `pnpm start` falha se o arquivo `.env` não existir, por causa de `--env-file=.env`.

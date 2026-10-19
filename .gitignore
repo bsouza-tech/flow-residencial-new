@@ -11,3 +11,5 @@ logs/
 *.log
 .tmp-*
 package-lock.json
+.claude/
+NEON_SQL_USADO.md

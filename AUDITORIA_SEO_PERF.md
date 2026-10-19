@@ -1,7 +1,7 @@
-# Auditoria SEO e desempenho — Solar Bellavista
+# Auditoria SEO e desempenho — Flow Residencial
 
 Documento factual. Medições em **build de produção** (`astro build` + `node ./dist/server/entry.mjs`) em `http://127.0.0.1:4999`, **sem** `DATABASE_URL` e **sem** `--env-file=.env`.  
-Artefatos temporários: `C:\Users\bs902\AppData\Local\Temp\solar-bellavista-audit-20261002-162620\`.  
+Artefatos temporários: `C:\Users\bs902\AppData\Local\Temp\flow-residencial-audit-20261002-162620\`.  
 Lighthouse CLI: `npx lighthouse@12.8.2` + Chrome `C:\Program Files\Google\Chrome\Application\chrome.exe`.
 
 ---
@@ -44,13 +44,13 @@ O LCP não é a imagem da fachada: é texto React que só existe depois da hidra
 | 315,1 | Image | `…/quarto.jpg` |
 | 260,5 | Image | `…/sala.jpg` |
 | 233,8 | Script | `/_astro/ConversionCTA.LYExT5te.js` |
-| 233,3 | Image | `…/quarto-infantil.jpg` |
-| 207,8 | Image | `…/Ponta.jpeg` |
+| 233,3 | Image | `…/quarto-2.jpg` |
+| 207,8 | Image | `…/planta.jpeg` |
 | 180,0 | Script | `/_astro/client.DI8FUbLA.js` |
 | 173,5 | Image | `…/cozinha.jpg` |
 | 165,2 | Script | `/_astro/Location.DZ5tntLt.js` |
 | 117,5 | Script | `/_astro/gsap.Q46aAQHs.js` |
-| 112,2 | Image | `/solar-bellavista.png` |
+| 112,2 | Image | `/flow-residencial.png` |
 | 42,0 | Font | Open Sans (gstatic) |
 | 34,7 | Font | Montserrat (gstatic) |
 
@@ -63,19 +63,19 @@ O LCP não é a imagem da fachada: é texto React que só existe depois da hidra
 | URL | Total KB | Wasted KB |
 |--|--:|--:|
 | varanda.jpg | 495,5 | 165,5 |
-| quadra-poliesportiva.jpg | 496,7 | 155,7 |
+| quadra-2.jpg | 496,7 | 155,7 |
 | fachada-dois.jpg | 485,5 | 148,4 |
 | area-gourmet.jpg | 456,7 | 144,6 |
 | playground.jpg | 458,9 | 144,3 |
 | fachada.jpg | 412,5 | 138,3 |
 | … | … | … |
-| solar-bellavista.png (mobile) | 112 | 65,3 |
+| flow-residencial.png (mobile) | 112 | 65,3 |
 
 **`uses-responsive-images`** — arquivos muito maiores que o display (desktop, wasted KB):
 
 | URL | Wasted KB | Seletor |
 |--|--:|--|
-| quadra-poliesportiva.jpg | 481,9 | `.amenities__card img` |
+| quadra-2.jpg | 481,9 | `.amenities__card img` |
 | playground.jpg | 445,2 | `.amenities__card img` |
 | area-gourmet.jpg | 443,0 | `.amenities__card img` |
 | fachada-dois.jpg | 420,8 | `.benefits-top img` |
@@ -83,7 +83,7 @@ O LCP não é a imagem da fachada: é texto React que só existe depois da hidra
 
 **`unsized-images`** (1):
 
-- `div.floorplans__visual … > img` → `Ponta.jpeg` sem `width`/`height` no markup.
+- `div.floorplans__visual … > img` → `planta.jpeg` sem `width`/`height` no markup.
 
 **`uses-optimized-images`**: presente no relatório bruto; itens detalhados sobrepostos a modern/responsive — ver JSON completo.
 
@@ -108,8 +108,8 @@ O LCP não é a imagem da fachada: é texto React que só existe depois da hidra
 
 | Origem | cacheLifetimeMs (LH) | Nota |
 |--|--:|--|
-| `wp.solarbellavista.com.br` imagens | 604800000 (7 dias) | OK relativo |
-| Assets locais Node (`/_astro/*`, `/solar-bellavista.png`) | auditados como curtos / `max-age=0` no header HTTP | ver §9 |
+| `wp.flowresidencial.com.br` imagens | 604800000 (7 dias) | OK relativo |
+| Assets locais Node (`/_astro/*`, `/flow-residencial.png`) | auditados como curtos / `max-age=0` no header HTTP | ver §9 |
 
 ### Forced reflow
 
@@ -144,7 +144,7 @@ Auditoria `third-party-cookies`: score **1**, **items vazios** nesta execução 
 1. **`aria-allowed-attr`** — `button.location__poi-card` com `role="listitem"` e `aria-pressed="false"`: `aria-pressed` não permitido nesse role.  
 2. **`aria-allowed-role`** — mesmo botão: `role="listitem"` não permitido em `<button>`.  
 3. **`color-contrast`**  
-   - Link do consent banner: `#1c92a0` sobre `#ffffff`, razão **3,7:1** (exige **4,5:1**).  
+   - Link do consent banner: o azul do modelo sobre branco, razão **3,7:1** (exige **4,5:1**).  
    - Texto do painel de POIs: `#688b8d` sobre `#ffffff`, razão **3,7:1** (exige **4,5:1**).  
 4. **`label-content-name-mismatch`** (desktop) — `a.hero__scroll` com `aria-label="Ir para a próxima seção"` cujo texto visível não está no nome acessível.
 
@@ -185,10 +185,10 @@ Soma dos arquivos baixados/medidos: **7631 KB (~7,5 MB)** em **24** assets (WP +
 | fachada-dois.jpg | jpg | 1680×1263 | 485,5 | Benefits + AboutGenesis `<img>` | sem | lazy | — | async | sim |
 | galeria (5 JPG) | jpg | 1680×1263 | 173–496 | Gallery | sem | eager | high no 1º | async | sim (hero); vazio no strip |
 | amenidades (8 JPG) | jpg | 1680×1263 | 278–497 | Amenities | sem | lazy | — | async | sim |
-| Ponta.jpeg / PCD / Meio-Garden | jpeg | (medido nos downloads) | ~208+ | FloorPlans | sem (LH unsized) | lazy | — | async | sim |
+| plantas (3 arquivos) | jpeg | (medido nos downloads) | ~208+ | FloorPlans | sem (LH unsized) | lazy | — | async | sim |
 | certificações PNG | png | 1080×1080 | 474–514 | Certifications | sem | lazy | — | async | sim |
 | logo Genesis | png | (footer) | medido no inventário | Footer | 220×56 | lazy | — | async | sim |
-| `/solar-bellavista.png` | png | 1000×1000 | 112 | Header | 180×72 | — | — | — | sim |
+| `/flow-residencial.png` | png | 1000×1000 | 112 | Header | 180×72 | — | — | — | sim |
 
 Exibição CSS: hero full-bleed; galeria/amenities tipicamente bem menores que 1680px de largura (LH aponta dezenas/centenas de KB desperdiçados).
 
@@ -230,7 +230,7 @@ Imports GSAP/Leaflet no topo dos módulos das islands impedem SSR útil dessas t
 
 | Item | Valor |
 |--|--|
-| `<title>` | Solar Bellavista \| Teresópolis |
+| `<title>` | Flow Residencial \| Teresópolis |
 | `<h1>` / `<h2>` | **0** (outline vazio) |
 | Texto “visível” aproximado | **59** caracteres: título + skip-link |
 | `astro-island` | 31 marcadores |
@@ -308,7 +308,7 @@ Sim, nesta arquitetura: todas as islands usam `client:only="react"` e o HTML ref
 
 | Campo | Valor |
 |--|--|
-| `<title>` | Solar Bellavista \| Teresópolis (**30** chars) |
+| `<title>` | Flow Residencial \| Teresópolis (**30** chars) |
 | meta description | 126 chars (presente) |
 | canonical | **não encontrado** |
 | og:title / og:description | presentes |
@@ -333,7 +333,7 @@ Nota SEO Lighthouse 100 ≠ HTML indexável completo: o LH executa JS.
 
 ## 9. Headers do servidor Node
 
-Observado em todos os assets locais testados (`/`, `/_astro/*.js`, `/_astro/*.css`, `/solar-bellavista.png`, `/consent.js`):
+Observado em todos os assets locais testados (`/`, `/_astro/*.js`, `/_astro/*.css`, `/flow-residencial.png`, `/consent.js`):
 
 ```
 Cache-Control: public, max-age=0

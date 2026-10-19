@@ -1,4 +1,4 @@
-# PROJECT_STRUCTURE — Solar Bellavista
+# PROJECT_STRUCTURE — Flow Residencial
 
 Documento factual da estrutura atual do repositório, para planejamento de tracking (pageviews, UTM, leads) e backend em Supabase Edge Functions.
 
@@ -124,7 +124,7 @@ src/
 
 Outras pastas na raiz relevantes:
 
-- `public/` — assets estáticos (`solar-bellavista.png`)
+- `public/` — assets estáticos (`flow-residencial.png`)
 - `scripts/generate-cities.mjs` — gera `brazilianCities.json` a partir da API IBGE
 
 ### Rotas / páginas
@@ -155,7 +155,7 @@ Outros layouts: **não encontrado**.
 ---
 import '../styles/global.css';
 import { META_PIXEL_ID } from '../lib/metaPixel';
-// props: title, description (defaults Solar Bellavista)
+// props: title, description (defaults Flow Residencial)
 ---
 
 <!doctype html>
@@ -227,7 +227,7 @@ Consequência para tracking: pageview de rota Astro ocorre tipicamente **uma vez
 
 | API | Uso |
 | --- | --- |
-| `sessionStorage` | `FloorPlans.tsx`: `sessionStorage.setItem('bellavista-selected-plan', activePlan.id)` ao clicar interesse na planta. **Leitura (`getItem`) não encontrada** em nenhum outro arquivo. |
+| `sessionStorage` | `FloorPlans.tsx`: `sessionStorage.setItem('flow-selected-plan', activePlan.id)` ao clicar interesse na planta. **Leitura (`getItem`) não encontrada** em nenhum outro arquivo. |
 | `localStorage` | **não encontrado** |
 | Cookies (`document.cookie` / Set-Cookie app) | **não encontrado** no código da aplicação |
 
@@ -235,7 +235,7 @@ Consequência para tracking: pageview de rota Astro ocorre tipicamente **uma vez
 
 **não encontrado** no frontend ou nas API routes. Nenhum código lê query string de UTM/`gclid`/`fbclid` nem grava referrer.
 
-Observação de schema (via inspeção prévia do Neon GêLeads, não via migration no repo): a tabela `leads` possui colunas `utm_first_*` / `utm_last_*`, mas o `INSERT` atual em `src/pages/api/leads.ts` **não** as preenche — só `origem_tipo = 'site'` e `origem_detalhe = 'landing-solar-bellavista'`.
+Observação de schema (via inspeção prévia do Neon GêLeads, não via migration no repo): a tabela `leads` possui colunas `utm_first_*` / `utm_last_*`, mas o `INSERT` atual em `src/pages/api/leads.ts` **não** as preenche — só `origem_tipo = 'site'` e `origem_detalhe = 'landing-flow-residencial'`.
 
 Código completo de captura UTM/gclid/fbclid/referrer: **não encontrado**.
 
@@ -333,7 +333,7 @@ const id = await createLead({
 });
 trackMeta('Lead', {
   params: {
-    content_name: 'Solar Bellavista',
+    content_name: 'Flow Residencial',
     content_category: 'formulario_basico',
   },
 });
@@ -349,7 +349,7 @@ setView('quase-la');
 
 ### Server: `POST /api/leads` (resumo)
 
-Insere em Neon `leads`: `nome`, `email`, `telefone` (E.164), `empreendimento_interesse` (`EMPREENDIMENTO`), `origem_tipo='site'`, `origem_detalhe='landing-solar-bellavista'`, `whatsapp_clicked=false`, `status='ativo'`. Retorna `{ id }`.
+Insere em Neon `leads`: `nome`, `email`, `telefone` (E.164), `empreendimento_interesse` (`EMPREENDIMENTO`), `origem_tipo='site'`, `origem_detalhe='landing-flow-residencial'`, `whatsapp_clicked=false`, `status='ativo'`. Retorna `{ id }`.
 
 ### Anti-spam
 
@@ -366,7 +366,7 @@ Há validação de campos no server e UUID no PATCH.
 
 | CTA | Onde | Evento |
 | --- | --- | --- |
-| WhatsApp (quase-lá) | `ConversionCTA.tsx` → `https://link.genesisempreendimentos.com.br/solar-bellavista-whatsapp` | `markWhatsappClicked(leadId)` (coluna DB); **sem** evento Meta dedicado |
+| WhatsApp (quase-lá) | `ConversionCTA.tsx` → `https://link.genesisempreendimentos.com.br/flow-whatsapp-lp` | `markWhatsappClicked(leadId)` (coluna DB); **sem** evento Meta dedicado |
 | “Tenho interesse” / âncoras `#interesse` | Header, Hero, FloorPlans, Footer | Scroll na página; FloorPlans também grava `sessionStorage` da planta |
 | Telefone | Footer `tel:+552126421203` | Sem tracking no código |
 | E-mail | Footer `mailto:comercial@genesisempreendimentos.com.br` | Sem tracking no código |
@@ -462,7 +462,7 @@ Nenhum componente de seção em `.astro` além do layout e da página.
 | JSON local | `data/brazilianCities.json` (municípios IBGE) |
 | Content collections Astro | **não encontrado** (sem `src/content/`) |
 | CMS | **não encontrado** |
-| API externa de conteúdo | IBGE só no script de geração offline; runtime do form usa JSON local. Logo Gênesis no Footer aponta para URL WordPress `wp.solarbellavista.com.br`. Mapa: tiles Leaflet (terceiro). |
+| API externa de conteúdo | IBGE só no script de geração offline; runtime do form usa JSON local. Logo Gênesis no Footer aponta para URL WordPress `wp.flowresidencial.com.br`. Mapa: tiles Leaflet (terceiro). |
 
 ---
 
@@ -470,12 +470,12 @@ Nenhum componente de seção em `.astro` além do layout e da página.
 
 | Item | Valor no código |
 | --- | --- |
-| Nome do empreendimento | `Solar Bellavista` — constante `EMPREENDIMENTO` em `src/data/leadForm.ts` |
-| Package / repo name | `solar-bellavista` (`package.json`) |
-| Origem lead (detalhe) | `landing-solar-bellavista` (`POST /api/leads`) |
+| Nome do empreendimento | `Flow Residencial` — constante `EMPREENDIMENTO` em `src/data/leadForm.ts` |
+| Package / repo name | `flow-residencial` (`package.json`) |
+| Origem lead (detalhe) | `landing-flow-residencial` (`POST /api/leads`) |
 | Origem lead (tipo) | `site` |
 | Pixel Meta | constante `META_PIXEL_ID` em `src/lib/metaPixel.ts` |
-| Domínio de produção | **não encontrado** como config de site; indícios: asset `https://wp.solarbellavista.com.br/...` (Footer); WhatsApp short-link `link.genesisempreendimentos.com.br/solar-bellavista-whatsapp` |
+| Domínio de produção | **não encontrado** como config de site; indícios: asset `https://wp.flowresidencial.com.br/...` (Footer); WhatsApp short-link `link.genesisempreendimentos.com.br/flow-whatsapp-lp` |
 | Domínios preview/staging | **não encontrado** |
 | Site institucional Gênesis | `https://genesisempreendimentos.com.br` |
 
@@ -484,7 +484,7 @@ Nenhum componente de seção em `.astro` além do layout e da página.
 Parcialmente genérico (estrutura Astro/React/Neon), mas **específico deste site** em muitos pontos:
 
 - Textos, imagens e dados em `src/data/*`
-- `EMPREENDIMENTO`, `origem_detalhe`, Pixel ID, logo, WhatsApp slug, sessionStorage key `bellavista-selected-plan`
+- `EMPREENDIMENTO`, `origem_detalhe`, Pixel ID, logo, WhatsApp slug, sessionStorage key `flow-selected-plan`
 - Conteúdo de seções e SEO defaults no `BaseLayout`
 
 Não há sistema de multi-tenant / env `SITE_SLUG` / config por empreendimento.
@@ -517,19 +517,19 @@ Não há sistema de multi-tenant / env `SITE_SLUG` / config por empreendimento.
 - `output: 'server'` + homepage `prerender = true` + APIs dinâmicas: modelo híbrido de fato, sem `output: 'hybrid'` explícito (Astro 7 `server` + prerender por rota).
 - Adapter Node em **devDependencies** (funciona no build local; atenção em installs de produção `pnpm install --prod`).
 - README fala “Neon GêLeads”; código não referencia Supabase.
-- `bellavista-selected-plan` gravado e não consumido.
+- `flow-selected-plan` gravado e não consumido.
 - Sem captura de UTM apesar de colunas no schema compartilhado de leads.
 
 ---
 
 ## Perguntas em aberto
 
-1. Qual é o **domínio de produção** canônico da landing (além do indício `wp.solarbellavista.com.br` / short-link Gênesis)?
+1. Qual é o **domínio de produção** canônico da landing (além do indício `wp.flowresidencial.com.br` / short-link Gênesis)?
 2. Onde o site será / é **deployado** (VPS Node, Docker, painel interno Gênesis, etc.)? Não há arquivo de plataforma no repo.
 3. O schema completo da tabela `leads` (migrations versionadas) **não está neste repositório** — apenas uso via SQL embutido. Onde vive a fonte da verdade do schema?
 4. Há pipeline/CRM que já lê `utm_*` / `whatsapp_clicked` / `geleads_id` fora deste site?
 5. Consentimento LGPD será exigido antes do Pixel/outros tags? (hoje não há banner).
-6. A chave `sessionStorage` `bellavista-selected-plan` deveria alimentar o lead ou foi abandonada?
+6. A chave `sessionStorage` `flow-selected-plan` deveria alimentar o lead ou foi abandonada?
 7. Escopo do tracking futuro: só Meta + UTM no Neon, ou também GA4/GTM/Supabase analytics?
 8. Supabase Edge Functions substituirão as rotas `src/pages/api/leads*`, coexistirão, ou só farão ingestão de pageview/UTM?
 9. Existem ambientes staging/preview com Pixel/DB separados? **não encontrado** no código.

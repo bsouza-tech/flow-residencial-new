@@ -1,6 +1,6 @@
-# solar-bellavista
+# flow-residencial
 
-Astro + React islands + Tailwind CSS v4 — landing do Solar Bellavista.
+Astro + React islands + Tailwind CSS v4 — landing do Flow Residencial.
 
 Ver [README.md](./README.md) para setup e estrutura.
 

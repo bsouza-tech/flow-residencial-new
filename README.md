@@ -1,6 +1,6 @@
-# Solar Bellavista
+# Flow Residencial
 
-Landing page institucional do empreendimento Solar Bellavista.
+Landing page institucional do empreendimento Flow Residencial.
 
 Stack: **Astro 7** + **React 19** (islands) + **Tailwind CSS v4** + **Neon Postgres** (leads).
 
@@ -34,7 +34,7 @@ Abre em `http://localhost:8443` (ou a porta definida em `$PORT`).
 
 ## Leads (Neon)
 
-Tabela: `leads` (projeto GêLeads), com `empreendimento_interesse = 'Solar Bellavista'`.
+Tabela: `leads` (projeto GêLeads), com `empreendimento_interesse = 'Flow Residencial'`.
 
 - `POST /api/leads` — cadastro básico (nome, e-mail, telefone)
 - `PATCH /api/leads/:id` — salva uma etapa do wizard (`step` 1–8) ou marca `whatsapp_clicked`
