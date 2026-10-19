@@ -5,6 +5,8 @@ import { saveLeadTracking } from '../../lib/leadTracking';
 
 export const prerender = false;
 
+const ORIGEM_DETALHE = 'SIE';
+
 /** Aceita E.164 completo (+DDI + número nacional). */
 function normalizePhone(value: unknown) {
   if (typeof value !== 'string') return '';
@@ -62,7 +64,7 @@ export const POST: APIRoute = async ({ request }) => {
         ${telefone},
         ${EMPREENDIMENTO},
         ${'site'},
-        ${'SIE'},
+        ${ORIGEM_DETALHE},
         false,
         ${'ativo'}
       )
