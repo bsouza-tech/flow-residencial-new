@@ -5,12 +5,12 @@ import Picture from '../ui/Picture';
 
 const navLinks = [
   { label: 'Início', href: '#hero' },
-  { label: 'Benefícios', href: '#beneficios' },
+  { label: 'Destaques', href: '#beneficios' },
   { label: 'Plantas', href: '#plantas' },
   { label: 'Galeria', href: '#galeria' },
   { label: 'Lazer', href: '#benfeitorias' },
   { label: 'Localização', href: '#localizacao' },
-  { label: 'Formulário', href: '#interesse' },
+  { label: 'Receber condições', href: '#interesse' },
   { label: 'Sobre', href: '#sobre' },
 ];
 
@@ -41,10 +41,14 @@ export default function Header() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && menuOpen) {
-        setMenuOpen(false);
-        btnRef.current?.focus();
-      }
+      if (e.key !== 'Escape' || !menuOpen) return;
+      const widgetAberto = [...document.querySelectorAll('div')].some((node) => {
+        const overlay = node.shadowRoot?.querySelector('.overlay');
+        return Boolean(overlay && !overlay.hidden);
+      });
+      if (widgetAberto) return;
+      setMenuOpen(false);
+      btnRef.current?.focus();
     };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
@@ -116,7 +120,7 @@ export default function Header() {
           <a
             href="#hero"
             className="site-header__brand"
-            aria-label="Solar Bellavista — início"
+            aria-label="Flow Residencial — início"
             onClick={(event) => {
               event.preventDefault();
               closeMenu();
@@ -124,8 +128,8 @@ export default function Header() {
             }}
           >
             <Picture
-              name="solar-bellavista"
-              alt="Solar Bellavista"
+              name="flow-logo"
+              alt="Flow Residencial"
               className="site-header__logo"
               sizes="200px"
               width={180}
@@ -159,7 +163,7 @@ export default function Header() {
 
           <div className="site-header__actions">
             <a className="site-header__cta" href="#interesse" data-abrir-formulario="">
-              Tenho interesse
+              Receber condições
             </a>
 
             <button
@@ -196,7 +200,7 @@ export default function Header() {
                     href={link.href}
                     onClick={(event) => {
                       if (link.href === '#interesse') {
-                        closeMenu();
+                        if (!event.defaultPrevented) closeMenu();
                         return;
                       }
                       event.preventDefault();
@@ -222,10 +226,12 @@ export default function Header() {
             className="site-header__mobile-cta"
             href="#interesse"
             data-abrir-formulario=""
-            onClick={closeMenu}
+            onClick={(event) => {
+              if (!event.defaultPrevented) closeMenu();
+            }}
             tabIndex={menuOpen ? 0 : -1}
           >
-            Tenho interesse
+            Receber condições
           </a>
         </div>
       </div>
@@ -251,10 +257,10 @@ export default function Header() {
           gap: 0.85rem;
           min-height: 4.1rem;
           padding: 0.45rem 0.55rem 0.45rem 0.95rem;
-          border-radius: 999px;
-          background: rgba(1, 48, 52, 0.78);
-          border: 1px solid rgba(255, 255, 255, 0.18);
-          box-shadow: 0 10px 28px rgba(1, 48, 52, 0.18);
+          border-radius: var(--raio-botao);
+          background: var(--cor-fundo);
+          border: 1px solid var(--cor-borda);
+          box-shadow: var(--sombra-botao);
           transition:
             background 0.3s ease,
             box-shadow 0.3s ease,
@@ -262,15 +268,15 @@ export default function Header() {
         }
 
         .site-header.is-scrolled .site-header__bar {
-          background: rgba(255, 255, 255, 0.96);
-          border-color: rgba(1, 48, 52, 0.08);
-          box-shadow: 0 12px 30px rgba(1, 48, 52, 0.12);
+          background: var(--cor-fundo);
+          border-color: var(--cor-borda);
+          box-shadow: var(--sombra-botao);
         }
 
         .site-header.is-open .site-header__bar {
-          background: rgba(255, 255, 255, 0.98);
-          border-color: rgba(1, 48, 52, 0.08);
-          box-shadow: 0 12px 30px rgba(1, 48, 52, 0.12);
+          background: var(--cor-fundo);
+          border-color: var(--cor-borda);
+          box-shadow: var(--sombra-botao);
         }
 
         .site-header__brand {
@@ -300,7 +306,7 @@ export default function Header() {
         }
 
         .site-header:not(.is-scrolled):not(.is-open) .site-header__logo {
-          mix-blend-mode: screen;
+          mix-blend-mode: normal;
         }
 
         .site-header.is-scrolled .site-header__logo,
@@ -333,14 +339,13 @@ export default function Header() {
           font-size: 0.84rem;
           letter-spacing: 0.02em;
           text-decoration: none;
-          color: #ffffff;
-          text-shadow: 0 1px 2px rgba(1, 48, 52, 0.25);
-          transition: color 0.2s ease;
+          color: var(--cor-texto);
+          text-shadow: 0 1px 2px color-mix(in srgb, var(--cor-fundo-profundo) 25%, transparent);
         }
 
         .site-header.is-scrolled .site-header__link,
         .site-header.is-open .site-header__link {
-          color: #2c2f31;
+          color: var(--cor-texto);
           text-shadow: none;
         }
 
@@ -352,7 +357,10 @@ export default function Header() {
           bottom: 0.24rem;
           height: 2px;
           border-radius: 999px;
-          background: #eb9c36;
+          background-color: var(--cor-realce);
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          animation: 11s infinite flow-shift-x;
           transform: scaleX(0);
           transform-origin: left center;
           transition: transform 0.25s ease;
@@ -360,19 +368,10 @@ export default function Header() {
 
         .site-header.is-scrolled .site-header__link::after,
         .site-header.is-open .site-header__link::after {
-          background: #1c92a0;
-        }
-
-        .site-header__link:hover,
-        .site-header__link:focus-visible {
-          color: #ffd166;
-        }
-
-        .site-header.is-scrolled .site-header__link:hover,
-        .site-header.is-scrolled .site-header__link:focus-visible,
-        .site-header.is-open .site-header__link:hover,
-        .site-header.is-open .site-header__link:focus-visible {
-          color: #1c92a0;
+          background-color: var(--cor-realce);
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          animation: 11s infinite flow-shift-x;
         }
 
         .site-header__link:hover::after,
@@ -393,24 +392,25 @@ export default function Header() {
           justify-content: center;
           min-height: 42px;
           padding: 0.6rem 1.25rem;
-          border-radius: 999px;
+          border-radius: var(--raio-botao);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 700;
           font-size: 0.8rem;
           letter-spacing: 0.02em;
           text-decoration: none;
-          color: #013034;
-          background: #eb9c36;
-          box-shadow: 0 8px 18px rgba(235, 156, 54, 0.32);
-          transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+          color: var(--cor-texto);
+          background-image: var(--gradiente-botao);
+          background-size: 240% 100%;
+          animation: 9s infinite flow-shift-x;
+          box-shadow: var(--sombra-botao);
+          transition: transform 0.2s ease, filter 0.2s ease;
         }
 
         .site-header__cta:hover,
         .site-header__cta:focus-visible {
-          background: #d88928;
-          transform: translateY(-1px);
-          box-shadow: 0 10px 22px rgba(235, 156, 54, 0.38);
-          color: #013034;
+          filter: brightness(1.05);
+          transform: translateY(-0.25rem);
+          color: var(--cor-texto);
         }
 
         .site-header__toggle {
@@ -419,10 +419,10 @@ export default function Header() {
           justify-content: center;
           width: 42px;
           height: 42px;
-          border: 1px solid rgba(255, 255, 255, 0.35);
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.14);
-          color: #ffffff;
+          border: 1px solid var(--cor-borda);
+          border-radius: var(--raio-botao);
+          background: var(--cor-superficie);
+          color: var(--cor-texto);
           cursor: pointer;
           position: relative;
           z-index: 2;
@@ -431,9 +431,9 @@ export default function Header() {
 
         .site-header.is-scrolled .site-header__toggle,
         .site-header.is-open .site-header__toggle {
-          border-color: rgba(1, 48, 52, 0.1);
-          background: rgba(1, 48, 52, 0.04);
-          color: #013034;
+          border-color: var(--cor-borda);
+          background: var(--cor-superficie);
+          color: var(--cor-texto);
         }
 
         .site-header__toggle-icon {
@@ -446,7 +446,7 @@ export default function Header() {
           display: block;
           height: 1.5px;
           width: 100%;
-          border-radius: 999px;
+          border-radius: var(--raio-botao);
           background: currentColor;
           transition: transform 0.25s ease, opacity 0.25s ease;
           transform-origin: center;
@@ -468,9 +468,7 @@ export default function Header() {
           position: fixed;
           inset: 0;
           z-index: 49;
-          background:
-            radial-gradient(80% 60% at 100% 0%, rgba(235, 156, 54, 0.18), transparent 55%),
-            #013034;
+          background: var(--cor-fundo);
           display: flex;
           opacity: 0;
           visibility: hidden;
@@ -517,24 +515,24 @@ export default function Header() {
           align-items: baseline;
           gap: 1rem;
           padding: 0.95rem 0.25rem;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          border-bottom: 1px solid color-mix(in srgb, var(--cor-texto) 10%, transparent);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 700;
           font-size: clamp(1.35rem, 5vw, 1.75rem);
-          color: #ffffff;
+          color: var(--cor-texto);
           text-decoration: none;
-        }
-
-        .site-header__mobile-list a:hover,
-        .site-header__mobile-list a:focus-visible {
-          color: #eb9c36;
         }
 
         .site-header__mobile-index {
           font-size: 0.7rem;
           font-weight: 600;
           letter-spacing: 0.12em;
-          color: #ffd166;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
         }
 
         .site-header__mobile-cta {
@@ -543,12 +541,15 @@ export default function Header() {
           justify-content: center;
           min-height: 52px;
           padding: 0.9rem 1.5rem;
-          border-radius: 999px;
+          border-radius: var(--raio-botao);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 700;
           font-size: 0.95rem;
-          color: #013034;
-          background: #eb9c36;
+          color: var(--cor-texto);
+          background-image: var(--gradiente-botao);
+          background-size: 240% 100%;
+          animation: 9s infinite flow-shift-x;
+          box-shadow: var(--sombra-botao);
           text-decoration: none;
         }
 

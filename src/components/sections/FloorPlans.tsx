@@ -6,6 +6,17 @@ import { useSectionMotion } from '../../lib/useSectionMotion';
 import { floorPlans } from '../../data/floorPlans';
 import Picture from '../ui/Picture';
 
+function quartos(n: number) {
+  return n === 1 ? '1 quarto' : `${n} quartos`;
+}
+
+function suites(n: number) {
+  return n === 1 ? '1 suíte' : `${n} suítes`;
+}
+
+function banheiros(n: number) {
+  return n === 1 ? '1 banheiro' : `${n} banheiros`;
+}
 
 export default function FloorPlans() {
   const [activeId, setActiveId] = useState(floorPlans[0]?.id ?? '');
@@ -13,7 +24,12 @@ export default function FloorPlans() {
   const sectionRef = useRef<HTMLElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const restaurarFocoPlanta = useRef(false);
+  const tabsRef = useRef<HTMLDivElement>(null);
   const panelsReady = useRef(false);
+  const afterCloseRef = useRef<string | null>(null);
+  const slideDir = useRef(1);
+  const [indicator, setIndicator] = useState({ x: 0, y: 0, w: 0, h: 0, ready: false });
 
   const activeIndex = Math.max(0, floorPlans.findIndex((p) => p.id === activeId));
   const activePlan = floorPlans[activeIndex] ?? floorPlans[0];
@@ -36,21 +52,175 @@ export default function FloorPlans() {
   });
 
   useLayoutEffect(() => {
+    const root = tabsRef.current;
+    if (!root) return;
+    const active = root.querySelector<HTMLElement>('.floorplans__tab.is-active');
+    if (!active) return;
+    setIndicator({
+      x: active.offsetLeft,
+      y: active.offsetTop,
+      w: active.offsetWidth,
+      h: active.offsetHeight,
+      ready: true,
+    });
+  }, [activeId]);
+
+  useEffect(() => {
+    const root = tabsRef.current;
+    if (!root) return;
+    const place = () => {
+      const active = root.querySelector<HTMLElement>('.floorplans__tab.is-active');
+      if (!active) return;
+      setIndicator((current) => ({
+        x: active.offsetLeft,
+        y: active.offsetTop,
+        w: active.offsetWidth,
+        h: active.offsetHeight,
+        ready: current.ready,
+      }));
+    };
+    const observer = new ResizeObserver(place);
+    observer.observe(root);
+    window.addEventListener('resize', place);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', place);
+    };
+  }, [activeId]);
+
+  useLayoutEffect(() => {
     if (!panelsReady.current || !detailRef.current) return;
     detailRef.current.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => {
       el.setAttribute('data-revealed', '');
     });
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+    gsap.fromTo(
+      detailRef.current,
+      { opacity: 0, x: 28 * slideDir.current },
+      { opacity: 1, x: 0, duration: 0.42, ease: 'power3.out', overwrite: 'auto' }
+    );
   }, [activeId]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
+
+    const lockScroll = () => {
+      const y = window.scrollY;
+      const gap = window.innerWidth - document.documentElement.clientWidth;
+      document.body.dataset.scrollLock = String(y);
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${y}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+      if (gap > 0) document.body.style.paddingRight = `${gap}px`;
+    };
+
+    const unlockScroll = () => {
+      const y = Number(document.body.dataset.scrollLock || '0');
+      document.documentElement.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      document.body.style.paddingRight = '';
+      delete document.body.dataset.scrollLock;
+      const scrolling = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
+      window.scrollTo(0, y);
+      document.documentElement.style.scrollBehavior = scrolling;
+    };
+
+    let settled = false;
+    let cancelled = false;
+    let timer = 0;
+    const onEnd = (event: AnimationEvent) => {
+      if (event.target !== dialog || event.animationName !== 'floorplanOut') return;
+      finishClose();
+    };
+
+    const finishClose = () => {
+      if (settled || cancelled) return;
+      settled = true;
+      window.clearTimeout(timer);
+      dialog.removeEventListener('animationend', onEnd);
+      dialog.classList.remove('is-closing');
+      if (dialog.open) dialog.close();
+      const widgetAberto = [...document.querySelectorAll('div')].find((node) => {
+        const overlay = node.shadowRoot?.querySelector('.overlay');
+        return Boolean(overlay && !overlay.hidden);
+      });
+      widgetAberto?.shadowRoot?.querySelector<HTMLElement>('#gf-title')?.focus({ preventScroll: true });
+      unlockScroll();
+      const hash = afterCloseRef.current;
+      afterCloseRef.current = null;
+      if (!hash) return;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.querySelector(hash)?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
+    };
+
     if (modalOpen) {
+      if (!document.body.dataset.scrollLock) lockScroll();
+      dialog.classList.remove('is-closing');
       if (!dialog.open) dialog.showModal();
-    } else if (dialog.open) {
-      dialog.close();
+    } else if (dialog.open || document.body.dataset.scrollLock) {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce || !dialog.open) {
+        finishClose();
+      } else {
+        dialog.classList.add('is-closing');
+        dialog.addEventListener('animationend', onEnd);
+        timer = window.setTimeout(finishClose, 420);
+      }
     }
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+      dialog.removeEventListener('animationend', onEnd);
+    };
   }, [modalOpen]);
+
+  useEffect(() => {
+    return () => {
+      if (!document.body.dataset.scrollLock) return;
+      const y = Number(document.body.dataset.scrollLock);
+      document.documentElement.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      document.body.style.paddingRight = '';
+      delete document.body.dataset.scrollLock;
+      const scrolling = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
+      window.scrollTo(0, y);
+      document.documentElement.style.scrollBehavior = scrolling;
+    };
+  }, []);
+
+  useEffect(() => {
+    const onFormsEvent = (event: Event) => {
+      const detail = (event as CustomEvent<{ type?: string }>).detail;
+      if (detail?.type !== 'closed' || !restaurarFocoPlanta.current) return;
+      restaurarFocoPlanta.current = false;
+      window.setTimeout(() => {
+        if (dialogRef.current?.open) return;
+        const active = document.activeElement;
+        const insideDialog = Boolean(active && dialogRef.current?.contains(active));
+        const hostDoWidget = active instanceof HTMLElement && Boolean(active.shadowRoot?.querySelector('#gf-title'));
+        if (active !== document.body && !insideDialog && !hostDoWidget) return;
+        sectionRef.current?.querySelector<HTMLElement>('.floorplans__image-btn')?.focus({ preventScroll: true });
+      }, 160);
+    };
+    window.addEventListener('genese-forms:event', onFormsEvent);
+    return () => window.removeEventListener('genese-forms:event', onFormsEvent);
+  }, []);
 
   useEffect(() => {
     if (!modalOpen) return;
@@ -63,32 +233,30 @@ export default function FloorPlans() {
   }, [modalOpen, activeIndex]);
 
   const handleTabChange = (id: string) => {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!reduceMotion && detailRef.current) {
-      gsap.fromTo(
-        detailRef.current,
-        { opacity: 0, y: 12 },
-        { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' }
-      );
-    }
+    if (id === activeId) return;
+    const nextIndex = floorPlans.findIndex((plan) => plan.id === id);
+    slideDir.current = nextIndex >= activeIndex ? 1 : -1;
     setActiveId(id);
   };
 
   const openModal = () => setModalOpen(true);
-  const closeModal = () => setModalOpen(false);
+  const closeModal = (hash?: string) => {
+    afterCloseRef.current = hash ?? null;
+    setModalOpen(false);
+  };
 
   const showPrev = () => {
     const prev = (activeIndex - 1 + floorPlans.length) % floorPlans.length;
-    setActiveId(floorPlans[prev].id);
+    handleTabChange(floorPlans[prev].id);
   };
 
   const showNext = () => {
     const next = (activeIndex + 1) % floorPlans.length;
-    setActiveId(floorPlans[next].id);
+    handleTabChange(floorPlans[next].id);
   };
 
   const selectInterest = () => {
-    sessionStorage.setItem('bellavista-selected-plan', activePlan.id);
+    sessionStorage.setItem('flow-selected-plan', activePlan.id);
   };
 
   return (
@@ -101,11 +269,22 @@ export default function FloorPlans() {
       <div className="container">
         <div className="floorplans__intro">
           <span className="eyebrow" data-reveal="eyebrow">Plantas</span>
-          <h2 id="floorplans-heading" data-reveal="heading">Conheça as tipologias do Bellavista.</h2>
-          <p data-reveal="text">Plantas funcionais, bem distribuídas e pensadas para o dia a dia da sua família.</p>
+          <h2 id="floorplans-heading" data-reveal="heading">Plantas para todos os estilos de vida</h2>
+          <p data-reveal="text">
+            No Flow, você escolhe entre quatro plantas versáteis que unem conforto, praticidade e design otimizado. Seja para morar sozinho ou para compartilhar, aqui você encontra o espaço ideal para viver com liberdade e fluidez.
+          </p>
         </div>
 
-        <div className="floorplans__tabs" role="tablist" aria-label="Tipologias de planta">
+        <div ref={tabsRef} className="floorplans__tabs" role="tablist" aria-label="Tipologias de planta">
+          <span
+            className={`floorplans__tab-indicator${indicator.ready ? ' is-ready' : ''}`}
+            aria-hidden="true"
+            style={{
+              width: indicator.w,
+              height: indicator.h,
+              transform: `translate(${indicator.x}px, ${indicator.y}px)`,
+            }}
+          />
           {floorPlans.map((plan) => {
             const selected = activeId === plan.id;
             return (
@@ -142,26 +321,13 @@ export default function FloorPlans() {
               <div className="floorplans__card">
                 <button
                   type="button"
-                  className="floorplans__availability"
-                  data-abrir-formulario=""
-                  onClick={(event) => {
-                    if (event.defaultPrevented) return;
-                    selectInterest();
-                    document.getElementById('interesse')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  Consultar disponibilidade
-                </button>
-
-                <button
-                  type="button"
                   className="floorplans__image-btn"
                   onClick={openModal}
                   aria-label={`Ampliar planta ${activePlan.name}`}
                 >
                   <Picture
                     name={activePlan.imageName}
-                    alt={`Planta ${activePlan.name} — ${activePlan.bedrooms} quartos, ${activePlan.bathrooms} banheiro, ${activePlan.area}`}
+                    alt={`Planta ${activePlan.name}`}
                     sizes="(max-width: 959px) 100vw, 55vw"
                     width={activePlan.imageWidth}
                     height={activePlan.imageHeight}
@@ -170,10 +336,6 @@ export default function FloorPlans() {
                   />
 
                 </button>
-
-                <button type="button" className="floorplans__expand" onClick={openModal}>
-                  Ampliar planta
-                </button>
               </div>
             </div>
 
@@ -181,7 +343,9 @@ export default function FloorPlans() {
               <p className="floorplans__kicker">Tipologia</p>
               <h3 className="floorplans__name">{activePlan.name}</h3>
 
+              {(activePlan.area || activePlan.bedrooms != null || activePlan.suites != null || activePlan.bathrooms != null) && (
               <div className="floorplans__specs">
+                {activePlan.area && (
                 <div className="floorplans__spec">
                   <span className="floorplans__spec-icon" aria-hidden="true">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -193,6 +357,8 @@ export default function FloorPlans() {
                     <span>Área</span>
                   </div>
                 </div>
+                )}
+                {activePlan.bedrooms != null && (
                 <div className="floorplans__spec">
                   <span className="floorplans__spec-icon" aria-hidden="true">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -201,10 +367,26 @@ export default function FloorPlans() {
                     </svg>
                   </span>
                   <div>
-                    <strong>{activePlan.bedrooms}</strong>
+                    <strong>{quartos(activePlan.bedrooms)}</strong>
                     <span>Quartos</span>
                   </div>
                 </div>
+                )}
+                {activePlan.suites != null && (
+                <div className="floorplans__spec">
+                  <span className="floorplans__spec-icon" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                      <path d="M4 20V10l8-6 8 6v10" />
+                      <path d="M9 20v-6h6v6" />
+                    </svg>
+                  </span>
+                  <div>
+                    <strong>{suites(activePlan.suites)}</strong>
+                    <span>Suítes</span>
+                  </div>
+                </div>
+                )}
+                {activePlan.bathrooms != null && (
                 <div className="floorplans__spec">
                   <span className="floorplans__spec-icon" aria-hidden="true">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -213,21 +395,26 @@ export default function FloorPlans() {
                     </svg>
                   </span>
                   <div>
-                    <strong>{activePlan.bathrooms}</strong>
-                    <span>Banheiro</span>
+                    <strong>{banheiros(activePlan.bathrooms)}</strong>
+                    <span>Banheiros</span>
                   </div>
                 </div>
+                )}
               </div>
+              )}
 
               {activePlan.description && (
                 <p className="floorplans__desc">{activePlan.description}</p>
               )}
 
+              {(activePlan.bedrooms != null || activePlan.suites != null || activePlan.bathrooms != null || activePlan.area) && (
               <ul className="floorplans__list">
-                <li>{activePlan.bedrooms} quartos</li>
-                <li>{activePlan.bathrooms} banheiro</li>
-                <li>Área privativa de {activePlan.area}</li>
+                {activePlan.bedrooms != null && <li>{quartos(activePlan.bedrooms)}</li>}
+                {activePlan.suites != null && <li>{suites(activePlan.suites)}</li>}
+                {activePlan.bathrooms != null && <li>{banheiros(activePlan.bathrooms)}</li>}
+                {activePlan.area && <li>Área privativa de {activePlan.area}</li>}
               </ul>
+              )}
 
               <a
                 href="#interesse"
@@ -259,68 +446,130 @@ export default function FloorPlans() {
       >
         {activePlan && (
           <div className="floorplans-modal__shell">
-            <button type="button" className="floorplans-modal__close" onClick={closeModal} aria-label="Fechar">
-              ×
+            <button type="button" className="floorplans-modal__close" onClick={() => closeModal()} aria-label="Fechar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
             </button>
 
-            <button type="button" className="floorplans-modal__nav floorplans-modal__nav--prev" onClick={showPrev} aria-label="Planta anterior">
-              ‹
-            </button>
-
-            <div className="floorplans-modal__content">
-              <div className="floorplans-modal__meta">
-                <div>
-                  <p className="eyebrow">Tipologia</p>
-                  <h3>{activePlan.name}</h3>
-                </div>
-                <p className="floorplans-modal__counter">
-                  {activeIndex + 1} / {floorPlans.length}
-                </p>
-              </div>
-
-              <div className="floorplans-modal__specs">
-                <span>{activePlan.bedrooms} quartos</span>
-                <span>{activePlan.bathrooms} banheiro</span>
-                <span>{activePlan.area}</span>
-              </div>
-
+            <div className="floorplans-modal__stage">
+              <button type="button" className="floorplans-modal__nav floorplans-modal__nav--prev" onClick={showPrev} aria-label="Planta anterior">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M15 5l-7 7 7 7" />
+                </svg>
+              </button>
               <div className="floorplans-modal__image">
                 <Picture
                   name={activePlan.imageName}
                   alt={`Planta ampliada ${activePlan.name}`}
-                  sizes="90vw"
+                  sizes="(max-width: 800px) 92vw, 58vw"
                   width={activePlan.imageWidth}
                   height={activePlan.imageHeight}
                   loading="eager"
                   className="floorplans__img"
                 />
               </div>
+              <button type="button" className="floorplans-modal__nav floorplans-modal__nav--next" onClick={showNext} aria-label="Próxima planta">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                  <path d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
 
+            <aside className="floorplans-modal__panel">
+              <p className="floorplans-modal__kicker">Flow Residencial</p>
+              <h3>{activePlan.name}</h3>
+              {activePlan.area && (
+                <p className="floorplans-modal__area">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                    <path d="M4 8h16v12H4zM8 8V5h8v3" />
+                  </svg>
+                  {activePlan.area}
+                </p>
+              )}
 
-              <div className="floorplans-modal__tabs">
-                {floorPlans.map((plan) => (
+              <ul className="floorplans-modal__specs">
+                {activePlan.bedrooms != null && (
+                  <li>
+                    <span className="floorplans-modal__spec-icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                        <path d="M3 20v-6a3 3 0 0 1 3-3h12a3 3 0 0 1 3 3v6" />
+                        <path d="M7 11V8a5 5 0 0 1 10 0v3" />
+                      </svg>
+                    </span>
+                    <span>
+                      <small>Quartos</small>
+                      <strong>{quartos(activePlan.bedrooms)}</strong>
+                    </span>
+                  </li>
+                )}
+                {activePlan.suites != null && (
+                  <li>
+                    <span className="floorplans-modal__spec-icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                        <path d="M4 20V10l8-6 8 6v10" />
+                        <path d="M9 20v-6h6v6" />
+                      </svg>
+                    </span>
+                    <span>
+                      <small>Suítes</small>
+                      <strong>{suites(activePlan.suites)}</strong>
+                    </span>
+                  </li>
+                )}
+                {activePlan.bathrooms != null && (
+                  <li>
+                    <span className="floorplans-modal__spec-icon" aria-hidden="true">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                        <path d="M4 12h16v7H4z" />
+                        <path d="M7 12V8a2 2 0 0 1 2-2h1" />
+                      </svg>
+                    </span>
+                    <span>
+                      <small>Banheiros</small>
+                      <strong>{banheiros(activePlan.bathrooms)}</strong>
+                    </span>
+                  </li>
+                )}
+              </ul>
+
+              <div className="floorplans-modal__tabs" role="tablist" aria-label="Outras plantas">
+                {floorPlans.map((plan, index) => (
                   <button
                     key={plan.id}
                     type="button"
+                    role="tab"
+                    aria-selected={plan.id === activePlan.id}
                     className={`floorplans-modal__tab${plan.id === activePlan.id ? ' is-active' : ''}`}
                     onClick={() => setActiveId(plan.id)}
                   >
                     {plan.name}
+                    <span className="floorplans-modal__tab-index">{index + 1}</span>
                   </button>
                 ))}
               </div>
-            </div>
 
-            <button type="button" className="floorplans-modal__nav floorplans-modal__nav--next" onClick={showNext} aria-label="Próxima planta">
-              ›
-            </button>
+              <a
+                href="#interesse"
+                className="floorplans__cta floorplans-modal__cta"
+                data-abrir-formulario=""
+                onClick={(event) => {
+                  event.preventDefault();
+                  restaurarFocoPlanta.current = true;
+                  selectInterest();
+                  closeModal('#interesse');
+                }}
+              >
+                Tenho interesse nesta planta
+              </a>
+            </aside>
           </div>
         )}
       </dialog>
 
       <style>{`
         .floorplans {
-          background: #ffffff;
+          background: var(--cor-fundo);
         }
 
         .floorplans__intro {
@@ -330,7 +579,12 @@ export default function FloorPlans() {
         }
 
         .floorplans__intro .eyebrow {
-          color: #19808c;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
           display: block;
         }
 
@@ -339,18 +593,19 @@ export default function FloorPlans() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 800;
           font-size: clamp(1.75rem, 3.5vw, 3rem);
-          color: #013034;
+          color: var(--cor-texto);
           line-height: 1.15;
         }
 
         .floorplans__intro p {
           margin: 0 auto;
           max-width: 36ch;
-          color: #4a5a61;
+          color: var(--cor-texto-apoio);
           line-height: 1.7;
         }
 
         .floorplans__tabs {
+          position: relative;
           display: flex;
           gap: 0.65rem;
           overflow-x: auto;
@@ -358,26 +613,47 @@ export default function FloorPlans() {
           margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
         }
 
+        .floorplans__tab-indicator {
+          position: absolute;
+          left: 0;
+          top: 0;
+          z-index: 0;
+          pointer-events: none;
+          border-radius: var(--raio-botao);
+          background-image: var(--gradiente-botao);
+          background-size: 240% 100%;
+          animation: 9s infinite flow-shift-x;
+        }
+
+        .floorplans__tab-indicator.is-ready {
+          transition:
+            transform 0.48s cubic-bezier(0.22, 1, 0.36, 1),
+            width 0.48s cubic-bezier(0.22, 1, 0.36, 1),
+            height 0.48s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
         .floorplans__tab {
+          position: relative;
+          z-index: 1;
           flex: 0 0 auto;
           min-height: 44px;
           padding: 0.7rem 1.2rem;
-          border: 1.5px solid #013034;
-          border-radius: 4px;
+          border: 1.5px solid var(--cor-borda);
+          border-radius: var(--raio-botao);
           background: transparent;
-          color: #013034;
+          color: var(--cor-texto);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.78rem;
           font-weight: 700;
           letter-spacing: 0.06em;
           text-transform: uppercase;
           cursor: pointer;
-          transition: background 0.2s ease, color 0.2s ease;
+          transition: border-color 0.35s ease, color 0.35s ease;
         }
 
         .floorplans__tab.is-active {
-          background: #013034;
-          color: #ffffff;
+          border-color: transparent;
+          color: var(--cor-texto);
         }
 
         .floorplans__panel {
@@ -398,17 +674,17 @@ export default function FloorPlans() {
           font-weight: 700;
           letter-spacing: 0.16em;
           text-transform: uppercase;
-          color: #013034;
+          color: var(--cor-texto);
           padding-bottom: 0.45rem;
-          border-bottom: 1px solid rgba(1, 48, 52, 0.25);
+          border-bottom: 1px solid color-mix(in srgb, var(--cor-fundo-profundo) 25%, transparent);
         }
 
         .floorplans__card {
           position: relative;
-          background: #ffffff;
+          background: var(--cor-fundo);
           border-radius: 12px;
           padding: clamp(1rem, 2vw, 1.5rem);
-          box-shadow: 0 10px 30px rgba(1, 48, 52, 0.06);
+          box-shadow: 0 10px 30px color-mix(in srgb, var(--cor-fundo-profundo) 6%, transparent);
         }
 
         .floorplans__availability {
@@ -420,8 +696,8 @@ export default function FloorPlans() {
           padding: 0.55rem 0.95rem;
           border: 0;
           border-radius: 4px;
-          background: #013034;
-          color: #ffffff;
+          background: var(--cor-fundo-profundo);
+          color: var(--cor-texto);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.68rem;
           font-weight: 700;
@@ -452,19 +728,6 @@ export default function FloorPlans() {
           display: block;
         }
 
-        .floorplans__expand {
-          margin-top: 0.85rem;
-          border: 0;
-          background: transparent;
-          color: #19808c;
-          font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
-          font-size: 0.82rem;
-          font-weight: 700;
-          text-decoration: underline;
-          text-underline-offset: 0.2em;
-          cursor: pointer;
-        }
-
         .floorplans__kicker {
           margin: 0 0 0.65rem;
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
@@ -472,7 +735,7 @@ export default function FloorPlans() {
           font-weight: 700;
           letter-spacing: 0.16em;
           text-transform: uppercase;
-          color: #5b7a7b;
+          color: var(--cor-texto-apoio);
         }
 
         .floorplans__name {
@@ -481,19 +744,19 @@ export default function FloorPlans() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: clamp(1.8rem, 3.5vw, 2.75rem);
           font-weight: 800;
-          color: #013034;
+          color: var(--cor-texto);
           line-height: 1.1;
           padding-bottom: 0.55rem;
-          border-bottom: 4px solid #013034;
+          border-bottom: 4px solid var(--cor-texto);
         }
 
         .floorplans__specs {
           display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 0.75rem;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.85rem 1rem;
           padding: 1rem 1.1rem;
           margin-bottom: 1.5rem;
-          background: #f4efe3;
+          background: var(--cor-superficie);
           border-radius: 10px;
         }
 
@@ -509,8 +772,8 @@ export default function FloorPlans() {
           width: 34px;
           height: 34px;
           border-radius: 8px;
-          background: rgba(1, 48, 52, 0.08);
-          color: #013034;
+          background: color-mix(in srgb, var(--cor-fundo-profundo) 8%, transparent);
+          color: var(--cor-texto);
           flex-shrink: 0;
         }
 
@@ -519,7 +782,7 @@ export default function FloorPlans() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 1.05rem;
           font-weight: 800;
-          color: #013034;
+          color: var(--cor-texto);
           line-height: 1.1;
         }
 
@@ -531,13 +794,13 @@ export default function FloorPlans() {
           font-weight: 700;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          /* #f4efe3 (fundo specs): #5b7a7b = 4,05:1 → #527072 = 4,67:1 */
-          color: #527072;
+          /* var(--cor-superficie) (fundo specs): var(--cor-texto-apoio) = 4,05:1 → var(--cor-texto-apoio) = 4,67:1 */
+          color: var(--cor-texto-apoio);
         }
 
         .floorplans__desc {
           margin: 0 0 1.25rem;
-          color: #4a5a61;
+          color: var(--cor-texto-apoio);
           line-height: 1.75;
           font-size: 0.98rem;
         }
@@ -553,7 +816,7 @@ export default function FloorPlans() {
         .floorplans__list li {
           position: relative;
           padding-left: 1.15rem;
-          color: #2c2f31;
+          color: var(--cor-texto);
           font-size: 0.95rem;
           line-height: 1.5;
         }
@@ -566,7 +829,10 @@ export default function FloorPlans() {
           width: 0.45rem;
           height: 0.45rem;
           border-radius: 999px;
-          background: #eb9c36;
+          background-color: var(--cor-realce);
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          animation: 11s infinite flow-shift-x;
         }
 
         .floorplans__cta {
@@ -575,9 +841,12 @@ export default function FloorPlans() {
           justify-content: center;
           min-height: 48px;
           padding: 0.85rem 1.5rem;
-          border-radius: 999px;
-          background: #eb9c36;
-          color: #013034;
+          border-radius: var(--raio-botao);
+          background-image: var(--gradiente-botao);
+          background-size: 240% 100%;
+          animation: 9s infinite flow-shift-x;
+          box-shadow: var(--sombra-botao);
+          color: var(--cor-texto);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 700;
           font-size: 0.88rem;
@@ -585,8 +854,39 @@ export default function FloorPlans() {
         }
 
         .floorplans__cta:hover {
-          background: #d88928;
-          color: #013034;
+          filter: brightness(1.05);
+          transform: translateY(-0.25rem);
+          color: var(--cor-texto);
+        }
+
+        @keyframes floorplanIn {
+          from { opacity: 0; transform: translateY(28px) scale(0.96); }
+          to { opacity: 1; transform: none; }
+        }
+
+        @keyframes floorplanOut {
+          from { opacity: 1; transform: none; }
+          to { opacity: 0; transform: translateY(18px) scale(0.98); }
+        }
+
+        @keyframes floorplanBackdropIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes floorplanBackdropOut {
+          from { opacity: 1; }
+          to { opacity: 0; }
+        }
+
+        @keyframes floorplanSheetIn {
+          from { opacity: 0; transform: scale(0.94); }
+          to { opacity: 1; transform: none; }
+        }
+
+        @keyframes floorplanPanelIn {
+          from { opacity: 0; transform: translateX(18px); }
+          to { opacity: 1; transform: none; }
         }
 
         .floorplans-modal {
@@ -595,15 +895,34 @@ export default function FloorPlans() {
           margin: auto;
           padding: 0;
           border: 0;
-          border-radius: 16px;
-          background: #ffffff;
-          color: #013034;
+          border-radius: 20px;
+          background: var(--cor-fundo);
+          color: var(--cor-texto);
           overflow: hidden;
+          overscroll-behavior: contain;
+          box-shadow: 0 28px 70px color-mix(in srgb, black 48%, transparent);
+          animation: floorplanIn 0.46s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
 
         .floorplans-modal::backdrop {
-          background: rgba(1, 48, 52, 0.72);
-          backdrop-filter: blur(6px);
+          background: color-mix(in srgb, #07080e 82%, transparent);
+          animation: floorplanBackdropIn 0.4s ease both;
+        }
+
+        .floorplans-modal.is-closing {
+          animation: floorplanOut 0.32s cubic-bezier(0.4, 0, 1, 1) forwards;
+        }
+
+        .floorplans-modal.is-closing::backdrop {
+          animation: floorplanBackdropOut 0.32s ease forwards;
+        }
+
+        .floorplans-modal[open] .floorplans-modal__image {
+          animation: floorplanSheetIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .floorplans-modal[open] .floorplans-modal__panel {
+          animation: floorplanPanelIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
         }
 
         .floorplans-modal:not([open]) {
@@ -613,117 +932,181 @@ export default function FloorPlans() {
         .floorplans-modal__shell {
           position: relative;
           display: grid;
-          grid-template-columns: auto 1fr auto;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 1.25rem 0.75rem;
+          grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+          max-height: 92dvh;
+          align-items: stretch;
         }
 
-        .floorplans-modal__content {
-          min-width: 0;
+        .floorplans-modal__stage {
+          position: relative;
           display: grid;
-          gap: 1rem;
-        }
-
-        .floorplans-modal__meta {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-end;
-          gap: 1rem;
-          padding-inline: 0.5rem;
-        }
-
-        .floorplans-modal__meta .eyebrow {
-          color: #19808c;
-          margin: 0 0 0.35rem;
-        }
-
-        .floorplans-modal__meta h3 {
-          margin: 0;
-          font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
-          font-size: clamp(1.4rem, 3vw, 2rem);
-          font-weight: 800;
-        }
-
-        .floorplans-modal__counter {
-          margin: 0;
-          font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
-          font-size: 0.85rem;
-          font-weight: 700;
-          color: #5b7a7b;
-        }
-
-        .floorplans-modal__specs {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-          padding-inline: 0.5rem;
-        }
-
-        .floorplans-modal__specs span {
-          display: inline-flex;
-          align-items: center;
-          min-height: 34px;
-          padding: 0.35rem 0.8rem;
-          border-radius: 999px;
-          background: #faf7f0;
-          border: 1px solid #e4d7b6;
-          font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
-          font-size: 0.78rem;
-          font-weight: 600;
+          place-items: center;
+          align-self: stretch;
+          min-height: 100%;
+          padding: 2.25rem 4.25rem;
+          background: #e8eef1;
         }
 
         .floorplans-modal__image {
-          background: #f7f6f2;
-          border-radius: 12px;
-          padding: 0.75rem;
-          max-height: min(58dvh, 620px);
+          width: 100%;
+          max-height: min(72dvh, 640px);
           overflow: auto;
         }
 
         .floorplans-modal__image img {
           width: 100%;
           height: auto;
+          max-height: min(68dvh, 600px);
+          object-fit: contain;
           display: block;
         }
 
-        .floorplans-modal__tabs {
+        .floorplans-modal__panel {
           display: flex;
-          flex-wrap: wrap;
-          gap: 0.45rem;
-          padding-inline: 0.5rem;
+          flex-direction: column;
+          gap: 0.85rem;
+          min-width: 0;
+          padding: 3.25rem 1.5rem 1.5rem;
+          overflow: auto;
         }
 
-        .floorplans-modal__tab {
-          min-height: 36px;
-          padding: 0.4rem 0.85rem;
-          border: 1px solid #013034;
-          border-radius: 4px;
-          background: transparent;
-          color: #013034;
+        .floorplans-modal__kicker {
+          margin: 0;
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.72rem;
           font-weight: 700;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.14em;
           text-transform: uppercase;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
+        }
+
+        .floorplans-modal__panel h3 {
+          margin: 0;
+          font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
+          font-size: clamp(1.55rem, 2.4vw, 2.1rem);
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          line-height: 1.1;
+        }
+
+        .floorplans-modal__area {
+          display: flex;
+          align-items: center;
+          gap: 0.45rem;
+          margin: 0;
+          color: var(--cor-texto-apoio);
+          font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
+          font-size: 0.95rem;
+          font-weight: 700;
+        }
+
+        .floorplans-modal__specs {
+          display: grid;
+          gap: 0.6rem;
+          margin: 0.35rem 0 0;
+          padding: 0;
+          list-style: none;
+        }
+
+        .floorplans-modal__specs li {
+          display: flex;
+          align-items: center;
+          gap: 0.85rem;
+          padding: 0.75rem 0.9rem;
+          border-radius: 14px;
+          background: var(--cor-superficie);
+        }
+
+        .floorplans-modal__spec-icon {
+          display: grid;
+          place-items: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 999px;
+          flex-shrink: 0;
+          background: color-mix(in srgb, var(--cor-realce) 18%, transparent);
+          color: var(--cor-realce);
+        }
+
+        .floorplans-modal__specs small {
+          display: block;
+          margin-bottom: 0.15rem;
+          font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
+          font-size: 0.66rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          color: var(--cor-texto-apoio);
+        }
+
+        .floorplans-modal__specs strong {
+          display: block;
+          font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
+          font-size: 1.02rem;
+          font-weight: 800;
+          color: var(--cor-texto);
+        }
+
+        .floorplans-modal__tabs {
+          display: grid;
+          gap: 0.4rem;
+          margin-top: auto;
+        }
+
+        .floorplans-modal__tab {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0.75rem;
+          min-height: 40px;
+          padding: 0.45rem 0.75rem;
+          border: 1px solid color-mix(in srgb, var(--cor-borda) 55%, transparent);
+          border-radius: 10px;
+          background: transparent;
+          color: var(--cor-texto);
+          font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
+          font-size: 0.82rem;
+          font-weight: 700;
+          text-align: left;
           cursor: pointer;
         }
 
+        .floorplans-modal__tab-index {
+          color: var(--cor-texto-apoio);
+          font-size: 0.72rem;
+          font-weight: 700;
+        }
+
         .floorplans-modal__tab.is-active {
-          background: #013034;
-          color: #ffffff;
+          border-color: transparent;
+          background-image: var(--gradiente-botao);
+          background-size: 240% 100%;
+          animation: 9s infinite flow-shift-x;
+          color: var(--cor-texto);
+        }
+
+        .floorplans-modal__tab.is-active .floorplans-modal__tab-index {
+          color: var(--cor-texto);
+        }
+
+        .floorplans-modal__cta {
+          align-self: stretch;
+          text-align: center;
         }
 
         .floorplans-modal__close,
         .floorplans-modal__nav {
-          width: 44px;
-          height: 44px;
+          display: grid;
+          place-items: center;
+          width: 40px;
+          height: 40px;
           border: 0;
           border-radius: 999px;
-          background: rgba(1, 48, 52, 0.08);
-          color: #013034;
-          font-size: 1.5rem;
-          line-height: 1;
           cursor: pointer;
         }
 
@@ -732,7 +1115,22 @@ export default function FloorPlans() {
           top: 0.85rem;
           right: 0.85rem;
           z-index: 2;
+          background: var(--cor-superficie);
+          color: var(--cor-texto);
         }
+
+        .floorplans-modal__nav {
+          position: absolute;
+          top: 50%;
+          z-index: 1;
+          transform: translateY(-50%);
+          background: #161724;
+          color: white;
+          box-shadow: 0 8px 18px color-mix(in srgb, black 22%, transparent);
+        }
+
+        .floorplans-modal__nav--prev { left: 0.85rem; }
+        .floorplans-modal__nav--next { right: 0.85rem; }
 
         @media (min-width: 960px) {
           .floorplans__panel {
@@ -753,22 +1151,27 @@ export default function FloorPlans() {
             margin-bottom: 0.85rem;
           }
 
+          .floorplans-modal {
+            overflow: auto;
+          }
+
           .floorplans-modal__shell {
             grid-template-columns: 1fr;
-            padding-top: 3.25rem;
+            max-height: none;
           }
 
-          .floorplans-modal__nav--prev,
-          .floorplans-modal__nav--next {
-            position: absolute;
-            bottom: 1rem;
+          .floorplans-modal__stage {
+            min-height: 240px;
+            padding: 1.25rem 3.25rem;
           }
 
-          .floorplans-modal__nav--prev { left: 1rem; }
-          .floorplans-modal__nav--next { right: 1rem; }
+          .floorplans-modal__panel {
+            padding: 1.25rem 1.15rem 1.35rem;
+          }
 
-          .floorplans-modal__content {
-            padding-bottom: 3.5rem;
+          .floorplans-modal__close {
+            background: white;
+            color: #161724;
           }
         }
       `}</style>
