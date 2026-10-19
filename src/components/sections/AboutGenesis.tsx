@@ -7,7 +7,7 @@ import { genesisStats } from '../../data/genesisStats';
 import Picture from '../ui/Picture';
 
 
-const GENESIS_VIDEO_ID = 'KVty8Cw8PX0';
+const GENESIS_VIDEO_ID = 'QHXUM6yo8zQ';
 
 export default function AboutGenesis() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -106,7 +106,7 @@ export default function AboutGenesis() {
             >
               <Picture
                 name="fachada-dois"
-                alt="Fachada do Solar Bellavista, empreendimento da Gênesis Incorporadora"
+                alt="Fachada Letreiro do Flow Residencial"
                 sizes="(max-width: 959px) 100vw, 50vw"
                 loading="lazy"
                 className="about__media-img"
@@ -149,7 +149,7 @@ export default function AboutGenesis() {
 
       <style>{`
         .about {
-          background: #ffffff;
+          background: var(--cor-fundo);
         }
 
         .about__intro {
@@ -164,7 +164,7 @@ export default function AboutGenesis() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 800;
           font-size: clamp(1.75rem, 3.5vw, 2.85rem);
-          color: #013034;
+          color: var(--cor-texto);
           line-height: 1.15;
         }
 
@@ -172,7 +172,7 @@ export default function AboutGenesis() {
           margin: 0 auto;
           max-width: 46ch;
           font-size: 1rem;
-          color: #4a5a61;
+          color: var(--cor-texto-apoio);
           line-height: 1.7;
         }
 
@@ -192,11 +192,11 @@ export default function AboutGenesis() {
         }
 
         .about__card {
-          background: #ffffff;
-          border: 1px solid rgba(1, 48, 52, 0.06);
+          background: var(--cor-fundo);
+          border: 1px solid color-mix(in srgb, var(--cor-fundo-profundo) 6%, transparent);
           border-radius: 18px;
           padding: clamp(1.35rem, 3vw, 1.85rem);
-          box-shadow: 0 12px 32px rgba(1, 48, 52, 0.06);
+          box-shadow: 0 12px 32px color-mix(in srgb, var(--cor-fundo-profundo) 6%, transparent);
         }
 
         .about__card h3 {
@@ -204,13 +204,13 @@ export default function AboutGenesis() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 800;
           font-size: 1.15rem;
-          color: #013034;
+          color: var(--cor-texto);
         }
 
         .about__card > p {
           margin: 0;
           font-size: 0.95rem;
-          color: #4a5a61;
+          color: var(--cor-texto-apoio);
           line-height: 1.7;
         }
 
@@ -234,17 +234,22 @@ export default function AboutGenesis() {
           top: 12%;
           bottom: 12%;
           width: 1px;
-          background: #e4d7b6;
+          background: var(--cor-superficie);
         }
 
         .about__stat-value {
-          margin: 0 0 0.35rem;
+          margin: 0 0 0.45rem;
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 800;
-          font-size: clamp(1.85rem, 3vw, 2.35rem);
-          color: #013034;
-          letter-spacing: -0.02em;
-          line-height: 1;
+          font-size: clamp(2.6rem, 4.6vw, 3.35rem);
+          letter-spacing: -0.04em;
+          line-height: 0.95;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
         }
 
         .about__stat-label {
@@ -252,7 +257,7 @@ export default function AboutGenesis() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.82rem;
           font-weight: 600;
-          color: #5b7a7b;
+          color: var(--cor-texto-apoio);
         }
 
         .about__media {
@@ -260,8 +265,8 @@ export default function AboutGenesis() {
           border-radius: 18px;
           overflow: hidden;
           aspect-ratio: 4 / 3;
-          box-shadow: 0 16px 40px rgba(1, 48, 52, 0.1);
-          background: #e8e4d8;
+          box-shadow: 0 16px 40px color-mix(in srgb, var(--cor-fundo-profundo) 10%, transparent);
+          background: var(--cor-superficie);
         }
 
         .about__media picture {
@@ -294,7 +299,7 @@ export default function AboutGenesis() {
         }
 
         .about__media-btn:focus-visible {
-          outline: 3px solid #eb9c36;
+          outline: 3px solid var(--cor-realce);
           outline-offset: -3px;
         }
 
@@ -305,12 +310,14 @@ export default function AboutGenesis() {
           transform: translate(-50%, -50%);
           width: 64px;
           height: 64px;
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.94);
-          color: #013034;
+          border-radius: var(--raio-botao);
+          background-image: var(--gradiente-botao-marca);
+          background-size: 240% 100%;
+          animation: 11s infinite flow-shift-x;
+          color: var(--cor-texto);
           display: grid;
           place-items: center;
-          box-shadow: 0 10px 28px rgba(1, 48, 52, 0.22);
+          box-shadow: 0 10px 28px color-mix(in srgb, var(--cor-fundo-profundo) 22%, transparent);
           pointer-events: none;
           transition: transform 0.2s ease;
         }
@@ -331,13 +338,13 @@ export default function AboutGenesis() {
         }
 
         .about-video::backdrop {
-          background: rgba(1, 48, 52, 0.72);
+          background: color-mix(in srgb, var(--cor-fundo-profundo) 72%, transparent);
         }
 
         .about-video__shell {
           position: relative;
           aspect-ratio: 16 / 9;
-          background: #013034;
+          background: var(--cor-fundo-profundo);
           border-radius: 16px;
           overflow: hidden;
         }
@@ -357,9 +364,9 @@ export default function AboutGenesis() {
           width: 40px;
           height: 40px;
           border: 0;
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.94);
-          color: #013034;
+          border-radius: var(--raio-botao);
+          background: var(--cor-superficie);
+          color: var(--cor-texto);
           font-size: 1.5rem;
           line-height: 1;
           cursor: pointer;

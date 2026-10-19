@@ -7,19 +7,30 @@ import Picture from '../ui/Picture';
 
 const footerLinks = [
   { label: 'Início', href: '#hero' },
-  { label: 'Benefícios', href: '#beneficios' },
+  { label: 'Destaques', href: '#beneficios' },
   { label: 'Plantas', href: '#plantas' },
   { label: 'Galeria', href: '#galeria' },
   { label: 'Lazer', href: '#benfeitorias' },
   { label: 'Localização', href: '#localizacao' },
-  { label: 'Formulário', href: '#interesse' },
+  { label: 'Receber condições', href: '#interesse' },
   { label: 'Sobre', href: '#sobre' },
 ];
 
 const socialLinks = [
   {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/genesisempreendimentos',
+    tone: 'facebook',
+    icon: (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H8v3h3v7h3v-7h3l1-3h-4V9c0-.6.4-1 1-1Z" />
+      </svg>
+    ),
+  },
+  {
     label: 'Instagram',
-    href: 'https://www.instagram.com/meuapsolar/',
+    href: 'https://www.instagram.com/genesisempreendimentos/',
+    tone: 'instagram',
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <rect x="3" y="3" width="18" height="18" rx="5" />
@@ -29,11 +40,12 @@ const socialLinks = [
     ),
   },
   {
-    label: 'Facebook',
-    href: 'https://www.facebook.com/MeuApeSolar',
+    label: 'YouTube',
+    href: 'https://www.youtube.com/@genesisempreendimentos_',
+    tone: 'youtube',
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-        <path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H8v3h3v7h3v-7h3l1-3h-4V9c0-.6.4-1 1-1Z" />
+        <path d="M23 12.2s0-3.2-.4-4.6c-.2-.9-.9-1.6-1.8-1.8C19.2 5.4 12 5.4 12 5.4s-7.2 0-8.8.4c-.9.2-1.6.9-1.8 1.8C1 9 1 12.2 1 12.2s0 3.2.4 4.6c.2.9.9 1.6 1.8 1.8 1.6.4 8.8.4 8.8.4s7.2 0 8.8-.4c.9-.2 1.6-.9 1.8-1.8.4-1.4.4-4.6.4-4.6ZM9.8 15.5v-6.6l6.2 3.3-6.2 3.3Z" />
       </svg>
     ),
   },
@@ -69,38 +81,34 @@ export default function Footer() {
       <div className="container">
         <div className="site-footer__top">
           <div className="site-footer__brand" data-reveal="items">
-            <a href="#hero" className="site-footer__logo" aria-label="Gênesis Empreendimentos — início">
+            <a href="#hero" className="site-footer__logo" aria-label="Flow Residencial — início">
               <Picture
-                name="genesis-logo"
-                alt="Gênesis Empreendimentos"
-                sizes="220px"
-                width={220}
-                height={56}
+                name="flow-logo"
+                alt="Flow Residencial"
+                sizes="140px"
+                width={140}
+                height={48}
                 loading="lazy"
               />
-
             </a>
-            <p>
-              Gênesis Empreendimentos — Construindo sonhos e transformando vidas.
+            <p className="site-footer__tagline">Seu espaço, Seu ritmo, Seu futuro.</p>
+            <p className="site-footer__copy">
+              © {year} desenvolvido por{' '}
+              <a href="https://genesisempreendimentos.com.br" target="_blank" rel="noopener noreferrer">
+                Gênesis Empreendimentos
+              </a>
             </p>
-            <div className="site-footer__social">
-              {socialLinks.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={item.label}
-                  className="site-footer__social-btn"
-                >
-                  {item.icon}
-                </a>
-              ))}
-            </div>
+            <img
+              className="site-footer__partners"
+              src="/img/genesis-caixa.png"
+              alt="Gênesis Empreendimentos e Caixa"
+              width={732}
+              height={90}
+            />
           </div>
 
           <div className="site-footer__col" data-reveal="items">
-            <h3>Navegação</h3>
+            <h3>Sobre o Flow</h3>
             <nav aria-label="Navegação do rodapé">
               <ul>
                 {footerLinks.map((link) => (
@@ -154,15 +162,27 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+
+          <div className="site-footer__col" data-reveal="items">
+            <h3>Redes Sociais</h3>
+            <div className="site-footer__social">
+              {socialLinks.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={item.label}
+                  className={`site-footer__social-btn site-footer__social-btn--${item.tone}`}
+                >
+                  {item.icon}
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div className="site-footer__bottom" data-reveal="items">
-          <p className="site-footer__copy">
-            © {year} desenvolvido por{' '}
-            <a href="https://genesisempreendimentos.com.br" target="_blank" rel="noopener noreferrer">
-              Gênesis Empreendimentos
-            </a>
-          </p>
           <div className="site-footer__legal-links">
             <a
               className="site-footer__privacy"
@@ -172,26 +192,25 @@ export default function Footer() {
             >
               Política de Privacidade
             </a>
-            <button
-              type="button"
-              className="site-footer__privacy site-footer__cookies"
-              onClick={() => window.GenesisConsent?.reset()}
+            <a
+              className="site-footer__privacy"
+              href={PRIVACY_POLICY_URL}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Preferências de cookies
-            </button>
+            </a>
           </div>
           <p className="site-footer__legal">
-            Todas as imagens são meramente ilustrativas. O projeto arquitetônico, as numerações das unidades, as cores, os detalhes da fachada e as ilustrações artísticas poderão sofrer alterações. Responsável técnico do projeto: Renata Pessôa de Rezende – CAU/RJ A33148-1. A decoração, os equipamentos da varanda, a mobília e o paisagismo são meras sugestões e não fazem parte das obrigações de entrega do imóvel. As unidades entregues e suas características, bem como o padrão de acabamento, estão discriminados no memorial descritivo arquivado no memorial de incorporação devidamente registrado na matrícula 14.706 no Cartório do 1° Ofício - Registro do Imóveis da comarca de Teresópolis - RJ.
+            Responsável técnico do projeto: Renata Pessôa de Rezende, CAU/RJ A33148-1.
           </p>
         </div>
       </div>
 
       <style>{`
         .site-footer {
-          background:
-            radial-gradient(ellipse 80% 70% at 15% 0%, rgba(28, 146, 160, 0.22) 0%, transparent 55%),
-            linear-gradient(165deg, #024048 0%, #013034 48%, #01262a 100%);
-          color: #ffffff;
+          background: var(--cor-fundo-profundo);
+          color: var(--cor-texto);
           padding-block: clamp(3.5rem, 7vw, 5rem) 2.25rem;
         }
 
@@ -200,21 +219,21 @@ export default function Footer() {
           grid-template-columns: 1fr;
           gap: 2.5rem;
           padding-bottom: 2.5rem;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+          border-bottom: 1px solid color-mix(in srgb, var(--cor-texto) 12%, transparent);
         }
 
         .site-footer__brand {
-          max-width: 22rem;
+          max-width: 18rem;
         }
 
         .site-footer__logo {
           display: inline-flex;
-          margin-bottom: 1.15rem;
+          margin-bottom: 1rem;
         }
 
         .site-footer__logo picture {
           display: block;
-          width: min(100%, 220px);
+          width: 7.5rem;
         }
 
         .site-footer__logo img {
@@ -223,11 +242,22 @@ export default function Footer() {
           height: auto;
         }
 
-        .site-footer__brand > p {
-          margin: 0 0 1.35rem;
-          font-size: 0.9rem;
-          line-height: 1.65;
-          color: rgba(255, 255, 255, 0.68);
+        .site-footer__tagline {
+          margin: 0 0 1.75rem;
+          max-width: 16rem;
+          font-size: 0.78rem;
+          font-style: italic;
+          font-weight: 400;
+          line-height: 1.5;
+          color: color-mix(in srgb, var(--cor-texto) 82%, transparent);
+        }
+
+        .site-footer__partners {
+          display: block;
+          width: auto;
+          max-width: 16rem;
+          height: auto;
+          margin-top: 0.85rem;
         }
 
         .site-footer__social {
@@ -236,32 +266,40 @@ export default function Footer() {
         }
 
         .site-footer__social-btn {
-          width: 40px;
-          height: 40px;
-          border-radius: 999px;
+          width: 32px;
+          height: 32px;
+          border-radius: 4px;
           display: grid;
           place-items: center;
-          color: #ffffff;
-          background: rgba(255, 255, 255, 0.08);
-          border: 1px solid rgba(255, 255, 255, 0.12);
+          color: #fff;
           text-decoration: none;
-          transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+          transition: opacity 0.2s ease;
         }
 
         .site-footer__social-btn:hover {
-          background: rgba(28, 146, 160, 0.35);
-          border-color: rgba(28, 146, 160, 0.55);
-          transform: translateY(-1px);
+          opacity: 0.82;
+        }
+
+        .site-footer__social-btn--facebook {
+          background: #3b5998;
+        }
+
+        .site-footer__social-btn--instagram {
+          background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+
+        .site-footer__social-btn--youtube {
+          background: #ff0000;
         }
 
         .site-footer__col h3 {
-          margin: 0 0 1.1rem;
+          margin: 0 0 1.15rem;
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
-          font-size: 0.78rem;
+          font-size: 0.95rem;
           font-weight: 700;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: #ffd166;
+          letter-spacing: 0;
+          text-transform: none;
+          color: var(--cor-texto);
         }
 
         .site-footer__col ul {
@@ -274,7 +312,7 @@ export default function Footer() {
         }
 
         .site-footer__col a {
-          color: rgba(255, 255, 255, 0.72);
+          color: color-mix(in srgb, var(--cor-texto) 72%, transparent);
           text-decoration: none;
           font-size: 0.9rem;
           line-height: 1.45;
@@ -282,7 +320,7 @@ export default function Footer() {
         }
 
         .site-footer__col a:hover {
-          color: #ffffff;
+          color: var(--cor-texto);
         }
 
         .site-footer__contact li {
@@ -293,21 +331,19 @@ export default function Footer() {
 
         .site-footer__icon {
           flex: 0 0 auto;
-          width: 34px;
-          height: 34px;
-          border-radius: 9px;
+          width: 16px;
+          height: 16px;
           display: grid;
           place-items: center;
-          background: rgba(28, 146, 160, 0.18);
-          color: #9fd8df;
-          margin-top: 0.05rem;
+          color: var(--cor-realce);
+          margin-top: 0.15rem;
         }
 
         .site-footer__contact address {
           font-style: normal;
           font-size: 0.9rem;
           line-height: 1.55;
-          color: rgba(255, 255, 255, 0.72);
+          color: color-mix(in srgb, var(--cor-texto) 72%, transparent);
         }
 
         .site-footer__contact a {
@@ -331,43 +367,50 @@ export default function Footer() {
           gap: 0.75rem 1.25rem;
         }
 
-        .site-footer__copy,
+        .site-footer__copy {
+          margin: 0;
+          color: color-mix(in srgb, var(--cor-texto) 42%, transparent);
+          font-size: 0.68rem;
+          line-height: 1.5;
+        }
+
         .site-footer__privacy,
         .site-footer__legal {
           margin: 0;
-          color: rgba(255, 255, 255, 0.48);
+          color: color-mix(in srgb, var(--cor-texto) 48%, transparent);
           font-size: 0.8rem;
           line-height: 1.6;
         }
 
-        .site-footer__cookies {
-          appearance: none;
-          border: 0;
-          background: transparent;
-          padding: 0;
-          cursor: pointer;
-          font: inherit;
-        }
-
         .site-footer__copy a {
-          color: #14b8a6;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
           text-decoration: none;
           font-weight: 700;
           transition: color 0.2s ease;
         }
 
         .site-footer__copy a:hover {
-          color: #2dd4bf;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
         }
 
         .site-footer__privacy {
-          color: rgba(255, 255, 255, 0.72);
+          color: color-mix(in srgb, var(--cor-texto) 72%, transparent);
           text-decoration: none;
           transition: color 0.2s ease;
         }
 
         .site-footer__privacy:hover {
-          color: #ffffff;
+          color: var(--cor-texto);
         }
 
         .site-footer__privacy {
@@ -379,20 +422,21 @@ export default function Footer() {
         .site-footer__legal {
           max-width: 58rem;
           font-size: 0.72rem;
-          color: rgba(255, 255, 255, 0.38);
+          color: color-mix(in srgb, var(--cor-texto) 38%, transparent);
           line-height: 1.7;
         }
 
         @media (min-width: 768px) {
           .site-footer__top {
-            grid-template-columns: 1.35fr 0.9fr 1.25fr;
+            grid-template-columns: 1fr 1fr;
             gap: 2.5rem 3rem;
           }
         }
 
         @media (min-width: 1024px) {
           .site-footer__top {
-            gap: 3rem 4rem;
+            grid-template-columns: 1.15fr 0.85fr 1.2fr 0.7fr;
+            gap: 2.5rem 3rem;
           }
         }
       `}</style>

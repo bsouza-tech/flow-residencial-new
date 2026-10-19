@@ -1,4 +1,4 @@
-export const EMPREENDIMENTO = 'Solar Bellavista';
+export const EMPREENDIMENTO = 'Flow Residencial';
 
 export const RELATIONSHIP_OPTIONS = [
   'Solteiro(a)',

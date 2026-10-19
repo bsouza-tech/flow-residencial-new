@@ -77,6 +77,44 @@ export function PoiGlyph({ icon, size = 18 }: { icon: PoiIcon; size?: number }) 
           <path {...stroke} d="M12 10v6M9 13h6" />
         </svg>
       );
+    case 'school':
+      return (
+        <svg {...props}>
+          <path {...stroke} d="M22 10 12 5 2 10l10 5 10-5Z" />
+          <path {...stroke} d="M6 12v5c0 1.2 2.4 3 6 3s6-1.8 6-3v-5" />
+        </svg>
+      );
+    case 'landmark':
+      return (
+        <svg {...props}>
+          <path {...stroke} d="M4 20h16" />
+          <path {...stroke} d="M6 20V10M10 20V10M14 20V10M18 20V10" />
+          <path {...stroke} d="M3 10h18" />
+          <path {...stroke} d="M12 3 4 10h16L12 3Z" />
+        </svg>
+      );
+    case 'shopping':
+      return (
+        <svg {...props}>
+          <path {...stroke} d="M6 8h12l-1 12H7L6 8Z" />
+          <path {...stroke} d="M9 8V7a3 3 0 0 1 6 0v1" />
+        </svg>
+      );
+    case 'calendar':
+      return (
+        <svg {...props}>
+          <rect {...stroke} x="4" y="5" width="16" height="15" rx="2" />
+          <path {...stroke} d="M8 3v4M16 3v4M4 10h16" />
+        </svg>
+      );
+    case 'cafe':
+      return (
+        <svg {...props}>
+          <path {...stroke} d="M5 8h11v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8Z" />
+          <path {...stroke} d="M16 9h2.2a2.2 2.2 0 0 1 0 4.4H16" />
+          <path {...stroke} d="M8 4.5v1.5M11 4v2" />
+        </svg>
+      );
     default:
       return null;
   }
@@ -102,6 +140,16 @@ export function poiIconSvg(icon: PoiIcon, size = 14, stroke = 'white') {
       return `<svg ${common}><path d="M6.5 9v6M17.5 9v6M3.5 10.5v3M20.5 10.5v3M6.5 12h11"/></svg>`;
     case 'hospital':
       return `<svg ${common}><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M12 10v6M9 13h6"/></svg>`;
+    case 'school':
+      return `<svg ${common}><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.2 2.4 3 6 3s6-1.8 6-3v-5"/></svg>`;
+    case 'landmark':
+      return `<svg ${common}><path d="M4 20h16"/><path d="M6 20V10M10 20V10M14 20V10M18 20V10"/><path d="M3 10h18"/><path d="M12 3 4 10h16L12 3Z"/></svg>`;
+    case 'shopping':
+      return `<svg ${common}><path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8V7a3 3 0 0 1 6 0v1"/></svg>`;
+    case 'calendar':
+      return `<svg ${common}><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>`;
+    case 'cafe':
+      return `<svg ${common}><path d="M5 8h11v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4V8Z"/><path d="M16 9h2.2a2.2 2.2 0 0 1 0 4.4H16"/><path d="M8 4.5v1.5M11 4v2"/></svg>`;
     default:
       return '';
   }

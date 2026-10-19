@@ -15,61 +15,25 @@ export interface Amenity {
   images: AmenityImage[];
 }
 
-function img(
-  id: string,
-  name: OptimizedImageName,
-  alt: string,
-  label: string,
-): AmenityImage {
+function img(id: string, name: OptimizedImageName, label: string): AmenityImage {
   return {
     id,
     name,
     src: optimizedFullSrc(name),
-    alt,
+    alt: label,
     label,
     category: 'amenity',
   };
 }
 
 export const amenities: Amenity[] = [
-  {
-    id: 'espacos-gourmet',
-    title: 'Espaços Gourmet',
-    images: [img('gourmet-1', 'area-gourmet', 'Espaço gourmet externo com churrasqueira, mesas e vista para a natureza', 'Espaços Gourmet')],
-  },
-  {
-    id: 'area-fitness',
-    title: 'Área Fitness',
-    images: [img('fitness-1', 'area-fit', 'Área fitness com academia externa e espaço indoor equipado', 'Área Fitness')],
-  },
-  {
-    id: 'quadra-esportiva',
-    title: 'Quadra Esportiva',
-    images: [img('quadra-1', 'quadra', 'Quadra poliesportiva cercada com vista para a piscina e o pet place', 'Quadra Esportiva')],
-  },
-  {
-    id: 'piscina-deck',
-    title: 'Piscina com Deck',
-    images: [img('piscina-1', 'piscina', 'Piscina com deck, espreguiçadeiras e vista para a montanha', 'Piscina com Deck')],
-  },
-  {
-    id: 'salao-festas',
-    title: 'Salão de Festas',
-    images: [img('salao-1', 'salao-de-festas', 'Salão de festas com mesas, bar e ambientação moderna', 'Salão de Festas')],
-  },
-  {
-    id: 'playground',
-    title: 'Playground',
-    images: [img('play-1', 'playground', 'Playground externo com brinquedos coloridos e gramado', 'Playground')],
-  },
-  {
-    id: 'petplace',
-    title: 'Petplace',
-    images: [img('pet-1', 'quadra-poliesportiva', 'Pet place com equipamentos de agility ao lado da quadra esportiva', 'Petplace')],
-  },
-  {
-    id: 'praca-jogos',
-    title: 'Praça de Jogos',
-    images: [img('jogos-1', 'area-gourmet-dois', 'Praça de jogos ao ar livre com mesas e área de lazer', 'Praça de Jogos')],
-  },
+  { id: 'marketplace', title: 'Marketplace', images: [img('marketplace-1', 'marketplace', 'Marketplace')] },
+  { id: 'fireplace', title: 'Fireplace', images: [img('fireplace-1', 'fireplace', 'Fireplace')] },
+  { id: 'area-gourmet', title: 'Área Gourmet', images: [img('gourmet-1', 'gourmet-coberto', 'Área Gourmet')] },
+  { id: 'coworking', title: 'Coworking', images: [img('coworking-1', 'coworking', 'Coworking')] },
+  { id: 'academia', title: 'Academia', images: [img('academia-1', 'academia', 'Academia')] },
+  { id: 'espaco-fitness', title: 'Espaço Fitness', images: [img('fitness-1', 'espaco-fitness', 'Espaço Fitness')] },
+  { id: 'laundry', title: 'Laundry', images: [img('laundry-1', 'laundry', 'Laundry')] },
+  { id: 'cafe', title: 'Café', images: [img('cafe-1', 'cafeteria', 'Café')] },
+  { id: 'lobby', title: 'Lobby', images: [img('lobby-1', 'lobby', 'Lobby')] },
 ];

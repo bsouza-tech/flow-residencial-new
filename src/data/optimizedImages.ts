@@ -14,8 +14,8 @@ export const optimizedImages = {
       1200,
       1680
     ],
-    "width": 1680,
-    "height": 1263,
+    "width": 1920,
+    "height": 1440,
     "largest": 1680
   },
   "fachada-dois": {
@@ -24,173 +24,241 @@ export const optimizedImages = {
       800,
       1200
     ],
-    "width": 1680,
-    "height": 1263,
+    "width": 1350,
+    "height": 1080,
     "largest": 1200
   },
-  "cozinha": {
-    "name": "cozinha",
+  "flow-logo": {
+    "name": "flow-logo",
+    "widths": [
+      480
+    ],
+    "width": 1920,
+    "height": 1080,
+    "largest": 480
+  },
+  "estudio": {
+    "name": "estudio",
+    "widths": [
+      800,
+      1080
+    ],
+    "width": 1080,
+    "height": 1080,
+    "largest": 1080
+  },
+  "double-suite": {
+    "name": "double-suite",
+    "widths": [
+      768
+    ],
+    "width": 768,
+    "height": 768,
+    "largest": 768
+  },
+  "cobertura-double-suite": {
+    "name": "cobertura-double-suite",
+    "widths": [
+      768
+    ],
+    "width": 768,
+    "height": 768,
+    "largest": 768
+  },
+  "dois-quartos-pcd": {
+    "name": "dois-quartos-pcd",
+    "widths": [
+      768
+    ],
+    "width": 768,
+    "height": 768,
+    "largest": 768
+  },
+  "suite-loft": {
+    "name": "suite-loft",
     "widths": [
       480,
       800,
       1200
     ],
-    "width": 1680,
-    "height": 1263,
+    "width": 1350,
+    "height": 1080,
     "largest": 1200
   },
-  "sala": {
-    "name": "sala",
+  "cozinha-loft": {
+    "name": "cozinha-loft",
     "widths": [
       480,
       800,
       1200
     ],
-    "width": 1680,
-    "height": 1263,
+    "width": 1350,
+    "height": 1080,
     "largest": 1200
   },
-  "quarto": {
-    "name": "quarto",
+  "suite-double-01": {
+    "name": "suite-double-01",
     "widths": [
       480,
       800,
       1200
     ],
-    "width": 1680,
-    "height": 1263,
+    "width": 1350,
+    "height": 1080,
     "largest": 1200
   },
-  "quarto-infantil": {
-    "name": "quarto-infantil",
+  "lobby": {
+    "name": "lobby",
     "widths": [
       480,
       800,
       1200
     ],
-    "width": 1680,
-    "height": 1263,
+    "width": 1350,
+    "height": 1080,
     "largest": 1200
   },
-  "varanda": {
-    "name": "varanda",
+  "suite-double-02": {
+    "name": "suite-double-02",
     "widths": [
       480,
       800,
       1200
     ],
-    "width": 1680,
-    "height": 1263,
+    "width": 1350,
+    "height": 1080,
     "largest": 1200
   },
-  "area-gourmet": {
-    "name": "area-gourmet",
+  "marketplace": {
+    "name": "marketplace",
     "widths": [
       480,
-      800
-    ],
-    "width": 1680,
-    "height": 1263,
-    "largest": 800
-  },
-  "area-fit": {
-    "name": "area-fit",
-    "widths": [
-      480,
-      800
-    ],
-    "width": 1680,
-    "height": 1263,
-    "largest": 800
-  },
-  "quadra": {
-    "name": "quadra",
-    "widths": [
-      480,
-      800
-    ],
-    "width": 1680,
-    "height": 1263,
-    "largest": 800
-  },
-  "piscina": {
-    "name": "piscina",
-    "widths": [
-      480,
-      800
-    ],
-    "width": 1680,
-    "height": 1263,
-    "largest": 800
-  },
-  "salao-de-festas": {
-    "name": "salao-de-festas",
-    "widths": [
-      480,
-      800
-    ],
-    "width": 1680,
-    "height": 1263,
-    "largest": 800
-  },
-  "playground": {
-    "name": "playground",
-    "widths": [
-      480,
-      800
-    ],
-    "width": 1680,
-    "height": 1263,
-    "largest": 800
-  },
-  "quadra-poliesportiva": {
-    "name": "quadra-poliesportiva",
-    "widths": [
-      480,
-      800
-    ],
-    "width": 1680,
-    "height": 1263,
-    "largest": 800
-  },
-  "area-gourmet-dois": {
-    "name": "area-gourmet-dois",
-    "widths": [
-      480,
-      800
-    ],
-    "width": 1680,
-    "height": 1263,
-    "largest": 800
-  },
-  "ponta": {
-    "name": "ponta",
-    "widths": [
       800,
       1200
     ],
-    "width": 1280,
-    "height": 905,
+    "width": 1350,
+    "height": 1080,
     "largest": 1200
   },
-  "ponta-pcd": {
-    "name": "ponta-pcd",
+  "coworking": {
+    "name": "coworking",
     "widths": [
+      480,
       800,
       1200
     ],
-    "width": 1280,
-    "height": 905,
+    "width": 1350,
+    "height": 1080,
     "largest": 1200
   },
-  "meio-garden": {
-    "name": "meio-garden",
+  "varanda-loft": {
+    "name": "varanda-loft",
     "widths": [
+      480,
       800,
       1200
     ],
-    "width": 1280,
-    "height": 905,
+    "width": 1350,
+    "height": 1080,
+    "largest": 1200
+  },
+  "cafeteria": {
+    "name": "cafeteria",
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "width": 1350,
+    "height": 1080,
+    "largest": 1200
+  },
+  "sala-double": {
+    "name": "sala-double",
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "width": 1350,
+    "height": 1080,
+    "largest": 1200
+  },
+  "academia": {
+    "name": "academia",
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "width": 1350,
+    "height": 1080,
+    "largest": 1200
+  },
+  "terraco-cobertura": {
+    "name": "terraco-cobertura",
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "width": 1350,
+    "height": 1080,
+    "largest": 1200
+  },
+  "espaco-fitness": {
+    "name": "espaco-fitness",
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "width": 1350,
+    "height": 1080,
+    "largest": 1200
+  },
+  "laundry": {
+    "name": "laundry",
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "width": 1350,
+    "height": 1080,
+    "largest": 1200
+  },
+  "gourmet-coberto": {
+    "name": "gourmet-coberto",
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "width": 1350,
+    "height": 1080,
+    "largest": 1200
+  },
+  "gourmet-descoberto": {
+    "name": "gourmet-descoberto",
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "width": 1350,
+    "height": 1080,
+    "largest": 1200
+  },
+  "fireplace": {
+    "name": "fireplace",
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "width": 1350,
+    "height": 1080,
     "largest": 1200
   },
   "nivel-a": {
@@ -236,15 +304,6 @@ export const optimizedImages = {
     ],
     "width": 2085,
     "height": 495,
-    "largest": 480
-  },
-  "solar-bellavista": {
-    "name": "solar-bellavista",
-    "widths": [
-      480
-    ],
-    "width": 1000,
-    "height": 1000,
     "largest": 480
   }
 } as const satisfies Record<string, OptimizedImageMeta>;

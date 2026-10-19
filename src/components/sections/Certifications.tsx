@@ -60,7 +60,7 @@ export default function Certifications() {
       <style>{`
         .certs {
           background:
-            linear-gradient(180deg, #ffffff 0%, #f7f5ef 48%, #ffffff 100%);
+            linear-gradient(180deg, var(--cor-fundo) 0%, var(--cor-superficie) 48%, var(--cor-fundo) 100%);
         }
 
         .certs__intro {
@@ -72,7 +72,12 @@ export default function Certifications() {
         .certs__intro .eyebrow {
           display: block;
           margin-bottom: 1rem;
-          color: #19808c;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
         }
 
         .certs__intro h2 {
@@ -80,7 +85,7 @@ export default function Certifications() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 800;
           font-size: clamp(1.75rem, 3.4vw, 2.75rem);
-          color: #013034;
+          color: var(--cor-texto);
           line-height: 1.15;
           letter-spacing: -0.02em;
         }
@@ -89,7 +94,7 @@ export default function Certifications() {
           margin: 0 auto;
           max-width: 38ch;
           font-size: 1rem;
-          color: #4a5a61;
+          color: var(--cor-texto-apoio);
           line-height: 1.7;
         }
 
@@ -111,11 +116,11 @@ export default function Certifications() {
           min-height: 100%;
           padding: 1.75rem 1.35rem 1.45rem;
           border-radius: 18px;
-          background: rgba(255, 255, 255, 0.92);
-          border: 1px solid rgba(1, 48, 52, 0.07);
+          background: var(--cor-superficie);
+          border: 1px solid var(--cor-borda);
           box-shadow:
-            0 1px 0 rgba(255, 255, 255, 0.8) inset,
-            0 14px 36px rgba(1, 48, 52, 0.05);
+            0 1px 0 color-mix(in srgb, var(--cor-texto) 80%, transparent) inset,
+            0 14px 36px color-mix(in srgb, var(--cor-fundo-profundo) 5%, transparent);
           transition:
             transform 0.28s ease,
             border-color 0.28s ease,
@@ -124,10 +129,10 @@ export default function Certifications() {
 
         .certs__item:hover {
           transform: translateY(-4px);
-          border-color: rgba(28, 146, 160, 0.28);
+          border-color: color-mix(in srgb, var(--cor-realce) 28%, transparent);
           box-shadow:
-            0 1px 0 rgba(255, 255, 255, 0.9) inset,
-            0 22px 44px rgba(28, 146, 160, 0.12);
+            0 1px 0 color-mix(in srgb, var(--cor-texto) 90%, transparent) inset,
+            0 22px 44px color-mix(in srgb, var(--cor-realce) 12%, transparent);
         }
 
         .certs__logo {
@@ -154,7 +159,7 @@ export default function Certifications() {
           margin-inline: auto;
           object-fit: contain;
           object-position: center;
-          filter: drop-shadow(0 8px 16px rgba(1, 48, 52, 0.08));
+          filter: drop-shadow(0 8px 16px color-mix(in srgb, var(--cor-fundo-profundo) 8%, transparent));
           transition: transform 0.28s ease;
         }
 
@@ -176,12 +181,12 @@ export default function Certifications() {
           font-size: 0.92rem;
           letter-spacing: 0.04em;
           text-transform: uppercase;
-          color: #013034;
+          color: var(--cor-texto);
         }
 
         .certs__meta span {
           font-size: 0.78rem;
-          color: #5b7a7b;
+          color: var(--cor-texto-apoio);
           line-height: 1.4;
         }
 
@@ -198,9 +203,9 @@ export default function Certifications() {
             gap: 0;
             padding: 0.35rem;
             border-radius: 22px;
-            background: rgba(255, 255, 255, 0.65);
-            border: 1px solid rgba(1, 48, 52, 0.06);
-            box-shadow: 0 20px 50px rgba(1, 48, 52, 0.04);
+            background: var(--cor-superficie);
+            border: 1px solid var(--cor-borda);
+            box-shadow: 0 20px 50px color-mix(in srgb, var(--cor-fundo-profundo) 4%, transparent);
             overflow: hidden;
           }
 
@@ -223,7 +228,7 @@ export default function Certifications() {
             background: linear-gradient(
               180deg,
               transparent,
-              rgba(1, 48, 52, 0.12),
+              color-mix(in srgb, var(--cor-fundo-profundo) 12%, transparent),
               transparent
             );
           }
@@ -231,7 +236,7 @@ export default function Certifications() {
           .certs__item:hover {
             transform: translateY(-2px);
             box-shadow: none;
-            background: rgba(28, 146, 160, 0.04);
+            background: color-mix(in srgb, var(--cor-realce) 4%, transparent);
           }
 
           .certs__logo {

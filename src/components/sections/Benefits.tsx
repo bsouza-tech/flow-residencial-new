@@ -19,6 +19,12 @@ const BenefitIcon = ({ id }: { id: string }) => {
         <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
       </svg>
     ),
+    condicoes: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="2" y="5" width="20" height="14" rx="2" />
+        <path d="M2 10h20" />
+      </svg>
+    ),
     localizacao: (
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
@@ -57,7 +63,7 @@ export default function Benefits() {
       id="beneficios"
       aria-labelledby="benefits-heading"
       className="section-padding"
-      style={{ background: '#ffffff' }}
+      style={{ background: 'var(--cor-fundo)' }}
     >
       <div className="container">
         {/* Top editorial row */}
@@ -66,26 +72,36 @@ export default function Benefits() {
           className="benefits-top"
         >
           {/* Left: heading */}
-          <div ref={headingRef} style={{ maxWidth: '480px' }}>
-            <span className="eyebrow" data-reveal="eyebrow" style={{ color: '#19808c', display: 'block', marginBottom: '1.25rem' }}>
-              O Bellavista
+          <div ref={headingRef} style={{ maxWidth: '34rem' }}>
+            <span className="eyebrow aurora-texto" data-reveal="eyebrow" style={{ display: 'block', marginBottom: '1.25rem' }}>
+              Flow Residencial
             </span>
             <h2
               id="benefits-heading"
+              className="benefits-heading"
               data-reveal="heading"
               style={{
                 fontFamily: "'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif",
                 fontWeight: 800,
-                fontSize: 'clamp(2rem, 4vw, 3.25rem)',
-                color: '#013034',
-                lineHeight: 1.15,
+                fontSize: 'clamp(1.85rem, 3.6vw, 2.85rem)',
+                color: 'var(--cor-texto)',
+                lineHeight: 1.12,
+                letterSpacing: '-0.03em',
                 margin: '0 0 1.5rem 0',
               }}
             >
-              Um lugar pensado para a vida acontecer.
+              <span className="gradient-text">Destaques</span> que elevam sua experiência de morar
             </h2>
-            <p data-reveal="text" style={{ fontSize: '1.05rem', color: '#4a5a61', lineHeight: 1.75, margin: 0 }}>
-              Mais do que um endereço, o Solar Bellavista é o começo de uma nova fase. Projetado para que cada detalhe do seu dia a dia faça sentido, com segurança, conforto e lazer perto de você e da sua família.
+            <p
+              data-reveal="text"
+              style={{
+                margin: 0,
+                color: 'var(--cor-texto-apoio)',
+                fontSize: '1.05rem',
+                lineHeight: 1.7,
+              }}
+            >
+              No Flow, você escolhe entre quatro plantas versáteis que unem conforto, praticidade e design otimizado. Seja para morar sozinho ou para compartilhar, aqui você encontra o espaço ideal para viver com liberdade e fluidez.
             </p>
           </div>
 
@@ -102,7 +118,7 @@ export default function Benefits() {
           >
             <Picture
               name="fachada-dois"
-              alt="Vista aérea do Solar Bellavista com prédios, área de lazer e entorno natural em Teresópolis"
+              alt="Fachada Letreiro do Flow Residencial"
               sizes="(max-width: 959px) 100vw, 50vw"
               loading="lazy"
               pictureClassName="benefits-top__picture"
@@ -110,8 +126,8 @@ export default function Benefits() {
             />
 
             {/* Teal accent */}
-            <div style={{ position: 'absolute', bottom: '1.5rem', left: '1.5rem', background: 'rgba(1,48,52,0.85)', backdropFilter: 'blur(8px)', borderRadius: '6px', padding: '0.75rem 1.25rem' }}>
-              <p style={{ fontFamily: "'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif", fontWeight: 700, fontSize: '0.75rem', color: '#eb9c36', letterSpacing: '0.08em', margin: 0 }}>
+            <div style={{ position: 'absolute', bottom: '1.5rem', left: '1.5rem', background: 'var(--cor-superficie-vidro)', backdropFilter: 'blur(8px)', borderRadius: '6px', padding: '0.75rem 1.25rem' }}>
+              <p className="aurora-texto" style={{ fontFamily: "'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif", fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.08em', margin: 0 }}>
                 TERESÓPOLIS — RJ
               </p>
             </div>
@@ -130,23 +146,23 @@ export default function Benefits() {
               className="benefit-card"
               data-reveal="items"
               style={{
-                background: '#f3f8f8',
+                background: 'var(--cor-superficie)',
                 borderRadius: '12px',
                 padding: '2rem',
-                border: '1px solid rgba(28,146,160,0.14)',
+                border: '1px solid color-mix(in srgb, var(--cor-realce) 14%, transparent)',
                 transition: 'box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease, background 0.2s ease',
               }}
               onMouseEnter={e => {
-                (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 28px rgba(1,48,52,0.08)';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 28px color-mix(in srgb, var(--cor-fundo-profundo) 8%, transparent)';
                 (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
-                (e.currentTarget as HTMLElement).style.background = '#eaf4f5';
-                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(28,146,160,0.28)';
+                (e.currentTarget as HTMLElement).style.background = 'var(--cor-superficie)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'color-mix(in srgb, var(--cor-realce) 28%, transparent)';
               }}
               onMouseLeave={e => {
                 (e.currentTarget as HTMLElement).style.boxShadow = 'none';
                 (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                (e.currentTarget as HTMLElement).style.background = '#f3f8f8';
-                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(28,146,160,0.14)';
+                (e.currentTarget as HTMLElement).style.background = 'var(--cor-superficie)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'color-mix(in srgb, var(--cor-realce) 14%, transparent)';
               }}
             >
               <div
@@ -154,8 +170,8 @@ export default function Benefits() {
                   width: '48px',
                   height: '48px',
                   borderRadius: '8px',
-                  background: 'rgba(28,146,160,0.14)',
-                  color: '#1c92a0',
+                  background: 'color-mix(in srgb, var(--cor-realce) 14%, transparent)',
+                  color: 'var(--cor-realce)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -165,18 +181,31 @@ export default function Benefits() {
               >
                 <BenefitIcon id={benefit.id} />
               </div>
-              <h3 style={{ fontFamily: "'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif", fontWeight: 700, fontSize: '1.05rem', color: '#013034', margin: '0 0 0.75rem 0' }}>
+              <h3 style={{ fontFamily: "'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif", fontWeight: 700, fontSize: '1.05rem', color: 'var(--cor-texto)', margin: benefit.description ? '0 0 0.75rem 0' : 0 }}>
                 {benefit.title}
               </h3>
-              <p style={{ fontSize: '0.9rem', color: '#4a5a61', lineHeight: 1.7, margin: 0 }}>
-                {benefit.description}
-              </p>
+              {benefit.description ? (
+                <p style={{ fontSize: '0.9rem', color: 'var(--cor-texto-apoio)', lineHeight: 1.7, margin: 0 }}>
+                  {benefit.description}
+                </p>
+              ) : null}
             </article>
           ))}
         </div>
       </div>
 
       <style>{`
+        .benefits-heading .gradient-text,
+        .benefits-heading .gradient-text .split-char {
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          -webkit-text-fill-color: transparent;
+          animation: 11s infinite flow-shift-x;
+        }
+
         .benefits-top__picture {
           display: block;
           width: 100%;

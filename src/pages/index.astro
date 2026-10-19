@@ -46,12 +46,15 @@ export const prerender = true;
     left: 1rem;
     z-index: 9999;
     padding: 0.75rem 1.5rem;
-    background: #eb9c36;
-    color: #ffffff;
+    background-image: var(--gradiente-botao);
+    background-size: 240% 100%;
+    animation: 9s infinite flow-shift-x;
+    box-shadow: var(--sombra-botao);
+    color: var(--cor-texto);
     font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
     font-weight: 700;
     font-size: 0.875rem;
-    border-radius: 999px;
+    border-radius: var(--raio-botao);
     text-decoration: none;
     transition: top 0.2s ease;
   }

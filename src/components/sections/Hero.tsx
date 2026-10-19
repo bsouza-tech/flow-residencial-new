@@ -1,6 +1,6 @@
 import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 
-const TITLE_ARIA = 'Um lugar para viver bem todos os dias.';
+const TITLE_ARIA = 'Morar com praticidade nunca foi tão fácil';
 
 /** Fade + deslize por letra. Stagger original 0.022; encurtado para 0.008 (2,75×) para o último caractere terminar cedo e o LCP do parágrafo não escorregar. */
 const CHAR_BASE_DELAY_S = 0.05;
@@ -104,17 +104,17 @@ export default function Hero() {
   }, []);
 
   let charIndex = 0;
-  const line1Before = CharSpans({ text: 'Um lugar para ', startIndex: charIndex });
+  const line1Before = CharSpans({ text: 'Morar com ', startIndex: charIndex });
   charIndex = line1Before.nextIndex;
-  const line1Em = CharSpans({ text: 'viver bem', startIndex: charIndex });
+  const line1Em = CharSpans({ text: 'praticidade', startIndex: charIndex });
   charIndex = line1Em.nextIndex;
-  const line2 = CharSpans({ text: 'todos os dias.', startIndex: charIndex });
+  const line2 = CharSpans({ text: 'nunca foi tão fácil', startIndex: charIndex });
 
   return (
     <section
       ref={sectionRef}
       id="hero"
-      aria-label="Apresentação do Solar Bellavista"
+      aria-label="Apresentação do Flow Residencial"
       className="hero"
     >
       <div className="hero__media" aria-hidden="true" />
@@ -124,7 +124,7 @@ export default function Hero() {
       <div className="container hero__content">
         <div className="hero__copy">
           <p className="hero__eyebrow">
-            Solar Bellavista
+            Flow Residencial
             <span aria-hidden="true">·</span>
             Teresópolis
           </p>
@@ -140,12 +140,12 @@ export default function Hero() {
           </h1>
 
           <p className="hero__text">
-            Conforto, lazer e praticidade para transformar o seu jeito de morar em Teresópolis.
+            Um empreendimento moderno, funcional e perfeito para quem busca viver com estilo e praticidade em Teresópolis.
           </p>
 
           <div className="hero__actions">
             <a href="#interesse" className="hero__btn hero__btn--primary" data-abrir-formulario="">
-              Quero conhecer
+              Receber condições
             </a>
             <a href="#plantas" className="hero__btn hero__btn--secondary">
               Ver plantas
@@ -166,13 +166,13 @@ export default function Hero() {
           display: flex;
           align-items: flex-end;
           overflow: hidden;
-          color: #ffffff;
+          color: var(--cor-texto);
         }
 
         .hero__media {
           position: absolute;
           inset: 0;
-          background-color: #013034;
+          background-color: var(--cor-fundo-profundo);
           background-image: url('/img/fachada-1200.webp');
           background-image: -webkit-image-set(
             url('/img/fachada-1200.avif') type('image/avif'),
@@ -208,15 +208,15 @@ export default function Hero() {
           background:
             linear-gradient(
               105deg,
-              rgba(1, 48, 52, 0.72) 0%,
-              rgba(1, 48, 52, 0.35) 48%,
-              rgba(1, 48, 52, 0.12) 100%
+              color-mix(in srgb, var(--cor-fundo-profundo) 56%, transparent) 0%,
+              color-mix(in srgb, var(--cor-fundo-profundo) 22%, transparent) 48%,
+              color-mix(in srgb, var(--cor-fundo-profundo) 6%, transparent) 100%
             ),
             linear-gradient(
               to top,
-              rgba(1, 48, 52, 0.92) 0%,
-              rgba(1, 48, 52, 0.55) 42%,
-              rgba(1, 48, 52, 0.08) 100%
+              color-mix(in srgb, var(--cor-fundo-profundo) 78%, transparent) 0%,
+              color-mix(in srgb, var(--cor-fundo-profundo) 38%, transparent) 42%,
+              color-mix(in srgb, var(--cor-fundo-profundo) 4%, transparent) 100%
             );
         }
 
@@ -242,12 +242,20 @@ export default function Hero() {
           font-weight: 600;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: #ffd166;
-          animation: heroRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: heroRise 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both, 11s infinite flow-shift-x;
         }
 
         .hero__eyebrow span {
-          color: rgba(255, 255, 255, 0.45);
+          background: none;
+          -webkit-background-clip: border-box;
+          background-clip: border-box;
+          -webkit-text-fill-color: color-mix(in srgb, var(--cor-texto) 45%, transparent);
+          color: color-mix(in srgb, var(--cor-texto) 45%, transparent);
           letter-spacing: 0;
         }
 
@@ -259,7 +267,7 @@ export default function Hero() {
           font-size: clamp(2.45rem, 5.6vw, 4.6rem);
           line-height: 1.05;
           letter-spacing: -0.03em;
-          color: #ffffff;
+          color: var(--cor-texto);
         }
 
         .hero__line {
@@ -283,7 +291,18 @@ export default function Hero() {
         .hero__title em {
           font-style: normal;
           font-weight: 800;
-          color: #eb9c36;
+          animation: 11s infinite flow-shift-x-var;
+        }
+
+        .hero__title em .hero__char {
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          background-position: calc(var(--flow-x) + (var(--i) * 2.5%)) 50%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: heroCharIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+          animation-delay: calc(${CHAR_BASE_DELAY_S}s + (var(--i) * ${CHAR_STAGGER_S}s));
         }
 
         .hero__text {
@@ -293,7 +312,7 @@ export default function Hero() {
           font-size: clamp(1rem, 1.4vw, 1.125rem);
           font-weight: 400;
           line-height: 1.65;
-          color: rgba(255, 255, 255, 0.86);
+          color: color-mix(in srgb, var(--cor-texto) 86%, transparent);
           /* Parágrafo visível no 1º paint: o LCP é este texto. Sem opacity:0. */
         }
 
@@ -312,7 +331,7 @@ export default function Hero() {
           justify-content: center;
           min-height: 48px;
           padding: 0.85rem 1.55rem;
-          border-radius: 999px;
+          border-radius: var(--raio-botao);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.84rem;
           font-weight: 700;
@@ -322,27 +341,29 @@ export default function Hero() {
         }
 
         .hero__btn--primary {
-          background: #eb9c36;
-          color: #013034;
-          box-shadow: 0 10px 24px rgba(235, 156, 54, 0.28);
+          background-image: var(--gradiente-botao);
+          background-size: 240% 100%;
+          animation: 9s infinite flow-shift-x;
+          color: var(--cor-texto);
+          box-shadow: var(--sombra-botao);
         }
 
         .hero__btn--primary:hover {
-          background: #d88928;
-          transform: translateY(-1px);
-          color: #013034;
+          filter: brightness(1.05);
+          transform: translateY(-0.25rem);
+          color: var(--cor-texto);
         }
 
         .hero__btn--secondary {
           background: transparent;
-          color: #ffffff;
-          border: 1.5px solid rgba(255, 255, 255, 0.55);
+          color: var(--cor-texto);
+          border: 1.5px solid var(--cor-borda);
         }
 
         .hero__btn--secondary:hover {
-          border-color: #ffffff;
-          background: rgba(255, 255, 255, 0.1);
-          color: #ffffff;
+          border-color: var(--cor-texto);
+          background: color-mix(in srgb, var(--cor-texto) 10%, transparent);
+          color: var(--cor-texto);
         }
 
         .hero__scroll {
@@ -355,7 +376,7 @@ export default function Hero() {
           align-items: center;
           gap: 0.55rem;
           text-decoration: none;
-          color: rgba(255, 255, 255, 0.55);
+          color: color-mix(in srgb, var(--cor-texto) 55%, transparent);
           animation: heroRise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
         }
 
@@ -371,7 +392,7 @@ export default function Hero() {
         .hero__scroll-line {
           width: 1px;
           height: 2.4rem;
-          background: rgba(255, 255, 255, 0.22);
+          background: color-mix(in srgb, var(--cor-texto) 22%, transparent);
           position: relative;
           overflow: hidden;
         }
@@ -382,8 +403,10 @@ export default function Hero() {
           inset: 0 auto auto 0;
           width: 100%;
           height: 45%;
-          background: #eb9c36;
-          animation: heroScroll 1.6s ease-in-out infinite;
+          background-color: var(--cor-realce);
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          animation: heroScroll 1.6s ease-in-out infinite, 11s infinite flow-shift-x;
         }
 
         @keyframes heroRise {

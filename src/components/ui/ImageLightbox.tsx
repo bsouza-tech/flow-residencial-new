@@ -174,9 +174,9 @@ export default function ImageLightbox({
           max-height: 100dvh;
           width: 100vw;
           height: 100dvh;
-          background: rgba(8, 18, 20, 0.92);
+          background: color-mix(in srgb, var(--cor-fundo-profundo) 92%, transparent);
           backdrop-filter: blur(18px);
-          color: #ffffff;
+          color: var(--cor-texto);
         }
 
         .image-lightbox:not([open]) {
@@ -188,7 +188,7 @@ export default function ImageLightbox({
         }
 
         .image-lightbox::backdrop {
-          background: rgba(8, 18, 20, 0.7);
+          background: color-mix(in srgb, var(--cor-fundo-profundo) 70%, transparent);
         }
 
         .image-lightbox__stage {
@@ -226,7 +226,7 @@ export default function ImageLightbox({
           font-size: clamp(0.95rem, 1.6vw, 1.15rem);
           font-weight: 600;
           letter-spacing: -0.01em;
-          color: #ffffff;
+          color: var(--cor-texto);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -239,12 +239,12 @@ export default function ImageLightbox({
           font-size: 0.82rem;
           font-weight: 600;
           letter-spacing: 0.06em;
-          color: rgba(255, 255, 255, 0.55);
+          color: color-mix(in srgb, var(--cor-texto) 55%, transparent);
         }
 
         .image-lightbox__counter span {
           margin: 0 0.15rem;
-          color: rgba(255, 255, 255, 0.35);
+          color: color-mix(in srgb, var(--cor-texto) 35%, transparent);
         }
 
         .image-lightbox__close {
@@ -252,9 +252,9 @@ export default function ImageLightbox({
           width: 44px;
           height: 44px;
           border: 0;
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.1);
-          color: #ffffff;
+          border-radius: var(--raio-botao);
+          background: color-mix(in srgb, var(--cor-texto) 10%, transparent);
+          color: var(--cor-texto);
           cursor: pointer;
           display: grid;
           place-items: center;
@@ -262,7 +262,7 @@ export default function ImageLightbox({
         }
 
         .image-lightbox__close:hover {
-          background: rgba(255, 255, 255, 0.18);
+          background: color-mix(in srgb, var(--cor-texto) 18%, transparent);
         }
 
         .image-lightbox__close:active {
@@ -290,11 +290,11 @@ export default function ImageLightbox({
           display: block;
           width: auto;
           height: auto;
-          max-width: min(100%, 1280px);
-          max-height: 100%;
+          max-width: min(88vw, 960px);
+          max-height: 72dvh;
           object-fit: contain;
           border-radius: 10px;
-          box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+          box-shadow: 0 24px 64px color-mix(in srgb, var(--cor-fundo-profundo) 35%, transparent);
           animation: lightbox-fade 0.28s ease;
         }
 
@@ -317,9 +317,9 @@ export default function ImageLightbox({
           width: 52px;
           height: 52px;
           border: 0;
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.12);
-          color: #ffffff;
+          border-radius: var(--raio-botao);
+          background: color-mix(in srgb, var(--cor-texto) 12%, transparent);
+          color: var(--cor-texto);
           cursor: pointer;
           display: grid;
           place-items: center;
@@ -328,7 +328,7 @@ export default function ImageLightbox({
         }
 
         .image-lightbox__nav:hover {
-          background: rgba(255, 255, 255, 0.22);
+          background: color-mix(in srgb, var(--cor-texto) 22%, transparent);
         }
 
         .image-lightbox__nav:active {
@@ -364,7 +364,7 @@ export default function ImageLightbox({
           border: 2px solid transparent;
           border-radius: 8px;
           overflow: hidden;
-          background: rgba(255, 255, 255, 0.08);
+          background: color-mix(in srgb, var(--cor-texto) 8%, transparent);
           cursor: pointer;
           opacity: 0.55;
           transition: opacity 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
@@ -376,7 +376,7 @@ export default function ImageLightbox({
 
         .image-lightbox__thumb.is-active {
           opacity: 1;
-          border-color: #eb9c36;
+          border-color: var(--cor-realce);
           transform: translateY(-2px);
         }
 
@@ -402,13 +402,14 @@ export default function ImageLightbox({
 
           .image-lightbox__image {
             max-width: 100%;
+            max-height: 68dvh;
             border-radius: 6px;
           }
 
           .image-lightbox__nav {
             width: 42px;
             height: 42px;
-            background: rgba(8, 18, 20, 0.55);
+            background: color-mix(in srgb, var(--cor-fundo-profundo) 55%, transparent);
           }
 
           .image-lightbox__nav--prev {

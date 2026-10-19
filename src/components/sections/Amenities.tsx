@@ -55,10 +55,7 @@ export default function Amenities() {
       <div className="container">
         <div className="amenities__intro">
           <span className="eyebrow" data-reveal="eyebrow">Lazer</span>
-          <h2 id="amenities-heading" data-reveal="heading">Benfeitorias e lazer</h2>
-          <p data-reveal="text">
-            Espaços de lazer para você usar no dia a dia, piscina, academia, salão de festas e muito mais.
-          </p>
+          <h2 id="amenities-heading" data-reveal="heading">Seu condomínio com lazer e infraestrutura</h2>
         </div>
 
         <div className="amenities__grid">
@@ -111,7 +108,7 @@ export default function Amenities() {
 
       <style>{`
         .amenities {
-          background: #ffffff;
+          background: var(--cor-fundo);
         }
 
         .amenities__intro {
@@ -121,7 +118,12 @@ export default function Amenities() {
         }
 
         .amenities__intro .eyebrow {
-          color: #19808c;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
           display: block;
           margin-bottom: 1rem;
         }
@@ -133,7 +135,7 @@ export default function Amenities() {
           font-size: clamp(1.55rem, 3.2vw, 2.35rem);
           letter-spacing: -0.02em;
           text-transform: none;
-          color: #013034;
+          color: var(--cor-texto);
           line-height: 1.15;
         }
 
@@ -143,7 +145,7 @@ export default function Amenities() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: clamp(0.95rem, 1.5vw, 1.05rem);
           line-height: 1.55;
-          color: #2c3a3d;
+          color: var(--cor-texto-apoio);
         }
 
         .amenities__grid {
@@ -159,7 +161,7 @@ export default function Amenities() {
           border: 0;
           border-radius: 16px;
           overflow: hidden;
-          background: #f7f4ec;
+          background: var(--cor-superficie);
           cursor: pointer;
           text-align: left;
           transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -167,11 +169,11 @@ export default function Amenities() {
 
         .amenities__card:hover {
           transform: translateY(-3px);
-          box-shadow: 0 14px 28px rgba(1, 48, 52, 0.12);
+          box-shadow: 0 14px 28px color-mix(in srgb, var(--cor-fundo-profundo) 12%, transparent);
         }
 
         .amenities__card:focus-visible {
-          outline: 3px solid #1c92a0;
+          outline: 3px solid var(--cor-realce);
           outline-offset: 3px;
         }
 
@@ -179,7 +181,7 @@ export default function Amenities() {
           position: relative;
           aspect-ratio: 16 / 11;
           overflow: hidden;
-          background: #9aa18f;
+          background: var(--cor-superficie);
         }
 
         .amenities__media picture {
@@ -207,14 +209,17 @@ export default function Amenities() {
           width: 2.15rem;
           height: 2.15rem;
           border-radius: 999px;
-          background: #1c92a0;
-          color: #ffffff;
+          background-color: var(--cor-realce);
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          animation: 11s infinite flow-shift-x;
+          color: var(--cor-fundo-profundo);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 700;
           font-size: 0.78rem;
           display: grid;
           place-items: center;
-          box-shadow: 0 4px 12px rgba(1, 48, 52, 0.18);
+          box-shadow: 0 4px 12px color-mix(in srgb, var(--cor-fundo-profundo) 18%, transparent);
         }
 
         .amenities__label {
@@ -225,8 +230,8 @@ export default function Amenities() {
           font-size: 0.92rem;
           letter-spacing: 0.04em;
           text-transform: uppercase;
-          color: #013034;
-          background: #f7f4ec;
+          color: var(--cor-texto);
+          background: var(--cor-superficie);
         }
 
         @media (min-width: 640px) {
@@ -234,12 +239,20 @@ export default function Amenities() {
             grid-template-columns: repeat(2, 1fr);
             gap: 1.25rem;
           }
+
+          .amenities__card:last-child {
+            grid-column: 1 / -1;
+          }
         }
 
         @media (min-width: 960px) {
           .amenities__grid {
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.25rem;
+          }
+
+          .amenities__card:last-child {
+            grid-column: auto;
           }
 
           .amenities__label {

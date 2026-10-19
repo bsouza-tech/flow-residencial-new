@@ -34,7 +34,7 @@ function onFormsEvent(event: Event) {
   if (import.meta.env.PROD && detail.type === 'lead_created') {
     trackMeta('Lead', {
       params: {
-        content_name: 'Solar Bellavista',
+        content_name: 'Flow Residencial',
         content_category: 'formulario_basico',
       },
     });
@@ -42,7 +42,7 @@ function onFormsEvent(event: Event) {
   if (import.meta.env.PROD && detail.type === 'completed') {
     trackMeta('CompleteRegistration', {
       params: {
-        content_name: 'Solar Bellavista',
+        content_name: 'Flow Residencial',
         status: true,
       },
     });

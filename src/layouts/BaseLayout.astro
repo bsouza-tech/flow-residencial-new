@@ -14,16 +14,16 @@ interface Props {
 }
 
 const {
-  title = 'Solar Bellavista | Teresópolis',
-  description = 'Conforto, lazer e praticidade para transformar o seu jeito de morar em Teresópolis. Empreendimento da Gênesis Empreendimentos.',
+  title = 'Flow Residencial em Teresópolis | Plantas e Lazer | Gênesis',
+  description = 'Conheça o Flow Residencial em N. S. de Fátima, Teresópolis. Explore plantas Estúdio, Double Suite, Cobertura Double Suite e Dois Quartos PCD.',
 } = Astro.props;
 
 const trackEndpoint =
   import.meta.env.PUBLIC_TRACK_ENDPOINT ||
   'https://gbyhwfamevtityuzzrhn.supabase.co/functions/v1/track';
-const siteUrl = 'https://solarbellavista.com.br';
+const siteUrl = 'https://flowresidencial.com.br';
 const canonicalUrl = `${siteUrl}/`;
-const ogImage = `${siteUrl}/og-solar-bellavista.jpg`;
+const ogImage = `${siteUrl}/og-flow-residencial.jpg`;
 
 const placeLine = projectLocation.addressLines[1];
 const addressLocality = placeLine.split(', ').pop()?.split(' — ')[0];
@@ -128,17 +128,17 @@ const jsonLd = {
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Fachada do Solar Bellavista em Teresópolis" />
+    <meta property="og:image:alt" content="Fachada do Flow Residencial em Teresópolis" />
     <meta property="og:locale" content="pt_BR" />
-    <meta property="og:site_name" content="Solar Bellavista" />
+    <meta property="og:site_name" content="Flow Residencial" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
-    <meta name="twitter:image:alt" content="Fachada do Solar Bellavista em Teresópolis" />
+    <meta name="twitter:image:alt" content="Fachada do Flow Residencial em Teresópolis" />
 
-    <meta name="theme-color" content="#1c92a0" />
+    <meta name="theme-color" content="#161724" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

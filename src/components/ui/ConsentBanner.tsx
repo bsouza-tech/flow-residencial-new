@@ -124,11 +124,11 @@ export default function ConsentBanner() {
           display: grid;
           gap: 1rem;
           padding: 1.15rem 1.2rem;
-          border: 1.5px solid #e4d7b6;
+          border: 1.5px solid var(--cor-superficie);
           border-radius: 18px;
-          background: #ffffff;
-          box-shadow: 0 28px 64px rgba(0, 0, 0, 0.28);
-          color: #2c2f31;
+          background: var(--cor-fundo);
+          box-shadow: 0 28px 64px color-mix(in srgb, var(--cor-fundo-profundo) 28%, transparent);
+          color: var(--cor-texto);
         }
 
         .consent-banner__title {
@@ -136,7 +136,7 @@ export default function ConsentBanner() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.95rem;
           font-weight: 800;
-          color: #013034;
+          color: var(--cor-texto);
         }
 
         .consent-banner__text {
@@ -144,11 +144,16 @@ export default function ConsentBanner() {
           font-family: 'Open Sans Variable', 'Open Sans Fallback', 'Open Sans', Arial, sans-serif;
           font-size: 0.84rem;
           line-height: 1.55;
-          color: #373f42;
+          color: var(--cor-texto-apoio);
         }
 
         .consent-banner__text a {
-          color: #19808c;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
           font-weight: 700;
           text-decoration: underline;
           text-underline-offset: 2px;
@@ -167,9 +172,12 @@ export default function ConsentBanner() {
           min-height: 48px;
           padding: 0.8rem 1.25rem;
           border: 0;
-          border-radius: 10px;
-          background: #eb9c36;
-          color: #1a1a1a;
+          border-radius: var(--raio-botao);
+          background-image: var(--gradiente-botao);
+          background-size: 240% 100%;
+          animation: 9s infinite flow-shift-x;
+          box-shadow: var(--sombra-botao);
+          color: var(--cor-texto);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.88rem;
           font-weight: 700;
@@ -178,8 +186,8 @@ export default function ConsentBanner() {
         }
 
         .consent-banner__btn:hover {
-          background: #d88928;
-          transform: translateY(-1px);
+          filter: brightness(1.05);
+          transform: translateY(-0.25rem);
         }
 
         @keyframes consentBannerIn {

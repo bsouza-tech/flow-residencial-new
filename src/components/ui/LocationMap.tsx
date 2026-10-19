@@ -29,7 +29,7 @@ function makePin(L: LeafletNS, icon: NearbyPlace['icon'] | 'home', large = false
 }
 
 function tipHtml(title: string, meta: string | undefined, icon: NearbyPlace['icon'] | 'home') {
-  const glyph = poiIconSvg(icon === 'home' ? 'home' : icon, 15, '#1c92a0');
+  const glyph = poiIconSvg(icon === 'home' ? 'home' : icon, 15, 'var(--cor-realce)');
   return `
     <div class="location-tip">
       <span class="location-tip__icon" aria-hidden="true">${glyph}</span>
@@ -46,6 +46,8 @@ export default function LocationMap({ activeId, onSelect }: Props) {
   const mapRef = useRef<LeafletMap | null>(null);
   const markersRef = useRef<Record<string, LeafletMarker>>({});
   const onSelectRef = useRef(onSelect);
+  const activeIdRef = useRef(activeId);
+  const skipInitialFocus = useRef(true);
   const [interactive, setInteractive] = useState(false);
   const [leafletReady, setLeafletReady] = useState(false);
   const leafletRef = useRef<LeafletNS | null>(null);
@@ -53,6 +55,10 @@ export default function LocationMap({ activeId, onSelect }: Props) {
   useEffect(() => {
     onSelectRef.current = onSelect;
   }, [onSelect]);
+
+  useEffect(() => {
+    activeIdRef.current = activeId;
+  }, [activeId]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -148,11 +154,30 @@ export default function LocationMap({ activeId, onSelect }: Props) {
 
     mapRef.current = map;
 
-    const resize = () => map.invalidateSize();
+    let framed = false;
+    const resize = () => {
+      map.invalidateSize();
+      const size = map.getSize();
+      if (framed || size.x < 20 || size.y < 20) return;
+      framed = true;
+      const id = activeIdRef.current;
+      const marker = id ? markersRef.current[id] : undefined;
+      const bounds = L.latLngBounds(
+        [projectLocation, ...nearbyPlaces].map((place) => [place.lat, place.lng])
+      );
+      map.fitBounds(bounds, { padding: [36, 36], maxZoom: 15, animate: false });
+      marker?.openPopup();
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(containerRef.current);
     window.addEventListener('resize', resize);
-    requestAnimationFrame(resize);
+    requestAnimationFrame(() => {
+      resize();
+      requestAnimationFrame(resize);
+    });
 
     return () => {
+      observer.disconnect();
       window.removeEventListener('resize', resize);
       map.remove();
       mapRef.current = null;
@@ -185,6 +210,12 @@ export default function LocationMap({ activeId, onSelect }: Props) {
 
     const marker = markersRef.current[activeId];
     if (!marker) return;
+    if (skipInitialFocus.current && activeId === projectLocation.id) {
+      skipInitialFocus.current = false;
+      return;
+    }
+    const size = map.getSize();
+    if (size.x < 20 || size.y < 20) return;
 
     Object.entries(markersRef.current).forEach(([id, m]) => {
       if (id !== activeId) m.closePopup();

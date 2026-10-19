@@ -7,9 +7,10 @@ export interface FloorPlan {
   image: string;
   imageWidth: number;
   imageHeight: number;
-  area: string;
-  bedrooms: number;
-  bathrooms: number;
+  area: string | null;
+  bedrooms: number | null;
+  suites: number | null;
+  bathrooms: number | null;
   parkingSpots: number | null;
   description: string | null;
 }
@@ -28,43 +29,47 @@ function plan(
 
 export const floorPlans: FloorPlan[] = [
   plan({
-    id: 'ponta',
-    name: 'Ponta',
-    imageName: 'ponta',
-    area: '52,32m²',
-    bedrooms: 2,
+    id: 'estudio',
+    name: 'Estúdio',
+    imageName: 'estudio',
+    area: '24,52 m²',
+    bedrooms: 1,
+    suites: null,
     bathrooms: 1,
     parkingSpots: null,
-    description: 'Planta de ponta com boa distribuição e varandas, pensada para o dia a dia da família.',
+    description: null,
   }),
   plan({
-    id: 'meio',
-    name: 'Meio',
-    imageName: 'ponta',
-    area: '50,02m²',
+    id: 'double-suite',
+    name: 'Double Suite',
+    imageName: 'double-suite',
+    area: '46,00 m²',
     bedrooms: 2,
-    bathrooms: 1,
+    suites: 1,
+    bathrooms: 2,
     parkingSpots: null,
-    description: 'Tipologia intermediária com aproveitamento inteligente dos ambientes.',
+    description: null,
   }),
   plan({
-    id: 'pcd',
-    name: 'PCD',
-    imageName: 'ponta-pcd',
-    area: '54,60m²',
+    id: 'cobertura-double-suite',
+    name: 'Cobertura Double Suite',
+    imageName: 'cobertura-double-suite',
+    area: '91,79 m²',
     bedrooms: 2,
-    bathrooms: 1,
+    suites: 2,
+    bathrooms: 2,
     parkingSpots: null,
-    description: 'Unidade acessível, com circulação e banheiro pensados para mais autonomia.',
+    description: null,
   }),
   plan({
-    id: 'garden',
-    name: 'Garden',
-    imageName: 'meio-garden',
-    area: '55,96m²',
+    id: 'dois-quartos-pcd',
+    name: 'Dois Quartos (PCD)',
+    imageName: 'dois-quartos-pcd',
+    area: '45,19 m²',
     bedrooms: 2,
+    suites: null,
     bathrooms: 1,
     parkingSpots: null,
-    description: 'Opção garden com área externa ampliada para viver mais perto do ar livre.',
+    description: null,
   }),
 ];

@@ -10,45 +10,34 @@ export interface GalleryImage {
   label: string;
 }
 
+function shot(id: string, name: OptimizedImageName, label: string, category: GalleryImage['category']): GalleryImage {
+  return {
+    id,
+    name,
+    src: optimizedFullSrc(name),
+    alt: label,
+    category,
+    label,
+  };
+}
+
 export const galleryImages: GalleryImage[] = [
-  {
-    id: 'cozinha',
-    name: 'cozinha',
-    src: optimizedFullSrc('cozinha'),
-    alt: 'Cozinha e área de serviço integradas do Solar Bellavista, com armários em tom areia e lavanderia',
-    category: 'interior',
-    label: 'Cozinha',
-  },
-  {
-    id: 'sala',
-    name: 'sala',
-    src: optimizedFullSrc('sala'),
-    alt: 'Sala de estar e jantar integrada do Solar Bellavista, com painel de TV em madeira e vista ao entardecer',
-    category: 'interior',
-    label: 'Sala',
-  },
-  {
-    id: 'quarto',
-    name: 'quarto',
-    src: optimizedFullSrc('quarto'),
-    alt: 'Quarto de casal do Solar Bellavista com cabeceira estofada, guarda-roupa espelhado e iluminação aconchegante',
-    category: 'interior',
-    label: 'Quarto',
-  },
-  {
-    id: 'quarto-infantil',
-    name: 'quarto-infantil',
-    src: optimizedFullSrc('quarto-infantil'),
-    alt: 'Quarto infantil do Solar Bellavista com duas camas, guarda-roupa e vista para as montanhas',
-    category: 'interior',
-    label: 'Quarto infantil',
-  },
-  {
-    id: 'varanda',
-    name: 'varanda',
-    src: optimizedFullSrc('varanda'),
-    alt: 'Varanda do Solar Bellavista com jardim vertical, mesa de madeira e vista para a mata',
-    category: 'interior',
-    label: 'Varanda',
-  },
+  shot('suite-loft', 'suite-loft', 'Suíte Loft', 'interior'),
+  shot('cozinha-loft', 'cozinha-loft', 'Cozinha Loft', 'interior'),
+  shot('fachada-letreiro', 'fachada-dois', 'Fachada Letreiro', 'amenity'),
+  shot('suite-double-01', 'suite-double-01', 'Suíte Double 01', 'interior'),
+  shot('lobby', 'lobby', 'Lobby', 'amenity'),
+  shot('suite-double-02', 'suite-double-02', 'Suíte Double 02', 'interior'),
+  shot('marketplace', 'marketplace', 'Marketplace', 'amenity'),
+  shot('coworking', 'coworking', 'Coworking', 'amenity'),
+  shot('varanda-loft', 'varanda-loft', 'Varanda Loft', 'interior'),
+  shot('cafeteria', 'cafeteria', 'Cafeteria', 'amenity'),
+  shot('sala-double', 'sala-double', 'Sala Double', 'interior'),
+  shot('academia', 'academia', 'Academia', 'amenity'),
+  shot('terraco-cobertura', 'terraco-cobertura', 'Terraço Cobertura', 'amenity'),
+  shot('espaco-fitness', 'espaco-fitness', 'Espaço Fitness', 'amenity'),
+  shot('laundry', 'laundry', 'Laundry', 'amenity'),
+  shot('gourmet-coberto', 'gourmet-coberto', 'Espaço Gourmet Coberto', 'amenity'),
+  shot('gourmet-descoberto', 'gourmet-descoberto', 'Espaço Gourmet Descoberto', 'amenity'),
+  shot('fireplace', 'fireplace', 'Fireplace', 'amenity'),
 ];

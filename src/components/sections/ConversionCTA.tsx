@@ -302,7 +302,7 @@ export default function ConversionCTA() {
       });
       trackMeta('Lead', {
         params: {
-          content_name: 'Solar Bellavista',
+          content_name: 'Flow Residencial',
           content_category: 'formulario_basico',
         },
       });
@@ -391,7 +391,7 @@ export default function ConversionCTA() {
       } else {
         trackMeta('CompleteRegistration', {
           params: {
-            content_name: 'Solar Bellavista',
+            content_name: 'Flow Residencial',
             status: true,
           },
         });
@@ -472,7 +472,7 @@ export default function ConversionCTA() {
           </h2>
 
           <p className="cta__text" data-reveal="text">
-            Clique no botão para informar nome, e-mail e telefone e seguir com a pesquisa rápida de perfil e preferências.
+            Clique no botão para informar nome, e-mail e telefone. Em seguida você pode continuar a pesquisa com perfil e preferências.
           </p>
 
           <button type="button" className="cta__open" data-reveal="extras" data-abrir-formulario="" onClick={openForm}>
@@ -503,9 +503,9 @@ export default function ConversionCTA() {
           )}
 
           {view === 'basic' && (
-            <form onSubmit={handleBasicSubmit} noValidate aria-label="Formulário de interesse no Solar Bellavista">
+            <form onSubmit={handleBasicSubmit} noValidate aria-label="Formulário de interesse no Flow Residencial">
               <header className="cta-modal__head">
-                <p className="cta-modal__eyebrow">Solar Bellavista</p>
+                <p className="cta-modal__eyebrow">Flow Residencial</p>
                 <h3 id={titleId}>Receber condições exclusivas</h3>
                 <p>Preencha seus dados e nossa equipe retorna com as melhores condições.</p>
               </header>
@@ -650,7 +650,7 @@ export default function ConversionCTA() {
               )}
 
               <button type="submit" className="cta__submit" disabled={loading} aria-busy={loading}>
-                {loading ? 'Enviando...' : 'Quero saber mais'}
+                {loading ? 'Enviando...' : 'Receber condições'}
               </button>
 
               <p className="cta-modal__note">Seus dados estão seguros. Não fazemos spam.</p>
@@ -662,7 +662,7 @@ export default function ConversionCTA() {
               <p className="cta-modal__eyebrow">Quase lá</p>
               <h3 id={titleId}>Recebemos o seu contato!</h3>
               <p>
-                Em breve um especialista do Solar Bellavista pode te chamar. Quer acelerar?
+                Em breve um especialista do Flow Residencial pode te chamar. Quer acelerar?
                 Complete seu perfil em menos de 1 minuto.
               </p>
               <button
@@ -678,7 +678,7 @@ export default function ConversionCTA() {
               </button>
               <a
                 className="cta-modal__whatsapp"
-                href="https://link.genesisempreendimentos.com.br/solar-bellavista-whatsapp"
+                href="https://link.genesisempreendimentos.com.br/flow-whatsapp-lp"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => {
@@ -1101,7 +1101,7 @@ export default function ConversionCTA() {
                 </svg>
               </div>
               <h3 id={titleId}>Cadastro completo!</h3>
-              <p>Obrigado. Nossa equipe já tem seu perfil e vai entrar em contato com condições do Solar Bellavista.</p>
+              <p>Obrigado. Nossa equipe já tem seu perfil e vai entrar em contato com condições do Flow Residencial.</p>
               <button type="button" className="cta__submit" onClick={closeForm}>
                 Fechar
               </button>
@@ -1113,8 +1113,8 @@ export default function ConversionCTA() {
       <style>{`
         .cta {
           background:
-            radial-gradient(ellipse 70% 60% at 50% 40%, rgba(28, 146, 160, 0.28) 0%, transparent 70%),
-            #013034;
+            radial-gradient(ellipse 70% 60% at 50% 40%, color-mix(in srgb, var(--cor-realce) 28%, transparent) 0%, transparent 70%),
+            var(--cor-fundo);
           text-align: center;
         }
 
@@ -1134,9 +1134,14 @@ export default function ConversionCTA() {
           padding: 0.45rem 1rem;
           margin-bottom: 1.5rem;
           border-radius: 999px;
-          background: rgba(255, 255, 255, 0.08);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: #ffd166;
+          background: color-mix(in srgb, var(--cor-texto) 8%, transparent);
+          border: 1px solid color-mix(in srgb, var(--cor-texto) 10%, transparent);
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.72rem;
           font-weight: 700;
@@ -1152,7 +1157,7 @@ export default function ConversionCTA() {
           font-size: clamp(2rem, 4.5vw, 3.35rem);
           line-height: 1.12;
           letter-spacing: -0.02em;
-          color: #ffffff;
+          color: var(--cor-texto);
         }
 
         .cta__text {
@@ -1160,7 +1165,7 @@ export default function ConversionCTA() {
           max-width: 40ch;
           font-size: clamp(0.95rem, 1.4vw, 1.05rem);
           line-height: 1.65;
-          color: rgba(255, 255, 255, 0.78);
+          color: color-mix(in srgb, var(--cor-texto) 78%, transparent);
         }
 
         .cta__open,
@@ -1171,9 +1176,12 @@ export default function ConversionCTA() {
           min-height: 52px;
           padding: 0.95rem 1.85rem;
           border: 0;
-          border-radius: 10px;
-          background: #eb9c36;
-          color: #1a1a1a;
+          border-radius: var(--raio-botao);
+          background-image: var(--gradiente-botao);
+          background-size: 240% 100%;
+          animation: 9s infinite flow-shift-x;
+          box-shadow: var(--sombra-botao);
+          color: var(--cor-texto);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.92rem;
           font-weight: 700;
@@ -1183,8 +1191,8 @@ export default function ConversionCTA() {
 
         .cta__open:hover,
         .cta__submit:hover:not(:disabled) {
-          background: #d88928;
-          transform: translateY(-1px);
+          filter: brightness(1.05);
+          transform: translateY(-0.25rem);
         }
 
         .cta__submit {
@@ -1199,7 +1207,8 @@ export default function ConversionCTA() {
         }
 
         .cta__submit:disabled {
-          background: #c5bfa9;
+          background: var(--cor-superficie);
+          color: var(--cor-texto);
           cursor: wait;
           transform: none;
         }
@@ -1212,12 +1221,12 @@ export default function ConversionCTA() {
           border: 0;
           border-radius: 18px;
           background: transparent;
-          color: #2c2f31;
+          color: var(--cor-texto);
           overflow: visible;
         }
 
         .cta-modal::backdrop {
-          background: rgba(1, 48, 52, 0.72);
+          background: color-mix(in srgb, var(--cor-fundo-profundo) 72%, transparent);
           backdrop-filter: blur(4px);
         }
 
@@ -1225,8 +1234,8 @@ export default function ConversionCTA() {
           position: relative;
           padding: clamp(1.5rem, 4vw, 2rem);
           border-radius: 18px;
-          background: #ffffff;
-          box-shadow: 0 28px 64px rgba(0, 0, 0, 0.28);
+          background: var(--cor-fundo);
+          box-shadow: 0 28px 64px color-mix(in srgb, var(--cor-fundo-profundo) 28%, transparent);
           animation: ctaModalIn 0.35s ease;
           overflow: visible;
         }
@@ -1251,16 +1260,16 @@ export default function ConversionCTA() {
           width: 40px;
           height: 40px;
           border: 0;
-          border-radius: 999px;
-          background: #f3f8f8;
-          color: #013034;
+          border-radius: var(--raio-botao);
+          background: var(--cor-superficie);
+          color: var(--cor-texto);
           cursor: pointer;
           transition: background 0.2s ease;
           z-index: 2;
         }
 
         .cta-modal__close:hover {
-          background: #e4eef0;
+          background: var(--cor-superficie);
         }
 
         .cta-modal__head {
@@ -1279,7 +1288,12 @@ export default function ConversionCTA() {
           font-weight: 700;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: #19808c;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
         }
 
         .cta-modal__head h3,
@@ -1288,7 +1302,7 @@ export default function ConversionCTA() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 800;
           font-size: clamp(1.35rem, 3vw, 1.65rem);
-          color: #013034;
+          color: var(--cor-texto);
           line-height: 1.2;
         }
 
@@ -1297,7 +1311,7 @@ export default function ConversionCTA() {
           margin: 0;
           font-size: 0.92rem;
           line-height: 1.55;
-          color: #4a5a61;
+          color: var(--cor-texto-apoio);
         }
 
         .cta-modal__fields,
@@ -1315,12 +1329,12 @@ export default function ConversionCTA() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 600;
           font-size: 0.78rem;
-          color: #373f42;
+          color: var(--cor-texto-apoio);
           letter-spacing: 0.03em;
         }
 
         .cta-modal__field label span {
-          color: #dc2626;
+          color: var(--cor-erro);
         }
 
         .sr-only {
@@ -1340,11 +1354,11 @@ export default function ConversionCTA() {
           min-height: 48px;
           padding: 0.875rem 1rem;
           border-radius: 8px;
-          border: 1.5px solid #e4d7b6;
+          border: 1.5px solid var(--cor-borda);
           font-size: 0.9rem;
           font-family: 'Open Sans Variable', 'Open Sans Fallback', 'Open Sans', Arial, sans-serif;
-          color: #2c2f31;
-          background: #ffffff;
+          color: var(--cor-texto);
+          background: var(--cor-fundo);
           outline: none;
           transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
@@ -1354,8 +1368,8 @@ export default function ConversionCTA() {
           display: flex;
           align-items: stretch;
           border-radius: 8px;
-          border: 1.5px solid #e4d7b6;
-          background: #ffffff;
+          border: 1.5px solid var(--cor-borda);
+          background: var(--cor-fundo);
           transition: border-color 0.2s ease, box-shadow 0.2s ease;
           z-index: 4;
         }
@@ -1365,8 +1379,8 @@ export default function ConversionCTA() {
         }
 
         .cta-modal__phone:focus-within {
-          border-color: #1c92a0;
-          box-shadow: 0 0 0 3px rgba(28, 146, 160, 0.12);
+          border-color: var(--cor-realce);
+          box-shadow: 0 0 0 3px color-mix(in srgb, var(--cor-realce) 12%, transparent);
         }
 
         .cta-modal__country {
@@ -1382,16 +1396,16 @@ export default function ConversionCTA() {
           min-height: 48px;
           padding: 0 0.7rem 0 0.75rem;
           border: 0;
-          border-right: 1.5px solid #e4d7b6;
+          border-right: 1.5px solid var(--cor-superficie);
           border-radius: 8px 0 0 8px;
-          background: #f3f8f8;
-          color: #013034;
+          background: var(--cor-superficie);
+          color: var(--cor-texto);
           cursor: pointer;
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
         }
 
         .cta-modal__country-btn:hover {
-          background: #e8f2f3;
+          background: var(--cor-superficie);
         }
 
         .cta-modal__flag {
@@ -1400,7 +1414,7 @@ export default function ConversionCTA() {
           height: 16px;
           object-fit: cover;
           border-radius: 2px;
-          box-shadow: 0 0 0 1px rgba(1, 48, 52, 0.12);
+          box-shadow: 0 0 0 1px color-mix(in srgb, var(--cor-fundo-profundo) 12%, transparent);
           flex-shrink: 0;
         }
 
@@ -1425,10 +1439,10 @@ export default function ConversionCTA() {
           padding: 0.35rem;
           overflow-y: auto;
           list-style: none;
-          border: 1.5px solid #e4d7b6;
+          border: 1.5px solid var(--cor-borda);
           border-radius: 10px;
-          background: #ffffff;
-          box-shadow: 0 14px 30px rgba(1, 48, 52, 0.14);
+          background: var(--cor-fundo);
+          box-shadow: 0 14px 30px color-mix(in srgb, var(--cor-fundo-profundo) 14%, transparent);
         }
 
         .cta-modal__country-item {
@@ -1441,7 +1455,7 @@ export default function ConversionCTA() {
           border: 0;
           border-radius: 8px;
           background: transparent;
-          color: #013034;
+          color: var(--cor-texto);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.84rem;
           text-align: left;
@@ -1450,7 +1464,7 @@ export default function ConversionCTA() {
 
         .cta-modal__country-item:hover,
         .cta-modal__country-item.is-active {
-          background: rgba(28, 146, 160, 0.12);
+          background: color-mix(in srgb, var(--cor-realce) 12%, transparent);
         }
 
         .cta-modal__country-name {
@@ -1458,7 +1472,7 @@ export default function ConversionCTA() {
         }
 
         .cta-modal__country-dial {
-          color: #5b7a7b;
+          color: var(--cor-texto-apoio);
           font-weight: 600;
         }
 
@@ -1473,8 +1487,8 @@ export default function ConversionCTA() {
         }
 
         .cta-modal__field input:focus {
-          border-color: #1c92a0;
-          box-shadow: 0 0 0 3px rgba(28, 146, 160, 0.12);
+          border-color: var(--cor-realce);
+          box-shadow: 0 0 0 3px color-mix(in srgb, var(--cor-realce) 12%, transparent);
         }
 
         .cta-modal__wizard {
@@ -1498,10 +1512,10 @@ export default function ConversionCTA() {
           list-style: none;
           max-height: min(14rem, 42vh);
           overflow-y: auto;
-          border: 1.5px solid #e4d7b6;
+          border: 1.5px solid var(--cor-borda);
           border-radius: 10px;
-          background: #ffffff;
-          box-shadow: 0 14px 30px rgba(1, 48, 52, 0.14);
+          background: var(--cor-fundo);
+          box-shadow: 0 14px 30px color-mix(in srgb, var(--cor-fundo-profundo) 14%, transparent);
         }
 
         .cta-modal__suggest-item {
@@ -1511,7 +1525,7 @@ export default function ConversionCTA() {
           border: 0;
           border-radius: 8px;
           background: transparent;
-          color: #013034;
+          color: var(--cor-texto);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.88rem;
           font-weight: 600;
@@ -1521,7 +1535,7 @@ export default function ConversionCTA() {
 
         .cta-modal__suggest-item:hover,
         .cta-modal__suggest-item.is-active {
-          background: rgba(28, 146, 160, 0.12);
+          background: color-mix(in srgb, var(--cor-realce) 12%, transparent);
         }
 
         .cta-modal__suggest-item--city {
@@ -1561,8 +1575,8 @@ export default function ConversionCTA() {
           height: 1.55rem;
           padding: 0 0.45rem;
           border-radius: 6px;
-          background: #e8f2f3;
-          color: #013034;
+          background: var(--cor-superficie);
+          color: var(--cor-texto);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.72rem;
           font-weight: 800;
@@ -1572,14 +1586,14 @@ export default function ConversionCTA() {
 
         .cta-modal__field input[aria-invalid='true'],
         .cta-modal__field:has(input[aria-invalid='true']) .cta-modal__phone {
-          border-color: #dc2626;
+          border-color: var(--cor-erro);
         }
 
         .cta-modal__hint {
           display: block;
           margin-top: 0.35rem;
           font-size: 0.72rem;
-          color: #5b7a7b;
+          color: var(--cor-texto-apoio);
         }
 
         .cta-modal__birth {
@@ -1613,16 +1627,16 @@ export default function ConversionCTA() {
           height: 2.35rem;
           border: 0;
           border-radius: 8px;
-          background: #f3f8f8;
-          color: #013034;
+          background: var(--cor-superficie);
+          color: var(--cor-texto);
           cursor: pointer;
           transition: background 0.2s ease, color 0.2s ease;
         }
 
         .cta-modal__birth-trigger:hover,
         .cta-modal__birth.is-open .cta-modal__birth-trigger {
-          background: rgba(28, 146, 160, 0.14);
-          color: #1c92a0;
+          background: color-mix(in srgb, var(--cor-realce) 14%, transparent);
+          color: var(--cor-realce);
         }
 
         .cta-modal__calendar {
@@ -1632,10 +1646,10 @@ export default function ConversionCTA() {
           right: 0;
           z-index: 20;
           padding: 0.9rem;
-          border: 1.5px solid #e4d7b6;
+          border: 1.5px solid var(--cor-borda);
           border-radius: 14px;
-          background: #ffffff;
-          box-shadow: 0 16px 34px rgba(1, 48, 52, 0.16);
+          background: var(--cor-fundo);
+          box-shadow: 0 16px 34px color-mix(in srgb, var(--cor-fundo-profundo) 16%, transparent);
           animation: ctaCalendarIn 0.22s ease;
         }
 
@@ -1665,16 +1679,16 @@ export default function ConversionCTA() {
           height: 2rem;
           border: 0;
           border-radius: 8px;
-          background: #f3f8f8;
-          color: #013034;
+          background: var(--cor-superficie);
+          color: var(--cor-texto);
           font-size: 1.15rem;
           line-height: 1;
           cursor: pointer;
         }
 
         .cta-modal__calendar-nav:hover {
-          background: rgba(28, 146, 160, 0.14);
-          color: #1c92a0;
+          background: color-mix(in srgb, var(--cor-realce) 14%, transparent);
+          color: var(--cor-realce);
         }
 
         .cta-modal__calendar-title {
@@ -1685,17 +1699,17 @@ export default function ConversionCTA() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.92rem;
           font-weight: 700;
-          color: #013034;
+          color: var(--cor-texto);
           text-transform: capitalize;
         }
 
         .cta-modal__calendar-title select {
           min-height: 2rem;
           padding: 0.2rem 0.45rem;
-          border: 1.5px solid #e4d7b6;
+          border: 1.5px solid var(--cor-borda);
           border-radius: 8px;
-          background: #ffffff;
-          color: #013034;
+          background: var(--cor-fundo);
+          color: var(--cor-texto);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.84rem;
           font-weight: 700;
@@ -1719,7 +1733,7 @@ export default function ConversionCTA() {
           font-size: 0.68rem;
           font-weight: 700;
           letter-spacing: 0.06em;
-          color: #5b7a7b;
+          color: var(--cor-texto-apoio);
         }
 
         .cta-modal__calendar-empty {
@@ -1729,9 +1743,9 @@ export default function ConversionCTA() {
         .cta-modal__calendar-day {
           min-height: 2.15rem;
           border: 0;
-          border-radius: 8px;
+          border-radius: var(--raio-botao);
           background: transparent;
-          color: #013034;
+          color: var(--cor-texto);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.84rem;
           font-weight: 600;
@@ -1740,16 +1754,20 @@ export default function ConversionCTA() {
         }
 
         .cta-modal__calendar-day:hover:not(:disabled) {
-          background: rgba(28, 146, 160, 0.12);
+          background: color-mix(in srgb, var(--cor-realce) 12%, transparent);
         }
 
         .cta-modal__calendar-day.is-selected {
-          background: linear-gradient(135deg, #1c92a0, #eb9c36);
-          color: #ffffff;
+          background-color: var(--cor-realce);
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          animation: 11s infinite flow-shift-x;
+          color: var(--cor-fundo-profundo);
         }
 
         .cta-modal__calendar-day:disabled {
-          opacity: 0.28;
+          opacity: 1;
+          color: var(--cor-texto-apoio);
           cursor: not-allowed;
         }
 
@@ -1763,7 +1781,7 @@ export default function ConversionCTA() {
         .cta-modal__submit-error {
           margin: 0.35rem 0 0.85rem;
           font-size: 0.78rem;
-          color: #dc2626;
+          color: var(--cor-erro);
           text-align: left;
         }
 
@@ -1771,7 +1789,7 @@ export default function ConversionCTA() {
           margin: 1rem 0 0;
           text-align: center;
           font-size: 0.72rem;
-          color: #5b7a7b;
+          color: var(--cor-texto-apoio);
           line-height: 1.5;
         }
 
@@ -1800,7 +1818,7 @@ export default function ConversionCTA() {
           padding: 0;
           border: 0;
           background: none;
-          color: #128c7e;
+          color: var(--cor-realce);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.78rem;
           font-weight: 600;
@@ -1809,7 +1827,7 @@ export default function ConversionCTA() {
         }
 
         .cta-modal__whatsapp:hover {
-          color: #075e54;
+          color: var(--cor-realce);
           opacity: 0.85;
         }
 
@@ -1819,10 +1837,10 @@ export default function ConversionCTA() {
           justify-content: center;
           min-height: 48px;
           padding: 0.8rem 1.25rem;
-          border: 1.5px solid rgba(1, 48, 52, 0.14);
-          border-radius: 10px;
+          border: 1.5px solid var(--cor-borda);
+          border-radius: var(--raio-botao);
           background: transparent;
-          color: #013034;
+          color: var(--cor-texto);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.88rem;
           font-weight: 600;
@@ -1831,11 +1849,12 @@ export default function ConversionCTA() {
         }
 
         .cta-modal__ghost:hover:not(:disabled) {
-          background: #f3f8f8;
+          background: var(--cor-superficie);
         }
 
         .cta-modal__ghost:disabled {
-          opacity: 0.4;
+          opacity: 1;
+          color: var(--cor-texto-apoio);
           cursor: not-allowed;
         }
 
@@ -1844,7 +1863,7 @@ export default function ConversionCTA() {
           height: 6px;
           margin: 0 0 1rem;
           border-radius: 999px;
-          background: #eef4f4;
+          background: var(--cor-superficie);
           overflow: hidden;
         }
 
@@ -1852,7 +1871,10 @@ export default function ConversionCTA() {
           display: block;
           height: 100%;
           border-radius: inherit;
-          background: linear-gradient(90deg, #1c92a0, #eb9c36);
+          background-color: var(--cor-realce);
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          animation: 11s infinite flow-shift-x;
           transition: width 0.3s ease;
         }
 
@@ -1864,10 +1886,10 @@ export default function ConversionCTA() {
         .cta-modal__chip {
           min-height: 48px;
           padding: 0.75rem 1rem;
-          border: 1.5px solid #e4d7b6;
-          border-radius: 10px;
-          background: #fff;
-          color: #013034;
+          border: 1.5px solid var(--cor-borda);
+          border-radius: var(--raio-botao);
+          background: var(--cor-fundo);
+          color: var(--cor-texto);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.9rem;
           font-weight: 600;
@@ -1877,15 +1899,15 @@ export default function ConversionCTA() {
         }
 
         .cta-modal__chip:hover {
-          border-color: #1c92a0;
-          background: #f3f8f8;
+          border-color: var(--cor-realce);
+          background: var(--cor-superficie);
         }
 
         .cta-modal__chip.is-active {
-          border-color: #1c92a0;
-          background: rgba(28, 146, 160, 0.12);
-          color: #013034;
-          box-shadow: inset 0 0 0 1px rgba(28, 146, 160, 0.25);
+          border-color: var(--cor-realce);
+          background: color-mix(in srgb, var(--cor-realce) 12%, transparent);
+          color: var(--cor-texto);
+          box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cor-realce) 25%, transparent);
         }
 
         .cta-modal__nav {
@@ -1911,8 +1933,8 @@ export default function ConversionCTA() {
           height: 60px;
           margin: 0 auto 1.25rem;
           border-radius: 50%;
-          background: rgba(28, 146, 160, 0.12);
-          color: #1c92a0;
+          background: color-mix(in srgb, var(--cor-realce) 12%, transparent);
+          color: var(--cor-realce);
           display: grid;
           place-items: center;
         }
@@ -1922,13 +1944,13 @@ export default function ConversionCTA() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 700;
           font-size: 1.25rem;
-          color: #013034;
+          color: var(--cor-texto);
         }
 
         .cta-modal__success p {
           margin: 0 0 1.5rem;
           font-size: 0.9rem;
-          color: #4a5a61;
+          color: var(--cor-texto-apoio);
           line-height: 1.7;
         }
 

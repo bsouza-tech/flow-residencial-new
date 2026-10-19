@@ -99,14 +99,13 @@ export default function Gallery() {
       <div className="container">
         <div className="gallery-heading gallery__intro">
           <span className="eyebrow" data-reveal="eyebrow">Galeria</span>
-          <h2 id="gallery-heading" data-reveal="heading">Veja como é viver no Bellavista.</h2>
+          <h2 id="gallery-heading" data-reveal="heading">Conheça cada ambiente do Flow</h2>
           <p data-reveal="text">
-            Ambientes pensados para o dia a dia, conforto, luz natural e espaços que convidam a ficar.
+            Clique numa foto na faixa para ampliar e navegar entre os ambientes.
           </p>
         </div>
 
         <div className="gallery__stage">
-          <p className="gallery__section-title">Áreas internas</p>
 
           {current && (
             <button
@@ -132,7 +131,6 @@ export default function Gallery() {
 
 
               <div className="gallery__badge">
-                <span>Áreas internas</span>
                 <strong>{current.label}</strong>
               </div>
 
@@ -196,7 +194,7 @@ export default function Gallery() {
 
       <style>{`
         .gallery {
-          background: #ffffff;
+          background: var(--cor-fundo);
           padding-bottom: clamp(3rem, 5vw, 5rem);
         }
 
@@ -207,7 +205,12 @@ export default function Gallery() {
         }
 
         .gallery__intro .eyebrow {
-          color: #19808c;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
           display: block;
           margin-bottom: 1rem;
         }
@@ -217,7 +220,7 @@ export default function Gallery() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-weight: 800;
           font-size: clamp(1.75rem, 3.5vw, 3rem);
-          color: #013034;
+          color: var(--cor-texto);
           line-height: 1.15;
           max-width: 18ch;
         }
@@ -226,7 +229,7 @@ export default function Gallery() {
           margin: 1rem auto 0;
           max-width: 42ch;
           font-size: 1rem;
-          color: #4a5a61;
+          color: var(--cor-texto-apoio);
           line-height: 1.7;
         }
 
@@ -237,7 +240,7 @@ export default function Gallery() {
           font-weight: 700;
           letter-spacing: 0.16em;
           text-transform: uppercase;
-          color: #013034;
+          color: var(--cor-texto);
         }
 
         .gallery__hero {
@@ -249,7 +252,7 @@ export default function Gallery() {
           padding: 0;
           border-radius: 18px;
           overflow: hidden;
-          background: #e8e4d8;
+          background: var(--cor-superficie);
           cursor: zoom-in;
         }
 
@@ -298,10 +301,10 @@ export default function Gallery() {
           z-index: 2;
           min-width: 11rem;
           padding: 0.75rem 0.95rem 0.85rem;
-          background: #ffffff;
-          border-top: 3px solid #eb9c36;
+          background: var(--cor-fundo);
+          border-top: 3px solid var(--cor-realce);
           text-align: left;
-          box-shadow: 0 8px 24px rgba(1, 48, 52, 0.12);
+          box-shadow: 0 8px 24px color-mix(in srgb, var(--cor-fundo-profundo) 12%, transparent);
         }
 
         .gallery__badge span {
@@ -311,7 +314,12 @@ export default function Gallery() {
           font-weight: 700;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          color: #19808c;
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          -webkit-background-clip: text;
+          background-clip: text;
+          color: transparent;
+          animation: 11s infinite flow-shift-x;
           margin-bottom: 0.25rem;
         }
 
@@ -320,7 +328,7 @@ export default function Gallery() {
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.95rem;
           font-weight: 800;
-          color: #013034;
+          color: var(--cor-texto);
         }
 
         .gallery__counter {
@@ -331,8 +339,11 @@ export default function Gallery() {
           min-height: 36px;
           padding: 0.45rem 0.8rem;
           border-radius: 8px;
-          background: #19808c;
-          color: #ffffff;
+          background-color: var(--cor-realce);
+          background-image: var(--gradiente-texto);
+          background-size: 280% 100%;
+          animation: 11s infinite flow-shift-x;
+          color: var(--cor-fundo-profundo);
           font-family: 'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif;
           font-size: 0.78rem;
           font-weight: 700;
@@ -342,8 +353,8 @@ export default function Gallery() {
         .gallery__rail {
           margin-top: 1rem;
           overflow: hidden;
-          mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-          -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+          mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
+          -webkit-mask-image: linear-gradient(90deg, transparent, black 5%, black 95%, transparent);
         }
 
         .gallery__track {
@@ -384,7 +395,7 @@ export default function Gallery() {
           border-radius: 12px;
           overflow: hidden;
           padding: 0;
-          background: #e8e4d8;
+          background: var(--cor-superficie);
           cursor: zoom-in;
           pointer-events: auto;
           position: relative;
@@ -393,7 +404,7 @@ export default function Gallery() {
         }
 
         .gallery__thumb.is-active {
-          border-color: #1c92a0;
+          border-color: var(--cor-realce);
         }
 
         .gallery__thumb img {

@@ -2,4 +2,4 @@
 export const PRIVACY_POLICY_URL = 'https://genesisempreendimentos.com.br/politicas/';
 
 /** Chave pública do site no tracker Gênesis (Edge Function /track). */
-export const TRACKING_SITE_KEY = '7fc802850e514adebbcff882c27f5976';
+export const TRACKING_SITE_KEY = '';
