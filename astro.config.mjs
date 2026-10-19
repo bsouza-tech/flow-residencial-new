@@ -36,7 +36,7 @@ if (building && publicEnv('PUBLIC_FORMULARIO_GLOBAL') === '1') {
 }
 
 export default defineConfig({
-  site: 'https://solarbellavista.com.br',
+  site: 'https://flowresidencial.com.br',
   output: 'server',
   adapter: node({ mode: 'standalone' }),
   integrations: [react()],

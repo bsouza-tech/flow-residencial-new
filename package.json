@@ -1,5 +1,5 @@
 {
-  "name": "solar-bellavista",
+  "name": "flow-residencial",
   "private": true,
   "version": "1.0.0",
   "type": "module",
@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "start": "node --env-file=.env ./dist/server/entry.mjs",
-    "format": "oxfmt"
+    "format": "oxfmt",
+    "verificar": "node scripts/verificar-residuos.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.6",
