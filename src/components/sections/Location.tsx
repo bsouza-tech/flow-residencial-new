@@ -62,9 +62,6 @@ export default function Location() {
               {projectLocation.addressLines.map((line) => (
                 <span key={line}>{line}</span>
               ))}
-              <a href={projectLocation.mapsUrl} target="_blank" rel="noopener noreferrer">
-                Ver no Google Maps
-              </a>
             </address>
 
             {nearbyPlaces.length > 0 && (
