@@ -63,6 +63,7 @@ export default function AboutGenesis() {
     <section
       ref={sectionRef}
       id="sobre"
+      data-section="sobre"
       aria-labelledby="about-heading"
       className="section-padding about"
     >

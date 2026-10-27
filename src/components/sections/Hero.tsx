@@ -114,6 +114,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="hero"
+      data-section="hero"
       aria-label="Apresentação do Flow Residencial"
       className="hero"
     >

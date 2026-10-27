@@ -263,6 +263,7 @@ export default function FloorPlans() {
     <section
       ref={sectionRef}
       id="plantas"
+      data-section="plantas"
       aria-labelledby="floorplans-heading"
       className="section-padding floorplans"
     >

@@ -24,6 +24,7 @@ export default function Certifications() {
     <section
       ref={sectionRef}
       id="certificacoes"
+      data-section="certificacoes"
       aria-labelledby="certs-heading"
       className="section-padding certs"
     >

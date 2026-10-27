@@ -61,6 +61,7 @@ export default function Benefits() {
     <section
       ref={sectionRef}
       id="beneficios"
+      data-section="beneficios"
       aria-labelledby="benefits-heading"
       className="section-padding"
       style={{ background: 'var(--cor-fundo)' }}

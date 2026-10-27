@@ -39,6 +39,7 @@ export default function Location() {
     <section
       ref={sectionRef}
       id="localizacao"
+      data-section="localizacao"
       aria-labelledby="location-heading"
       className="section-padding location"
     >

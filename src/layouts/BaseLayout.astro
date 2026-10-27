@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css';
 import { META_PIXEL_ID } from '../lib/metaPixel';
-import { TRACKING_SITE_KEY } from '../data/site';
 import { projectLocation } from '../data/pointsOfInterest';
 import { optimizedFullSrc } from '../data/optimizedImages';
 import consentJs from '../../public/consent.js?raw';
@@ -18,9 +17,6 @@ const {
   description = 'Conheça o Flow Residencial em N. S. de Fátima, Teresópolis. Explore plantas Estúdio, Double Suite, Cobertura Double Suite e Dois Quartos PCD.',
 } = Astro.props;
 
-const trackEndpoint =
-  import.meta.env.PUBLIC_TRACK_ENDPOINT ||
-  'https://gbyhwfamevtityuzzrhn.supabase.co/functions/v1/track';
 const siteUrl = 'https://flowresidencial.com.br';
 const canonicalUrl = `${siteUrl}/`;
 const ogImage = `${siteUrl}/og-flow-residencial.jpg`;
@@ -163,15 +159,7 @@ const jsonLd = {
     <title>{title}</title>
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <script is:inline set:html={consentJs} />
-    <script
-      is:inline
-      src="/tracker.js"
-      defer
-      data-site-key={TRACKING_SITE_KEY}
-      data-endpoint={trackEndpoint}
-      data-requires-consent="true"
-      data-sections="hero,beneficios,plantas,galeria,benfeitorias,localizacao,interesse,sobre"
-    ></script>
+    <script is:inline src="/tracker.js" defer></script>
     <script is:inline define:vars={{ META_PIXEL_ID, PIXEL_ENABLED: import.meta.env.PROD }}>
       (function () {
         if (!PIXEL_ENABLED) return;

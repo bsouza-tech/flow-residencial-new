@@ -49,6 +49,7 @@ export default function Amenities() {
     <section
       ref={sectionRef}
       id="benfeitorias"
+      data-section="benfeitorias"
       aria-labelledby="amenities-heading"
       className="section-padding amenities"
     >

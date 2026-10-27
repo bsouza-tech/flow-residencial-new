@@ -93,6 +93,7 @@ export default function Gallery() {
     <section
       ref={sectionRef}
       id="galeria"
+      data-section="galeria"
       aria-labelledby="gallery-heading"
       className="section-padding gallery"
     >

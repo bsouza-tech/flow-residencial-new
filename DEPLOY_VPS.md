@@ -42,11 +42,15 @@ Sem valores.
 | Nome | Uso | Obrigatória | Quando é lida |
 | --- | --- | --- | --- |
 | `DATABASE_URL` | Conexão Neon usada por `/api/leads` e `/api/leads/[id]` | Sim, para gravar lead | Só no servidor, a cada request |
-| `PUBLIC_TRACK_ENDPOINT` | Endereço do tracker no HTML | Não | No build (`PUBLIC_*`). Se faltar, o código usa o endereço público padrão |
+| `SUPABASE_URL` | Projeto Supabase do tracking `acessos_user` | Sim, para gravar pageview | Runtime (dotenv / PM2) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Service role do Supabase (só servidor) | Sim, para gravar pageview | Runtime |
+| `SITE_ID` | ID do Flow no modelo unificado (`3`) | Sim, para gravar pageview | Runtime |
+| `TRUST_PROXY` | `true` atrás do Nginx (usa X-Forwarded-For) | Não | Runtime |
+| `MAXMIND_DB_PATH` | Caminho opcional do `.mmdb` de GeoIP | Não | Runtime |
 | `PORT` | Porta de escuta do servidor Node | Não | Na subida do servidor. Padrão do adapter: 8080 |
 | `HOST` | Endereço de escuta | Não | Na subida do servidor. Em produção: `127.0.0.1` |
 
-`src/lib/db.ts` também chama `dotenv` e, se existir um arquivo `.env` no diretório de trabalho, carrega essas variáveis em tempo de execução.
+`src/lib/db.ts` e `src/lib/acessos/*` chamam `dotenv` e, se existir um arquivo `.env` no diretório de trabalho, carregam essas variáveis em tempo de execução (útil quando o PM2 sobe `dist/server/entry.mjs` sem `--env-file`).
 
 ## Conferir se subiu
 
