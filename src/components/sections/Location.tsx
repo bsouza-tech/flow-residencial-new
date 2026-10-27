@@ -155,6 +155,7 @@ export default function Location() {
 
         .location-map {
           position: relative;
+          width: 100%;
           z-index: 0;
           border-radius: 16px;
           overflow: hidden;

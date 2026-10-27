@@ -81,6 +81,8 @@
 html {
   scroll-behavior: smooth;
   color-scheme: dark;
+  /* Entradas animadas não devem ampliar a área de rolagem da página. */
+  overflow-x: clip;
 }
 
 @media (prefers-reduced-motion: reduce) {

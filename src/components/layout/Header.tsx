@@ -281,6 +281,7 @@ export default function Header() {
 
         .site-header__brand {
           display: inline-flex;
+          min-width: 0;
           align-items: center;
           text-decoration: none;
           flex-shrink: 0;
@@ -585,7 +586,7 @@ export default function Header() {
 
         @media (max-width: 959px) {
           .site-header__bar {
-            grid-template-columns: 1fr auto;
+            grid-template-columns: minmax(0, 1fr) auto;
           }
 
           .site-header__brand picture {
