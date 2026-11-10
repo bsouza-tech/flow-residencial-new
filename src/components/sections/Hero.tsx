@@ -1,5 +1,6 @@
 import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
 import { siteContent } from '../../data/content';
+import { resolveImgPath } from '../../data/imagesBase';
 
 const hero = siteContent.hero;
 const TITLE_ARIA = hero.title;
@@ -117,7 +118,7 @@ export default function Hero() {
   charIndex = line1Em.nextIndex;
   const line2 = CharSpans({ text: titleAfter, startIndex: charIndex });
 
-  const bg = hero.backgroundImageBase;
+  const bg = resolveImgPath(hero.backgroundImageBase);
 
   return (
     <section

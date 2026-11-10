@@ -1,11 +1,13 @@
 import { useRef, type ReactNode } from 'react';
 import { siteContent } from '../../data/content';
+import { resolveImgPath } from '../../data/imagesBase';
 import { PRIVACY_POLICY_URL } from '../../data/site';
 import { revealItems } from '../../lib/animateReveal';
 import { useSectionMotion } from '../../lib/useSectionMotion';
 import ContentImage from '../ui/ContentImage';
 
 const footer = siteContent.footer;
+const partnersImageSrc = resolveImgPath(footer.partnersImage);
 const footerLinks = footer.nav;
 
 const socialIcons: Record<string, { tone: string; icon: ReactNode }> = {
@@ -93,7 +95,7 @@ export default function Footer() {
             </p>
             <img
               className="site-footer__partners"
-              src={footer.partnersImage}
+              src={partnersImageSrc}
               alt="Gênesis Empreendimentos e Caixa"
               width={732}
               height={90}

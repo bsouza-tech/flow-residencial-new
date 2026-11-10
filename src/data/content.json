@@ -1,4 +1,7 @@
 {
+  "images": {
+    "baseUrl": ""
+  },
   "hero": {
     "eyebrow": ["Flow Residencial", "Teresópolis"],
     "title": "Morar com praticidade nunca foi tão fácil",

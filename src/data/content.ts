@@ -1,3 +1,4 @@
+import { normalizeImagesBaseUrl, setImagesBaseUrl } from './imagesBase';
 import {
   optimizedFullSrc,
   optimizedImages,
@@ -15,6 +16,10 @@ export function optionalHttpsUrl(value: unknown): string | undefined {
 export type ContentLink = { label: string; href: string };
 
 export type SiteContent = {
+  images: {
+    /** https://…/ com barra final, ou "" para /img/ local. */
+    baseUrl: string;
+  };
   hero: {
     eyebrow: [string, string];
     title: string;
@@ -159,6 +164,10 @@ function isLink(value: unknown): value is ContentLink {
 function validate(raw: unknown): SiteContent | null {
   if (!raw || typeof raw !== 'object') return null;
   const root = raw as Record<string, unknown>;
+
+  const imagesRaw = root.images as Record<string, unknown> | undefined;
+  const baseUrl = normalizeImagesBaseUrl(imagesRaw?.baseUrl);
+  if (baseUrl === null) return null;
 
   const hero = root.hero as Record<string, unknown> | undefined;
   const benefits = root.benefits as Record<string, unknown> | undefined;
@@ -398,6 +407,7 @@ function validate(raw: unknown): SiteContent | null {
   }
 
   return {
+    images: { baseUrl },
     hero: {
       eyebrow: [hero.eyebrow[0], hero.eyebrow[1]],
       title: hero.title,
@@ -486,6 +496,7 @@ function validate(raw: unknown): SiteContent | null {
 
 /** Fallback idêntico ao conteúdo atual do site (sem JSON). */
 export const FALLBACK_CONTENT: SiteContent = {
+  images: { baseUrl: '' },
   hero: {
     eyebrow: ['Flow Residencial', 'Teresópolis'],
     title: 'Morar com praticidade nunca foi tão fácil',
@@ -768,6 +779,7 @@ function loadContent(): SiteContent {
 }
 
 export const siteContent: SiteContent = loadContent();
+setImagesBaseUrl(siteContent.images.baseUrl);
 
 /** Resolve src de imagem: URL https opcional, senão pipeline local por imageName. */
 export function resolveImageSrc(imageName: OptimizedImageName, imageUrl?: string): string {
