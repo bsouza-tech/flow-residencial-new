@@ -1,6 +1,9 @@
 import { useEffect, useRef, type CSSProperties, type ReactNode } from 'react';
+import { siteContent } from '../../data/content';
+import { resolveImgPath } from '../../data/imagesBase';
 
-const TITLE_ARIA = 'Morar com praticidade nunca foi tão fácil';
+const hero = siteContent.hero;
+const TITLE_ARIA = hero.title;
 
 /** Fade + deslize por letra. Stagger original 0.022; encurtado para 0.008 (2,75×) para o último caractere terminar cedo e o LCP do parágrafo não escorregar. */
 const CHAR_BASE_DELAY_S = 0.05;
@@ -103,12 +106,19 @@ export default function Hero() {
     };
   }, []);
 
+  const em = hero.titleEmphasized;
+  const emIdx = hero.title.indexOf(em);
+  const titleBefore = emIdx >= 0 ? hero.title.slice(0, emIdx) : hero.title;
+  const titleAfter = emIdx >= 0 ? hero.title.slice(emIdx + em.length).trimStart() : '';
+
   let charIndex = 0;
-  const line1Before = CharSpans({ text: 'Morar com ', startIndex: charIndex });
+  const line1Before = CharSpans({ text: titleBefore, startIndex: charIndex });
   charIndex = line1Before.nextIndex;
-  const line1Em = CharSpans({ text: 'praticidade', startIndex: charIndex });
+  const line1Em = CharSpans({ text: emIdx >= 0 ? em : '', startIndex: charIndex });
   charIndex = line1Em.nextIndex;
-  const line2 = CharSpans({ text: 'nunca foi tão fácil', startIndex: charIndex });
+  const line2 = CharSpans({ text: titleAfter, startIndex: charIndex });
+
+  const bg = resolveImgPath(hero.backgroundImageBase);
 
   return (
     <section
@@ -125,38 +135,40 @@ export default function Hero() {
       <div className="container hero__content">
         <div className="hero__copy">
           <p className="hero__eyebrow">
-            Flow Residencial
+            {hero.eyebrow[0]}
             <span aria-hidden="true">·</span>
-            Teresópolis
+            {hero.eyebrow[1]}
           </p>
 
           <h1 className="hero__title" aria-label={TITLE_ARIA}>
             <span className="hero__line" aria-hidden="true">
               {line1Before.nodes}
-              <em>{line1Em.nodes}</em>
+              {emIdx >= 0 ? <em>{line1Em.nodes}</em> : null}
             </span>
-            <span className="hero__line" aria-hidden="true">
-              {line2.nodes}
-            </span>
+            {titleAfter ? (
+              <span className="hero__line" aria-hidden="true">
+                {line2.nodes}
+              </span>
+            ) : null}
           </h1>
 
           <p className="hero__text">
-            Um empreendimento moderno, funcional e perfeito para quem busca viver com estilo e praticidade em Teresópolis.
+            {hero.text}
           </p>
 
           <div className="hero__actions">
-            <a href="#interesse" className="hero__btn hero__btn--primary" data-abrir-formulario="">
-              Receber condições
+            <a href={hero.ctaPrimary.href} className="hero__btn hero__btn--primary" data-abrir-formulario="">
+              {hero.ctaPrimary.label}
             </a>
-            <a href="#plantas" className="hero__btn hero__btn--secondary">
-              Ver plantas
+            <a href={hero.ctaSecondary.href} className="hero__btn hero__btn--secondary">
+              {hero.ctaSecondary.label}
             </a>
           </div>
         </div>
       </div>
 
-      <a href="#beneficios" className="hero__scroll" aria-label="Explorar — ir para a próxima seção">
-        <span>Explorar</span>
+      <a href="#beneficios" className="hero__scroll" aria-label={`${hero.scrollLabel} — ir para a próxima seção`}>
+        <span>{hero.scrollLabel}</span>
         <span className="hero__scroll-line" aria-hidden="true" />
       </a>
 
@@ -174,14 +186,14 @@ export default function Hero() {
           position: absolute;
           inset: 0;
           background-color: var(--cor-fundo-profundo);
-          background-image: url('/img/fachada-1200.webp');
+          background-image: url('${bg}-1200.webp');
           background-image: -webkit-image-set(
-            url('/img/fachada-1200.avif') type('image/avif'),
-            url('/img/fachada-1200.webp') type('image/webp')
+            url('${bg}-1200.avif') type('image/avif'),
+            url('${bg}-1200.webp') type('image/webp')
           );
           background-image: image-set(
-            url('/img/fachada-1200.avif') type('image/avif'),
-            url('/img/fachada-1200.webp') type('image/webp')
+            url('${bg}-1200.avif') type('image/avif'),
+            url('${bg}-1200.webp') type('image/webp')
           );
           background-size: cover;
           background-position: center 28%;
@@ -190,14 +202,14 @@ export default function Hero() {
 
         @media (min-width: 1280px) {
           .hero__media {
-            background-image: url('/img/fachada-1680.webp');
+            background-image: url('${bg}-1680.webp');
             background-image: -webkit-image-set(
-              url('/img/fachada-1680.avif') type('image/avif'),
-              url('/img/fachada-1680.webp') type('image/webp')
+              url('${bg}-1680.avif') type('image/avif'),
+              url('${bg}-1680.webp') type('image/webp')
             );
             background-image: image-set(
-              url('/img/fachada-1680.avif') type('image/avif'),
-              url('/img/fachada-1680.webp') type('image/webp')
+              url('${bg}-1680.avif') type('image/avif'),
+              url('${bg}-1680.webp') type('image/webp')
             );
           }
         }

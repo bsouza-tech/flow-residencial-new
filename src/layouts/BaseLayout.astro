@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import { META_PIXEL_ID } from '../lib/metaPixel';
 import { projectLocation } from '../data/pointsOfInterest';
+import { siteContent } from '../data/content';
+import { imagesPreconnectOrigin } from '../data/imagesBase';
 import { optimizedFullSrc } from '../data/optimizedImages';
 import consentJs from '../../public/consent.js?raw';
 import montserratLatin from '@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url';
@@ -20,6 +22,13 @@ const {
 const siteUrl = 'https://flowresidencial.com.br';
 const canonicalUrl = `${siteUrl}/`;
 const ogImage = `${siteUrl}/og-flow-residencial.jpg`;
+const imagesPreconnect = imagesPreconnectOrigin();
+const organizationLogoSrc = optimizedFullSrc('genesis-logo');
+const organizationLogo = organizationLogoSrc.startsWith('https://')
+  ? organizationLogoSrc
+  : `${siteUrl}${organizationLogoSrc}`;
+// Garante setImagesBaseUrl via siteContent (side-effect do loader).
+void siteContent.images.baseUrl;
 
 const placeLine = projectLocation.addressLines[1];
 const addressLocality = placeLine.split(', ').pop()?.split(' — ')[0];
@@ -55,7 +64,7 @@ const jsonLd = {
       '@id': `${siteUrl}/#organization`,
       name: 'Gênesis Empreendimentos',
       url: 'https://genesisempreendimentos.com.br',
-      logo: `${siteUrl}${optimizedFullSrc('genesis-logo')}`,
+      logo: organizationLogo,
       telephone: '+552126421203',
     },
   ],
@@ -135,6 +144,9 @@ const jsonLd = {
     <meta name="twitter:image:alt" content="Fachada do Flow Residencial em Teresópolis" />
 
     <meta name="theme-color" content="#161724" />
+    {imagesPreconnect && (
+      <link rel="preconnect" href={imagesPreconnect} crossorigin />
+    )}
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

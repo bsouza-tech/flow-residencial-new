@@ -2,9 +2,12 @@ import { useRef, useState } from 'react';
 import { animateSectionIntro } from '../../lib/animateIntro';
 import { revealItems } from '../../lib/animateReveal';
 import { useSectionMotion } from '../../lib/useSectionMotion';
+import { siteContent } from '../../data/content';
 import { amenities, type AmenityImage } from '../../data/amenities';
 import ImageLightbox from '../ui/ImageLightbox';
-import Picture from '../ui/Picture';
+import ContentImage from '../ui/ContentImage';
+
+const intro = siteContent.amenities;
 
 
 export default function Amenities() {
@@ -48,15 +51,15 @@ export default function Amenities() {
   return (
     <section
       ref={sectionRef}
-      id="benfeitorias"
-      data-section="benfeitorias"
+      id={intro.sectionId}
+      data-section={intro.sectionId}
       aria-labelledby="amenities-heading"
       className="section-padding amenities"
     >
       <div className="container">
         <div className="amenities__intro">
-          <span className="eyebrow" data-reveal="eyebrow">Lazer</span>
-          <h2 id="amenities-heading" data-reveal="heading">Seu condomínio com lazer e infraestrutura</h2>
+          <span className="eyebrow" data-reveal="eyebrow">{intro.eyebrow}</span>
+          <h2 id="amenities-heading" data-reveal="heading">{intro.heading}</h2>
         </div>
 
         <div className="amenities__grid">
@@ -77,8 +80,9 @@ export default function Amenities() {
                 }
               >
                 <div className="amenities__media">
-                  <Picture
+                  <ContentImage
                     name={cover.name}
+                    imageUrl={cover.imageUrl}
                     alt={cover.alt}
                     sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw"
                     loading="lazy"

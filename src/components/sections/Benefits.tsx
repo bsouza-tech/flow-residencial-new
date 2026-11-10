@@ -2,8 +2,12 @@ import { useRef, type ReactElement } from 'react';
 import { animateSectionIntro } from '../../lib/animateIntro';
 import { revealItems, revealMedia } from '../../lib/animateReveal';
 import { useSectionMotion } from '../../lib/useSectionMotion';
+import { siteContent } from '../../data/content';
 import { benefits } from '../../data/benefits';
-import Picture from '../ui/Picture';
+import ContentImage from '../ui/ContentImage';
+
+const intro = siteContent.benefits;
+const headingMatch = intro.headingHtml.match(/^(\S+)(\s*)([\s\S]*)$/);
 
 
 const BenefitIcon = ({ id }: { id: string }) => {
@@ -75,7 +79,7 @@ export default function Benefits() {
           {/* Left: heading */}
           <div ref={headingRef} style={{ maxWidth: '34rem' }}>
             <span className="eyebrow aurora-texto" data-reveal="eyebrow" style={{ display: 'block', marginBottom: '1.25rem' }}>
-              Flow Residencial
+              {intro.eyebrow}
             </span>
             <h2
               id="benefits-heading"
@@ -91,7 +95,15 @@ export default function Benefits() {
                 margin: '0 0 1.5rem 0',
               }}
             >
-              <span className="gradient-text">Destaques</span> que elevam sua experiência de morar
+              {headingMatch ? (
+                <>
+                  <span className="gradient-text">{headingMatch[1]}</span>
+                  {headingMatch[2]}
+                  {headingMatch[3]}
+                </>
+              ) : (
+                intro.headingHtml
+              )}
             </h2>
             <p
               data-reveal="text"
@@ -102,7 +114,7 @@ export default function Benefits() {
                 lineHeight: 1.7,
               }}
             >
-              No Flow, você escolhe entre quatro plantas versáteis que unem conforto, praticidade e design otimizado. Seja para morar sozinho ou para compartilhar, aqui você encontra o espaço ideal para viver com liberdade e fluidez.
+              {intro.lead}
             </p>
           </div>
 
@@ -117,8 +129,9 @@ export default function Benefits() {
               position: 'relative',
             }}
           >
-            <Picture
-              name="fachada-dois"
+            <ContentImage
+              name={intro.imageName}
+              imageUrl={intro.imageUrl}
               alt="Fachada Letreiro do Flow Residencial"
               sizes="(max-width: 959px) 100vw, 50vw"
               loading="lazy"
@@ -129,7 +142,7 @@ export default function Benefits() {
             {/* Teal accent */}
             <div style={{ position: 'absolute', bottom: '1.5rem', left: '1.5rem', background: 'var(--cor-superficie-vidro)', backdropFilter: 'blur(8px)', borderRadius: '6px', padding: '0.75rem 1.25rem' }}>
               <p className="aurora-texto" style={{ fontFamily: "'Montserrat Variable', 'Montserrat Fallback', 'Montserrat', Arial, sans-serif", fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.08em', margin: 0 }}>
-                TERESÓPOLIS — RJ
+                {intro.badge}
               </p>
             </div>
           </div>

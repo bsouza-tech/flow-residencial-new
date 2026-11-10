@@ -2,10 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { animateSectionIntro } from '../../lib/animateIntro';
 import { revealBlock, revealMedia } from '../../lib/animateReveal';
 import { useSectionMotion } from '../../lib/useSectionMotion';
+import { siteContent } from '../../data/content';
 import { galleryImages } from '../../data/gallery';
 import ImageLightbox from '../ui/ImageLightbox';
-import Picture from '../ui/Picture';
+import ContentImage from '../ui/ContentImage';
 import { optimizedImages } from '../../data/optimizedImages';
+
+const intro = siteContent.gallery;
 
 
 const MAIN_INTERVAL_MS = 4200;
@@ -99,10 +102,10 @@ export default function Gallery() {
     >
       <div className="container">
         <div className="gallery-heading gallery__intro">
-          <span className="eyebrow" data-reveal="eyebrow">Galeria</span>
-          <h2 id="gallery-heading" data-reveal="heading">Conheça cada ambiente do Flow</h2>
+          <span className="eyebrow" data-reveal="eyebrow">{intro.eyebrow}</span>
+          <h2 id="gallery-heading" data-reveal="heading">{intro.heading}</h2>
           <p data-reveal="text">
-            Clique numa foto na faixa para ampliar e navegar entre os ambientes.
+            {intro.lead}
           </p>
         </div>
 
@@ -117,9 +120,10 @@ export default function Gallery() {
               aria-label={`Ampliar: ${current.label}`}
             >
               {images.map((image, index) => (
-                <Picture
+                <ContentImage
                   key={image.id}
                   name={image.name}
+                  imageUrl={image.imageUrl}
                   alt={image.alt}
                   sizes="(max-width: 959px) 100vw, min(1100px, 92vw)"
                   pictureClassName={`gallery__hero-picture${index === activeIndex ? ' is-active' : ''}`}
@@ -164,8 +168,9 @@ export default function Gallery() {
                         aria-label={copy === 0 ? `Ver ${image.label}` : undefined}
                         tabIndex={copy === 0 && index < images.length ? 0 : -1}
                       >
-                        <Picture
+                        <ContentImage
                           name={image.name}
+                          imageUrl={image.imageUrl}
                           alt=""
                           sizes="140px"
                           width={optimizedImages[image.name].width}

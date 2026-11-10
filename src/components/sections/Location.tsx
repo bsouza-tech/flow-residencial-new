@@ -2,9 +2,12 @@ import { useCallback, useRef, useState } from 'react';
 import { animateSectionIntro } from '../../lib/animateIntro';
 import { revealBlock, revealItems, revealMedia } from '../../lib/animateReveal';
 import { useSectionMotion } from '../../lib/useSectionMotion';
+import { siteContent } from '../../data/content';
 import { nearbyPlaces, projectLocation } from '../../data/pointsOfInterest';
 import LocationMap from '../ui/LocationMap';
 import { PoiGlyph } from '../ui/PoiIcons';
+
+const intro = siteContent.location;
 
 export default function Location() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -45,10 +48,10 @@ export default function Location() {
     >
       <div className="container">
         <div className="location__intro">
-          <span className="eyebrow" data-reveal="eyebrow">Localização</span>
-          <h2 id="location-heading" data-reveal="heading">Uma localização privilegiada para uma vida prática e conectada</h2>
+          <span className="eyebrow" data-reveal="eyebrow">{intro.eyebrow}</span>
+          <h2 id="location-heading" data-reveal="heading">{intro.heading}</h2>
           <p data-reveal="text">
-            Localizado no bairro N. S. de Fátima, em Teresópolis, o Flow oferece fácil acesso a tudo o que você precisa. Um endereço que une mobilidade, comodidade e qualidade de vida no seu dia a dia.
+            {intro.lead}
           </p>
         </div>
 

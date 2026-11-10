@@ -13,3 +13,4 @@ logs/
 package-lock.json
 .claude/
 NEON_SQL_USADO.md
+wp-upload/

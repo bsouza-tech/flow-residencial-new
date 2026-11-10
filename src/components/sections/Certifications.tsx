@@ -2,8 +2,11 @@ import { useRef } from 'react';
 import { animateSectionIntro } from '../../lib/animateIntro';
 import { revealItems } from '../../lib/animateReveal';
 import { useSectionMotion } from '../../lib/useSectionMotion';
+import { siteContent } from '../../data/content';
 import { certifications } from '../../data/certifications';
-import Picture from '../ui/Picture';
+import ContentImage from '../ui/ContentImage';
+
+const intro = siteContent.certifications;
 
 
 export default function Certifications() {
@@ -30,17 +33,18 @@ export default function Certifications() {
     >
       <div className="container">
         <div className="certs__intro">
-          <span className="eyebrow" data-reveal="eyebrow">Qualidade</span>
-          <h2 id="certs-heading" data-reveal="heading">Certificações e parcerias</h2>
-          <p data-reveal="text">Reconhecimentos que reforçam qualidade e confiabilidade em cada entrega.</p>
+          <span className="eyebrow" data-reveal="eyebrow">{intro.eyebrow}</span>
+          <h2 id="certs-heading" data-reveal="heading">{intro.heading}</h2>
+          <p data-reveal="text">{intro.lead}</p>
         </div>
 
         <ul className="certs__rail" aria-label="Certificações e parcerias">
           {certifications.map((item) => (
             <li key={item.id} className="certs__item" data-reveal="items">
               <div className="certs__logo">
-                <Picture
+                <ContentImage
                   name={item.imageName}
+                  imageUrl={item.imageUrl}
                   alt={item.alt}
                   sizes="120px"
                   loading="lazy"

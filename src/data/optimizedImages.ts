@@ -1,4 +1,7 @@
-/* Gerado por scripts/optimize-images.mjs — não editar à mão. */
+/* Gerado por scripts/optimize-images.mjs — não editar à mão.
+ * imagePath/srcSet respeitam images.baseUrl (via imagesBase.ts). */
+import { getImagesBaseUrl } from './imagesBase';
+
 export type OptimizedImageMeta = {
   name: string;
   widths: number[];
@@ -311,7 +314,9 @@ export const optimizedImages = {
 export type OptimizedImageName = keyof typeof optimizedImages;
 
 export function imagePath(name: OptimizedImageName, width: number, ext: 'avif' | 'webp') {
-  return `/img/${name}-${width}.${ext}`;
+  const file = `${name}-${width}.${ext}`;
+  const base = getImagesBaseUrl();
+  return base ? `${base}${file}` : `/img/${file}`;
 }
 
 export function imageSrcSet(name: OptimizedImageName, ext: 'avif' | 'webp') {

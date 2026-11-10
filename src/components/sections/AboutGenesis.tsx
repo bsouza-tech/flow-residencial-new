@@ -3,11 +3,11 @@ import { gsap } from '../../lib/gsap';
 import { animateSectionIntro } from '../../lib/animateIntro';
 import { revealColumns, revealMedia } from '../../lib/animateReveal';
 import { useSectionMotion } from '../../lib/useSectionMotion';
+import { siteContent } from '../../data/content';
 import { genesisStats } from '../../data/genesisStats';
-import Picture from '../ui/Picture';
+import ContentImage from '../ui/ContentImage';
 
-
-const GENESIS_VIDEO_ID = 'QHXUM6yo8zQ';
+const about = siteContent.about;
 
 export default function AboutGenesis() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -69,18 +69,18 @@ export default function AboutGenesis() {
     >
       <div className="container">
         <div className="about__intro">
-          <h2 id="about-heading" data-reveal="heading">Confiança e Tradição da Construtora</h2>
+          <h2 id="about-heading" data-reveal="heading">{about.heading}</h2>
           <p data-reveal="text">
-            Mais de 16 anos unindo tradição e inovação, com milhares de famílias atendidas e lares entregues.
+            {about.lead}
           </p>
         </div>
 
         <div className="about__grid">
           <div className="about__col" data-reveal="col">
             <article className="about__card">
-              <h3>Sobre Gênesis</h3>
+              <h3>{about.cardTitle}</h3>
               <p>
-                A Gênesis Incorporadora é sinônimo de excelência no mercado imobiliário, com mais de uma década construindo sonhos e transformando vidas.
+                {about.cardText}
               </p>
             </article>
 
@@ -105,8 +105,9 @@ export default function AboutGenesis() {
               onClick={() => setVideoOpen(true)}
               aria-label="Assistir ao vídeo da Gênesis Incorporadora"
             >
-              <Picture
-                name="fachada-dois"
+              <ContentImage
+                name={about.thumbImageName}
+                imageUrl={about.thumbImageUrl}
                 alt="Fachada Letreiro do Flow Residencial"
                 sizes="(max-width: 959px) 100vw, 50vw"
                 loading="lazy"
@@ -139,7 +140,7 @@ export default function AboutGenesis() {
           {videoOpen && (
             <iframe
               className="about-video__frame"
-              src={`https://www.youtube-nocookie.com/embed/${GENESIS_VIDEO_ID}?autoplay=1&rel=0`}
+              src={`https://www.youtube-nocookie.com/embed/${about.videoId}?autoplay=1&rel=0`}
               title="Vídeo da Gênesis Incorporadora"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen

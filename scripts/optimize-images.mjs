@@ -177,7 +177,9 @@ console.log(`og ${fs.statSync(path.join(publicDir, 'og-flow-residencial.jpg')).s
 Object.assign(meta, SEAL_META);
 
 const metaPath = path.join(root, 'src', 'data', 'optimizedImages.ts');
-const ts = `/* Gerado por scripts/optimize-images.mjs — não editar à mão. */
+const ts = `/* Gerado por scripts/optimize-images.mjs — metadados; helpers respeitam images.baseUrl. */
+import { getImagesBaseUrl } from './imagesBase';
+
 export type OptimizedImageMeta = {
   name: string;
   widths: number[];
@@ -191,7 +193,9 @@ export const optimizedImages = ${JSON.stringify(meta, null, 2)} as const satisfi
 export type OptimizedImageName = keyof typeof optimizedImages;
 
 export function imagePath(name: OptimizedImageName, width: number, ext: 'avif' | 'webp') {
-  return \`/img/\${name}-\${width}.\${ext}\`;
+  const file = \`\${name}-\${width}.\${ext}\`;
+  const base = getImagesBaseUrl();
+  return base ? \`\${base}\${file}\` : \`/img/\${file}\`;
 }
 
 export function imageSrcSet(name: OptimizedImageName, ext: 'avif' | 'webp') {
