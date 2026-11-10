@@ -3,8 +3,11 @@ import { gsap } from '../../lib/gsap';
 import { animateSectionIntro } from '../../lib/animateIntro';
 import { revealColumns, revealItems } from '../../lib/animateReveal';
 import { useSectionMotion } from '../../lib/useSectionMotion';
+import { siteContent } from '../../data/content';
 import { floorPlans } from '../../data/floorPlans';
-import Picture from '../ui/Picture';
+import ContentImage from '../ui/ContentImage';
+
+const intro = siteContent.floorPlans;
 
 function quartos(n: number) {
   return n === 1 ? '1 quarto' : `${n} quartos`;
@@ -269,10 +272,10 @@ export default function FloorPlans() {
     >
       <div className="container">
         <div className="floorplans__intro">
-          <span className="eyebrow" data-reveal="eyebrow">Plantas</span>
-          <h2 id="floorplans-heading" data-reveal="heading">Plantas para todos os estilos de vida</h2>
+          <span className="eyebrow" data-reveal="eyebrow">{intro.eyebrow}</span>
+          <h2 id="floorplans-heading" data-reveal="heading">{intro.heading}</h2>
           <p data-reveal="text">
-            No Flow, você escolhe entre quatro plantas versáteis que unem conforto, praticidade e design otimizado. Seja para morar sozinho ou para compartilhar, aqui você encontra o espaço ideal para viver com liberdade e fluidez.
+            {intro.lead}
           </p>
         </div>
 
@@ -326,8 +329,9 @@ export default function FloorPlans() {
                   onClick={openModal}
                   aria-label={`Ampliar planta ${activePlan.name}`}
                 >
-                  <Picture
+                  <ContentImage
                     name={activePlan.imageName}
+                    imageUrl={activePlan.imageUrl}
                     alt={`Planta ${activePlan.name}`}
                     sizes="(max-width: 959px) 100vw, 55vw"
                     width={activePlan.imageWidth}
@@ -460,8 +464,9 @@ export default function FloorPlans() {
                 </svg>
               </button>
               <div className="floorplans-modal__image">
-                <Picture
+                <ContentImage
                   name={activePlan.imageName}
+                  imageUrl={activePlan.imageUrl}
                   alt={`Planta ampliada ${activePlan.name}`}
                   sizes="(max-width: 800px) 92vw, 58vw"
                   width={activePlan.imageWidth}

@@ -1,25 +1,15 @@
-import { useRef } from 'react';
+import { useRef, type ReactNode } from 'react';
+import { siteContent } from '../../data/content';
 import { PRIVACY_POLICY_URL } from '../../data/site';
 import { revealItems } from '../../lib/animateReveal';
 import { useSectionMotion } from '../../lib/useSectionMotion';
-import Picture from '../ui/Picture';
+import ContentImage from '../ui/ContentImage';
 
+const footer = siteContent.footer;
+const footerLinks = footer.nav;
 
-const footerLinks = [
-  { label: 'Início', href: '#hero' },
-  { label: 'Destaques', href: '#beneficios' },
-  { label: 'Plantas', href: '#plantas' },
-  { label: 'Galeria', href: '#galeria' },
-  { label: 'Lazer', href: '#benfeitorias' },
-  { label: 'Localização', href: '#localizacao' },
-  { label: 'Receber condições', href: '#interesse' },
-  { label: 'Sobre', href: '#sobre' },
-];
-
-const socialLinks = [
-  {
-    label: 'Facebook',
-    href: 'https://www.facebook.com/genesisempreendimentos',
+const socialIcons: Record<string, { tone: string; icon: ReactNode }> = {
+  Facebook: {
     tone: 'facebook',
     icon: (
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -27,9 +17,7 @@ const socialLinks = [
       </svg>
     ),
   },
-  {
-    label: 'Instagram',
-    href: 'https://www.instagram.com/genesisempreendimentos/',
+  Instagram: {
     tone: 'instagram',
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -39,9 +27,7 @@ const socialLinks = [
       </svg>
     ),
   },
-  {
-    label: 'YouTube',
-    href: 'https://www.youtube.com/@genesisempreendimentos_',
+  YouTube: {
     tone: 'youtube',
     icon: (
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -49,7 +35,13 @@ const socialLinks = [
       </svg>
     ),
   },
-];
+};
+
+const socialLinks = footer.social.map((item) => ({
+  ...item,
+  tone: socialIcons[item.label]?.tone ?? 'facebook',
+  icon: socialIcons[item.label]?.icon ?? socialIcons.Facebook.icon,
+}));
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -82,8 +74,9 @@ export default function Footer() {
         <div className="site-footer__top">
           <div className="site-footer__brand" data-reveal="items">
             <a href="#hero" className="site-footer__logo" aria-label="Flow Residencial — início">
-              <Picture
-                name="flow-logo"
+              <ContentImage
+                name={footer.logoImageName}
+                imageUrl={footer.logoImageUrl}
                 alt="Flow Residencial"
                 sizes="140px"
                 width={140}
@@ -91,7 +84,7 @@ export default function Footer() {
                 loading="lazy"
               />
             </a>
-            <p className="site-footer__tagline">Seu espaço, Seu ritmo, Seu futuro.</p>
+            <p className="site-footer__tagline">{footer.tagline}</p>
             <p className="site-footer__copy">
               © {year} desenvolvido por{' '}
               <a href="https://genesisempreendimentos.com.br" target="_blank" rel="noopener noreferrer">
@@ -100,7 +93,7 @@ export default function Footer() {
             </p>
             <img
               className="site-footer__partners"
-              src="/img/genesis-caixa.png"
+              src={footer.partnersImage}
               alt="Gênesis Empreendimentos e Caixa"
               width={732}
               height={90}
@@ -136,9 +129,9 @@ export default function Footer() {
                   </svg>
                 </span>
                 <address>
-                  Av. Oliveira Botelho, 982 — Alto
+                  {footer.contact.address[0]}
                   <br />
-                  Teresópolis — RJ, 25960-004
+                  {footer.contact.address[1]}
                 </address>
               </li>
               <li>
@@ -147,7 +140,7 @@ export default function Footer() {
                     <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.5-1.1a2 2 0 0 1 2.1-.4c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2.1Z" />
                   </svg>
                 </span>
-                <a href="tel:+552126421203">(21) 2642-1203</a>
+                <a href={footer.contact.phoneHref}>{footer.contact.phone}</a>
               </li>
               <li>
                 <span className="site-footer__icon" aria-hidden="true">
@@ -156,8 +149,8 @@ export default function Footer() {
                     <path d="m4 7 8 6 8-6" />
                   </svg>
                 </span>
-                <a href="mailto:comercial@genesisempreendimentos.com.br">
-                  comercial@genesisempreendimentos.com.br
+                <a href={`mailto:${footer.contact.email}`}>
+                  {footer.contact.email}
                 </a>
               </li>
             </ul>
@@ -202,7 +195,7 @@ export default function Footer() {
             </a>
           </div>
           <p className="site-footer__legal">
-            Responsável técnico do projeto: Renata Pessôa de Rezende, CAU/RJ A33148-1.
+            {footer.legal}
           </p>
         </div>
       </div>
