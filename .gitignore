@@ -14,3 +14,6 @@ package-lock.json
 .claude/
 NEON_SQL_USADO.md
 wp-upload/
+src/data/content.resolved.json
+public/img/wp-*.webp
+public/img/wp-*.avif

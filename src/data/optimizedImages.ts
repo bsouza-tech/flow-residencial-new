@@ -1,6 +1,8 @@
 /* Gerado por scripts/optimize-images.mjs — não editar à mão.
- * imagePath/srcSet respeitam images.baseUrl (via imagesBase.ts). */
+ * imagePath/srcSet respeitam images.baseUrl (via imagesBase.ts).
+ * Variantes wp-* vêm de wpGeneratedImages.json (pré-build). */
 import { getImagesBaseUrl } from './imagesBase';
+import wpGenerated from './wpGeneratedImages.json';
 
 export type OptimizedImageMeta = {
   name: string;
@@ -10,7 +12,7 @@ export type OptimizedImageMeta = {
   largest: number;
 };
 
-export const optimizedImages = {
+const staticOptimizedImages = {
   "fachada": {
     "name": "fachada",
     "widths": [
@@ -311,21 +313,30 @@ export const optimizedImages = {
   }
 } as const satisfies Record<string, OptimizedImageMeta>;
 
-export type OptimizedImageName = keyof typeof optimizedImages;
+export type OptimizedImageName = string;
+
+export const optimizedImages: Record<string, OptimizedImageMeta> = {
+  ...staticOptimizedImages,
+  ...(wpGenerated.images as Record<string, OptimizedImageMeta>),
+};
 
 export function imagePath(name: OptimizedImageName, width: number, ext: 'avif' | 'webp') {
   const file = `${name}-${width}.${ext}`;
+  // Variantes geradas no pré-build a partir de URL WP ficam sempre em /img local.
+  if (name.startsWith('wp-')) return `/img/${file}`;
   const base = getImagesBaseUrl();
   return base ? `${base}${file}` : `/img/${file}`;
 }
 
 export function imageSrcSet(name: OptimizedImageName, ext: 'avif' | 'webp') {
   const meta = optimizedImages[name];
+  if (!meta) throw new Error(`[images] nome desconhecido: ${name}`);
   return meta.widths.map((w) => `${imagePath(name, w, ext)} ${w}w`).join(', ');
 }
 
 /** URL WebP da maior variante — lightbox / fallback único. */
 export function optimizedFullSrc(name: OptimizedImageName) {
   const meta = optimizedImages[name];
+  if (!meta) throw new Error(`[images] nome desconhecido: ${name}`);
   return imagePath(name, meta.largest, 'webp');
 }

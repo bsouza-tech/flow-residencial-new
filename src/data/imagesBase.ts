@@ -26,6 +26,8 @@ export function normalizeImagesBaseUrl(value: unknown): string | null {
 /** Converte `/img/arquivo` → baseUrl+arquivo (ou mantém local). */
 export function resolveImgPath(localPath: string): string {
   if (!imagesBaseUrl) return localPath;
+  // Variantes geradas no pré-build (wp-*) permanecem locais em /img/.
+  if (localPath.startsWith('/img/wp-')) return localPath;
   if (localPath.startsWith('/img/')) {
     return `${imagesBaseUrl}${localPath.slice('/img/'.length)}`;
   }

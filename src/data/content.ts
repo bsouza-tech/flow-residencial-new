@@ -142,9 +142,35 @@ export type SiteContent = {
 };
 
 const IMAGE_NAMES = new Set(Object.keys(optimizedImages));
+const WP_HOST = 'wp.flowresidencial.com.br';
+
+/** URL https completa do WordPress do Flow (com extensão). */
+export function isWpImageUrl(value: unknown): boolean {
+  if (typeof value !== 'string') return false;
+  try {
+    const url = new URL(value.trim());
+    if (url.protocol !== 'https:') return false;
+    if (url.hostname !== WP_HOST) return false;
+    const pathname = url.pathname;
+    const dot = pathname.lastIndexOf('.');
+    return dot > pathname.lastIndexOf('/');
+  } catch {
+    return false;
+  }
+}
 
 function isImageName(value: unknown): value is OptimizedImageName {
-  return typeof value === 'string' && IMAGE_NAMES.has(value);
+  if (typeof value !== 'string') return false;
+  if (IMAGE_NAMES.has(value)) return true;
+  if (value.startsWith('wp-')) return true;
+  return isWpImageUrl(value);
+}
+
+function isBackgroundImageBase(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  if (isWpImageUrl(value)) return true;
+  if (value.startsWith('/img/')) return true;
+  return isImageName(value);
 }
 
 function isString(value: unknown): value is string {
@@ -193,7 +219,7 @@ function validate(raw: unknown): SiteContent | null {
     !isLink(hero.ctaPrimary) ||
     !isLink(hero.ctaSecondary) ||
     !isString(hero.scrollLabel) ||
-    !isString(hero.backgroundImageBase)
+    !isBackgroundImageBase(hero.backgroundImageBase)
   ) {
     return null;
   }
@@ -771,9 +797,10 @@ export const FALLBACK_CONTENT: SiteContent = {
 };
 
 function loadContent(): SiteContent {
-  // Glob opcional: se content.json não existir, o mapa fica vazio e usamos o fallback.
+  // Prefer content.resolved.json (saída do pré-build com URLs WP reescritas).
+  const resolved = import.meta.glob('./content.resolved.json', { eager: true, import: 'default' });
   const modules = import.meta.glob('./content.json', { eager: true, import: 'default' });
-  const raw = modules['./content.json'];
+  const raw = resolved['./content.resolved.json'] ?? modules['./content.json'];
   if (raw === undefined) return FALLBACK_CONTENT;
   return validate(raw) ?? FALLBACK_CONTENT;
 }
