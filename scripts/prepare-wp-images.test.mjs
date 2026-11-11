@@ -131,6 +131,11 @@ test('prepareWpImages baixa, gera variantes e falha com content-type ruim', asyn
     },
   };
   fs.writeFileSync(path.join(srcData, 'content.json'), JSON.stringify(content, null, 2));
+  // Stub mínimo para loadKnownImageNames no assert do pré-build.
+  fs.writeFileSync(
+    path.join(srcData, 'optimizedImages.ts'),
+    `const staticOptimizedImages = {\n  "fachada-dois": {\n  },\n  "flow-logo": {\n  },\n} as const satisfies Record<string, unknown>;\n`,
+  );
 
   const fetchFn = async (url, init = {}) => {
     assert.equal(url, SAMPLE_PNG_URL);

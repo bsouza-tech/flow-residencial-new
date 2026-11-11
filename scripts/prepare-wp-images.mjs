@@ -11,6 +11,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  loadKnownImageNames,
+  validateSiteContent,
+} from '../src/data/contentValidate.mjs';
+import {
   VARIANT_WIDTHS,
   cacheKey,
   collectWpUrls,
@@ -138,6 +142,20 @@ export async function prepareWpImages({
   const resolved = rewriteContent(content, urlToId);
   writeJson(resolvedFile, resolved);
   writeJson(metaFile, { images });
+
+  // Mesma validação de content.ts: se o resolved cairia no FALLBACK, falha o build.
+  const knownNames = loadKnownImageNames(rootDir, {
+    readFileSync: fs.readFileSync,
+    existsSync: fs.existsSync,
+    join: path.join,
+  });
+  const check = validateSiteContent(resolved, knownNames);
+  if (!check.ok) {
+    throw new Error(
+      `[content] pré-build: validação falhou — campo ${check.field}=${JSON.stringify(check.value)} (${check.reason}). ` +
+        `Sem esta correção o site usaria FALLBACK_CONTENT em silêncio.`,
+    );
+  }
 
   return {
     urls: [...urls.keys()],

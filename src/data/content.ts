@@ -1,17 +1,16 @@
-import { normalizeImagesBaseUrl, setImagesBaseUrl } from './imagesBase';
+import { setImagesBaseUrl } from './imagesBase';
 import {
   optimizedFullSrc,
   optimizedImages,
   type OptimizedImageName,
 } from './optimizedImages';
+import {
+  isWpImageUrl,
+  optionalHttpsUrl,
+  validateSiteContent,
+} from './contentValidate.mjs';
 
-/** URL https opcional por item de imagem — usada só se presente e válida. */
-export function optionalHttpsUrl(value: unknown): string | undefined {
-  if (typeof value !== 'string') return undefined;
-  const trimmed = value.trim();
-  if (!/^https:\/\//i.test(trimmed)) return undefined;
-  return trimmed;
-}
+export { isWpImageUrl, optionalHttpsUrl };
 
 export type ContentLink = { label: string; href: string };
 
@@ -141,383 +140,28 @@ export type SiteContent = {
   };
 };
 
+/** Registry estático + wpGeneratedImages.json (escrito pelo pré-build antes do astro build). */
 const IMAGE_NAMES = new Set(Object.keys(optimizedImages));
-const WP_HOST = 'wp.flowresidencial.com.br';
 
-/** URL https completa do WordPress do Flow (com extensão). */
-export function isWpImageUrl(value: unknown): boolean {
-  if (typeof value !== 'string') return false;
-  try {
-    const url = new URL(value.trim());
-    if (url.protocol !== 'https:') return false;
-    if (url.hostname !== WP_HOST) return false;
-    const pathname = url.pathname;
-    const dot = pathname.lastIndexOf('.');
-    return dot > pathname.lastIndexOf('/');
-  } catch {
-    return false;
-  }
+/**
+ * Valida content.json / content.resolved.json.
+ * Em runtime, falha → FALLBACK_CONTENT (silencioso).
+ * No pré-build, a mesma função falha o processo (exit 1) via prepare-wp-images.
+ */
+export function validate(raw: unknown): SiteContent | null {
+  const result = validateSiteContent(raw, IMAGE_NAMES);
+  if (!result.ok) return null;
+  return result.content as SiteContent;
 }
 
-function isImageName(value: unknown): value is OptimizedImageName {
-  if (typeof value !== 'string') return false;
-  if (IMAGE_NAMES.has(value)) return true;
-  if (value.startsWith('wp-')) return true;
-  return isWpImageUrl(value);
-}
-
-function isBackgroundImageBase(value: unknown): value is string {
-  if (typeof value !== 'string') return false;
-  if (isWpImageUrl(value)) return true;
-  if (value.startsWith('/img/')) return true;
-  return isImageName(value);
-}
-
-function isString(value: unknown): value is string {
-  return typeof value === 'string';
-}
-
-function isNumberOrNull(value: unknown): value is number | null {
-  return value === null || typeof value === 'number';
-}
-
-function isLink(value: unknown): value is ContentLink {
-  if (!value || typeof value !== 'object') return false;
-  const o = value as Record<string, unknown>;
-  return isString(o.label) && isString(o.href);
-}
-
-function validate(raw: unknown): SiteContent | null {
-  if (!raw || typeof raw !== 'object') return null;
-  const root = raw as Record<string, unknown>;
-
-  const imagesRaw = root.images as Record<string, unknown> | undefined;
-  const baseUrl = normalizeImagesBaseUrl(imagesRaw?.baseUrl);
-  if (baseUrl === null) return null;
-
-  const hero = root.hero as Record<string, unknown> | undefined;
-  const benefits = root.benefits as Record<string, unknown> | undefined;
-  const floorPlans = root.floorPlans as Record<string, unknown> | undefined;
-  const gallery = root.gallery as Record<string, unknown> | undefined;
-  const amenities = root.amenities as Record<string, unknown> | undefined;
-  const location = root.location as Record<string, unknown> | undefined;
-  const about = root.about as Record<string, unknown> | undefined;
-  const certifications = root.certifications as Record<string, unknown> | undefined;
-  const footer = root.footer as Record<string, unknown> | undefined;
-
-  if (!hero || !benefits || !floorPlans || !gallery || !amenities || !location || !about || !certifications || !footer) {
-    return null;
-  }
-
-  if (
-    !Array.isArray(hero.eyebrow) ||
-    hero.eyebrow.length !== 2 ||
-    !hero.eyebrow.every(isString) ||
-    !isString(hero.title) ||
-    !isString(hero.titleEmphasized) ||
-    !isString(hero.text) ||
-    !isLink(hero.ctaPrimary) ||
-    !isLink(hero.ctaSecondary) ||
-    !isString(hero.scrollLabel) ||
-    !isBackgroundImageBase(hero.backgroundImageBase)
-  ) {
-    return null;
-  }
-
-  if (
-    !isString(benefits.eyebrow) ||
-    !isString(benefits.headingHtml) ||
-    !isString(benefits.lead) ||
-    !isString(benefits.badge) ||
-    !isImageName(benefits.imageName) ||
-    !Array.isArray(benefits.items)
-  ) {
-    return null;
-  }
-
-  const benefitItems: SiteContent['benefits']['items'] = [];
-  for (const item of benefits.items) {
-    if (!item || typeof item !== 'object') return null;
-    const b = item as Record<string, unknown>;
-    if (!isString(b.id) || !isString(b.title)) return null;
-    if (!(b.description === null || isString(b.description))) return null;
-    benefitItems.push({ id: b.id, title: b.title, description: b.description });
-  }
-
-  if (
-    !isString(floorPlans.eyebrow) ||
-    !isString(floorPlans.heading) ||
-    !isString(floorPlans.lead) ||
-    !Array.isArray(floorPlans.items)
-  ) {
-    return null;
-  }
-
-  const floorItems: SiteContent['floorPlans']['items'] = [];
-  for (const item of floorPlans.items) {
-    if (!item || typeof item !== 'object') return null;
-    const p = item as Record<string, unknown>;
-    if (!isString(p.id) || !isString(p.name) || !isImageName(p.imageName)) return null;
-    if (!(p.area === null || isString(p.area))) return null;
-    if (!isNumberOrNull(p.bedrooms) || !isNumberOrNull(p.suites) || !isNumberOrNull(p.bathrooms) || !isNumberOrNull(p.parkingSpots)) {
-      return null;
-    }
-    if (!(p.description === null || isString(p.description))) return null;
-    floorItems.push({
-      id: p.id,
-      name: p.name,
-      imageName: p.imageName,
-      imageUrl: optionalHttpsUrl(p.imageUrl),
-      area: p.area,
-      bedrooms: p.bedrooms,
-      suites: p.suites,
-      bathrooms: p.bathrooms,
-      parkingSpots: p.parkingSpots,
-      description: p.description,
-    });
-  }
-
-  if (
-    !isString(gallery.eyebrow) ||
-    !isString(gallery.heading) ||
-    !isString(gallery.lead) ||
-    !Array.isArray(gallery.items)
-  ) {
-    return null;
-  }
-
-  const galleryItems: SiteContent['gallery']['items'] = [];
-  for (const item of gallery.items) {
-    if (!item || typeof item !== 'object') return null;
-    const g = item as Record<string, unknown>;
-    if (!isString(g.id) || !isImageName(g.name) || !isString(g.label)) return null;
-    if (g.category !== 'interior' && g.category !== 'amenity') return null;
-    galleryItems.push({
-      id: g.id,
-      name: g.name,
-      label: g.label,
-      category: g.category,
-      imageUrl: optionalHttpsUrl(g.imageUrl),
-    });
-  }
-
-  if (
-    !isString(amenities.eyebrow) ||
-    !isString(amenities.heading) ||
-    !isString(amenities.sectionId) ||
-    !Array.isArray(amenities.items)
-  ) {
-    return null;
-  }
-
-  const amenityItems: SiteContent['amenities']['items'] = [];
-  for (const item of amenities.items) {
-    if (!item || typeof item !== 'object') return null;
-    const a = item as Record<string, unknown>;
-    if (!isString(a.id) || !isString(a.title) || !isImageName(a.imageName)) return null;
-    amenityItems.push({
-      id: a.id,
-      title: a.title,
-      imageName: a.imageName,
-      imageUrl: optionalHttpsUrl(a.imageUrl),
-    });
-  }
-
-  const project = location.project as Record<string, unknown> | undefined;
-  if (
-    !isString(location.eyebrow) ||
-    !isString(location.heading) ||
-    !isString(location.lead) ||
-    !project ||
-    !isString(project.id) ||
-    !isString(project.name) ||
-    typeof project.lat !== 'number' ||
-    typeof project.lng !== 'number' ||
-    !Array.isArray(project.addressLines) ||
-    !project.addressLines.every(isString) ||
-    !isString(project.mapsUrl) ||
-    !Array.isArray(location.pois)
-  ) {
-    return null;
-  }
-
-  const pois: SiteContent['location']['pois'] = [];
-  for (const item of location.pois) {
-    if (!item || typeof item !== 'object') return null;
-    const p = item as Record<string, unknown>;
-    if (
-      !isString(p.id) ||
-      !isString(p.name) ||
-      !isString(p.distance) ||
-      !isString(p.icon) ||
-      typeof p.lat !== 'number' ||
-      typeof p.lng !== 'number'
-    ) {
-      return null;
-    }
-    pois.push({
-      id: p.id,
-      name: p.name,
-      distance: p.distance,
-      icon: p.icon,
-      lat: p.lat,
-      lng: p.lng,
-    });
-  }
-
-  if (
-    !isString(about.heading) ||
-    !isString(about.lead) ||
-    !isString(about.cardTitle) ||
-    !isString(about.cardText) ||
-    !isString(about.videoId) ||
-    !isImageName(about.thumbImageName) ||
-    !Array.isArray(about.stats)
-  ) {
-    return null;
-  }
-
-  const stats: SiteContent['about']['stats'] = [];
-  for (const item of about.stats) {
-    if (!item || typeof item !== 'object') return null;
-    const s = item as Record<string, unknown>;
-    if (typeof s.value !== 'number' || !isString(s.suffix) || !isString(s.label)) return null;
-    stats.push({ value: s.value, suffix: s.suffix, label: s.label });
-  }
-
-  if (
-    !isString(certifications.eyebrow) ||
-    !isString(certifications.heading) ||
-    !isString(certifications.lead) ||
-    !Array.isArray(certifications.items)
-  ) {
-    return null;
-  }
-
-  const certItems: SiteContent['certifications']['items'] = [];
-  for (const item of certifications.items) {
-    if (!item || typeof item !== 'object') return null;
-    const c = item as Record<string, unknown>;
-    if (!isString(c.id) || !isString(c.name) || !isString(c.description) || !isImageName(c.imageName) || !isString(c.alt)) {
-      return null;
-    }
-    certItems.push({
-      id: c.id,
-      name: c.name,
-      description: c.description,
-      imageName: c.imageName,
-      alt: c.alt,
-      imageUrl: optionalHttpsUrl(c.imageUrl),
-    });
-  }
-
-  const contact = footer.contact as Record<string, unknown> | undefined;
-  if (
-    !isString(footer.tagline) ||
-    !Array.isArray(footer.nav) ||
-    !footer.nav.every(isLink) ||
-    !contact ||
-    !Array.isArray(contact.address) ||
-    !contact.address.every(isString) ||
-    !isString(contact.phone) ||
-    !isString(contact.phoneHref) ||
-    !isString(contact.email) ||
-    !Array.isArray(footer.social) ||
-    !footer.social.every(isLink) ||
-    !isString(footer.privacyUrl) ||
-    !isString(footer.legal) ||
-    !isString(footer.partnersImage) ||
-    !isImageName(footer.logoImageName)
-  ) {
-    return null;
-  }
-
-  return {
-    images: { baseUrl },
-    hero: {
-      eyebrow: [hero.eyebrow[0], hero.eyebrow[1]],
-      title: hero.title,
-      titleEmphasized: hero.titleEmphasized,
-      text: hero.text,
-      ctaPrimary: hero.ctaPrimary,
-      ctaSecondary: hero.ctaSecondary,
-      scrollLabel: hero.scrollLabel,
-      backgroundImageBase: hero.backgroundImageBase,
-    },
-    benefits: {
-      eyebrow: benefits.eyebrow,
-      headingHtml: benefits.headingHtml,
-      lead: benefits.lead,
-      badge: benefits.badge,
-      imageName: benefits.imageName,
-      imageUrl: optionalHttpsUrl(benefits.imageUrl),
-      items: benefitItems,
-    },
-    floorPlans: {
-      eyebrow: floorPlans.eyebrow,
-      heading: floorPlans.heading,
-      lead: floorPlans.lead,
-      items: floorItems,
-    },
-    gallery: {
-      eyebrow: gallery.eyebrow,
-      heading: gallery.heading,
-      lead: gallery.lead,
-      items: galleryItems,
-    },
-    amenities: {
-      eyebrow: amenities.eyebrow,
-      heading: amenities.heading,
-      sectionId: amenities.sectionId,
-      items: amenityItems,
-    },
-    location: {
-      eyebrow: location.eyebrow,
-      heading: location.heading,
-      lead: location.lead,
-      project: {
-        id: project.id,
-        name: project.name,
-        lat: project.lat,
-        lng: project.lng,
-        addressLines: project.addressLines as string[],
-        mapsUrl: project.mapsUrl,
-      },
-      pois,
-    },
-    about: {
-      heading: about.heading,
-      lead: about.lead,
-      cardTitle: about.cardTitle,
-      cardText: about.cardText,
-      stats,
-      videoId: about.videoId,
-      thumbImageName: about.thumbImageName,
-      thumbImageUrl: optionalHttpsUrl(about.thumbImageUrl),
-    },
-    certifications: {
-      eyebrow: certifications.eyebrow,
-      heading: certifications.heading,
-      lead: certifications.lead,
-      items: certItems,
-    },
-    footer: {
-      tagline: footer.tagline,
-      nav: footer.nav as ContentLink[],
-      contact: {
-        address: contact.address as string[],
-        phone: contact.phone,
-        phoneHref: contact.phoneHref,
-        email: contact.email,
-      },
-      social: footer.social as ContentLink[],
-      privacyUrl: footer.privacyUrl,
-      legal: footer.legal,
-      partnersImage: footer.partnersImage,
-      logoImageName: footer.logoImageName,
-      logoImageUrl: optionalHttpsUrl(footer.logoImageUrl),
-    },
-  };
+/** Explica falha de validação (campo + valor) — usado pelo pré-build. */
+export function explainValidationFailure(
+  raw: unknown,
+  knownNames: Set<string> = IMAGE_NAMES,
+): { field: string; value: unknown; reason: string } | null {
+  const result = validateSiteContent(raw, knownNames);
+  if (result.ok) return null;
+  return { field: result.field, value: result.value, reason: result.reason };
 }
 
 /** Fallback idêntico ao conteúdo atual do site (sem JSON). */
