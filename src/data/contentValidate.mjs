@@ -5,12 +5,6 @@
 
 export const WP_HOST = 'wp.flowresidencial.com.br';
 
-/** Nome gerado pelo pré-build: wp-<12 hex>. */
-export const WP_IMAGE_NAME_RE = /^wp-[a-f0-9]{12}$/;
-
-/** Hero background reescrito: /img/wp-<12 hex>. */
-export const WP_BACKGROUND_BASE_RE = /^\/img\/wp-[a-f0-9]{12}$/;
-
 export function optionalHttpsUrl(value) {
   if (typeof value !== 'string') return undefined;
   const trimmed = value.trim();
@@ -28,6 +22,7 @@ export function normalizeImagesBaseUrl(value) {
   return trimmed;
 }
 
+/** URL WP com extensão (baixar/gerar variantes no pré-build). */
 export function isWpImageUrl(value) {
   if (typeof value !== 'string') return false;
   try {
@@ -43,26 +38,57 @@ export function isWpImageUrl(value) {
 }
 
 /**
- * Aceita: nome no registry, wp-<hash> do pré-build, ou URL WP (pré-rewrite).
+ * Stem https sem extensão, dentro de images.baseUrl.
+ * Ex.: baseUrl .../2026/11/ + "fachada" → .../2026/11/fachada (Hero concatena -1200.webp).
+ * @param {unknown} value
+ * @param {string} baseUrl
+ */
+export function isWpImageStemUrl(value, baseUrl) {
+  if (typeof value !== 'string' || typeof baseUrl !== 'string' || !baseUrl) return false;
+  const trimmed = value.trim();
+  if (!trimmed.startsWith(baseUrl)) return false;
+  try {
+    const url = new URL(trimmed);
+    if (url.protocol !== 'https:') return false;
+    if (url.hostname !== WP_HOST) return false;
+    const last = url.pathname.split('/').filter(Boolean).pop() || '';
+    // Stem: último segmento sem ponto (sem extensão).
+    if (!last || last.includes('.')) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Aceita: nome no registry, wp-* do pré-build (como antes de 1133d22), ou URL WP com extensão.
  * @param {unknown} value
  * @param {Set<string>} knownNames
  */
 export function isImageName(value, knownNames) {
   if (typeof value !== 'string') return false;
   if (knownNames.has(value)) return true;
-  if (WP_IMAGE_NAME_RE.test(value)) return true;
+  // Paridade com content.ts pré-1133d22: qualquer wp-*.
+  if (value.startsWith('wp-')) return true;
   return isWpImageUrl(value);
 }
 
 /**
+ * Formatos históricos do Hero + pré-build:
+ * - "/img/<nome>" (CDN via resolveImgPath)
+ * - https stem sem extensão dentro de images.baseUrl
+ * - URL WP com extensão (pré-rewrite)
+ * - "/img/wp-<hash>" (pós-rewrite)
+ * - nome de imagem conhecido / wp-*
  * @param {unknown} value
  * @param {Set<string>} knownNames
+ * @param {string} [baseUrl]
  */
-export function isBackgroundImageBase(value, knownNames) {
+export function isBackgroundImageBase(value, knownNames, baseUrl = '') {
   if (typeof value !== 'string') return false;
-  if (isWpImageUrl(value)) return true;
-  if (WP_BACKGROUND_BASE_RE.test(value)) return true;
   if (value.startsWith('/img/')) return true;
+  if (isWpImageStemUrl(value, baseUrl)) return true;
+  if (isWpImageUrl(value)) return true;
   return isImageName(value, knownNames);
 }
 
@@ -128,7 +154,7 @@ export function validateSiteContent(raw, knownNames) {
   ) {
     return fail('hero', hero, 'campos de texto/cta inválidos');
   }
-  if (!isBackgroundImageBase(hero.backgroundImageBase, knownNames)) {
+  if (!isBackgroundImageBase(hero.backgroundImageBase, knownNames, baseUrl)) {
     return fail('hero.backgroundImageBase', hero.backgroundImageBase, 'imagem de fundo inválida');
   }
 
