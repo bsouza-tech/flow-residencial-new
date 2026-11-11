@@ -2,7 +2,7 @@ import type { CSSProperties } from 'react';
 import {
   imagePath,
   imageSrcSet,
-  optimizedImages,
+  resolveImageMeta,
   type OptimizedImageName,
 } from '../../data/optimizedImages';
 
@@ -32,7 +32,7 @@ export default function Picture({
   width,
   height,
 }: PictureProps) {
-  const meta = optimizedImages[name];
+  const meta = resolveImageMeta(name);
   const fallbackW = meta.largest;
   const fallbackSrc = imagePath(name, fallbackW, 'webp');
 

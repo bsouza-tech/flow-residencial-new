@@ -315,10 +315,30 @@ const staticOptimizedImages = {
 
 export type OptimizedImageName = string;
 
+/** Larguras geradas pelo pré-build para URLs WP (scripts/lib/wp-images.mjs). */
+export const WP_VARIANT_WIDTHS = [800, 1200, 1680] as const;
+
 export const optimizedImages: Record<string, OptimizedImageMeta> = {
   ...staticOptimizedImages,
   ...(wpGenerated.images as Record<string, OptimizedImageMeta>),
 };
+
+/** Meta para nomes wp-* mesmo se o JSON de registry estiver vazio (paths /img/wp-…). */
+export function resolveImageMeta(name: OptimizedImageName): OptimizedImageMeta {
+  const existing = optimizedImages[name];
+  if (existing) return existing;
+  if (name.startsWith('wp-')) {
+    const largest = WP_VARIANT_WIDTHS[WP_VARIANT_WIDTHS.length - 1];
+    return {
+      name,
+      widths: [...WP_VARIANT_WIDTHS],
+      width: largest,
+      height: Math.round(largest * 0.8),
+      largest,
+    };
+  }
+  throw new Error(`[images] nome desconhecido: ${name}`);
+}
 
 export function imagePath(name: OptimizedImageName, width: number, ext: 'avif' | 'webp') {
   const file = `${name}-${width}.${ext}`;
@@ -329,14 +349,12 @@ export function imagePath(name: OptimizedImageName, width: number, ext: 'avif' |
 }
 
 export function imageSrcSet(name: OptimizedImageName, ext: 'avif' | 'webp') {
-  const meta = optimizedImages[name];
-  if (!meta) throw new Error(`[images] nome desconhecido: ${name}`);
+  const meta = resolveImageMeta(name);
   return meta.widths.map((w) => `${imagePath(name, w, ext)} ${w}w`).join(', ');
 }
 
 /** URL WebP da maior variante — lightbox / fallback único. */
 export function optimizedFullSrc(name: OptimizedImageName) {
-  const meta = optimizedImages[name];
-  if (!meta) throw new Error(`[images] nome desconhecido: ${name}`);
+  const meta = resolveImageMeta(name);
   return imagePath(name, meta.largest, 'webp');
 }
